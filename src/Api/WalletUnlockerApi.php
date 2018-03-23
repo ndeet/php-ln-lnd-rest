@@ -83,37 +83,39 @@ class WalletUnlockerApi
     }
 
     /**
-     * Operation createWallet
+     * Operation genSeed
      *
-     * * lncli: `create` CreateWallet is used at lnd startup to set the encryption password for the wallet database.
+     * * GenSeed is the first method that should be used to instantiate a new lnd instance. This method allows a caller to generate a new aezeed cipher seed given an optional passphrase. If provided, the passphrase will be necessary to decrypt the cipherseed to expose the internal wallet seed.
      *
-     * @param  \Lnd\Rest\Model\LnrpcCreateWalletRequest $body body (required)
+     * @param  string $aezeedPassphrase * aezeed_passphrase is an optional user provided passphrase that will be used to encrypt the generated aezeed cipher seed. (optional)
+     * @param  string $seedEntropy * seed_entropy is an optional 16-bytes generated via CSPRNG. If not specified, then a fresh set of randomness will be used to create the seed. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Lnd\Rest\Model\LnrpcCreateWalletResponse
+     * @return \Lnd\Rest\Model\LnrpcGenSeedResponse
      */
-    public function createWallet($body)
+    public function genSeed($aezeedPassphrase = null, $seedEntropy = null)
     {
-        list($response) = $this->createWalletWithHttpInfo($body);
+        list($response) = $this->genSeedWithHttpInfo($aezeedPassphrase, $seedEntropy);
         return $response;
     }
 
     /**
-     * Operation createWalletWithHttpInfo
+     * Operation genSeedWithHttpInfo
      *
-     * * lncli: `create` CreateWallet is used at lnd startup to set the encryption password for the wallet database.
+     * * GenSeed is the first method that should be used to instantiate a new lnd instance. This method allows a caller to generate a new aezeed cipher seed given an optional passphrase. If provided, the passphrase will be necessary to decrypt the cipherseed to expose the internal wallet seed.
      *
-     * @param  \Lnd\Rest\Model\LnrpcCreateWalletRequest $body (required)
+     * @param  string $aezeedPassphrase * aezeed_passphrase is an optional user provided passphrase that will be used to encrypt the generated aezeed cipher seed. (optional)
+     * @param  string $seedEntropy * seed_entropy is an optional 16-bytes generated via CSPRNG. If not specified, then a fresh set of randomness will be used to create the seed. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return array of \Lnd\Rest\Model\LnrpcCreateWalletResponse, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Lnd\Rest\Model\LnrpcGenSeedResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createWalletWithHttpInfo($body)
+    public function genSeedWithHttpInfo($aezeedPassphrase = null, $seedEntropy = null)
     {
-        $returnType = '\Lnd\Rest\Model\LnrpcCreateWalletResponse';
-        $request = $this->createWalletRequest($body);
+        $returnType = '\Lnd\Rest\Model\LnrpcGenSeedResponse';
+        $request = $this->genSeedRequest($aezeedPassphrase, $seedEntropy);
 
         try {
             $options = $this->createHttpClientOption();
@@ -164,7 +166,7 @@ class WalletUnlockerApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\Lnd\Rest\Model\LnrpcCreateWalletResponse',
+                        '\Lnd\Rest\Model\LnrpcGenSeedResponse',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -175,18 +177,19 @@ class WalletUnlockerApi
     }
 
     /**
-     * Operation createWalletAsync
+     * Operation genSeedAsync
      *
-     * * lncli: `create` CreateWallet is used at lnd startup to set the encryption password for the wallet database.
+     * * GenSeed is the first method that should be used to instantiate a new lnd instance. This method allows a caller to generate a new aezeed cipher seed given an optional passphrase. If provided, the passphrase will be necessary to decrypt the cipherseed to expose the internal wallet seed.
      *
-     * @param  \Lnd\Rest\Model\LnrpcCreateWalletRequest $body (required)
+     * @param  string $aezeedPassphrase * aezeed_passphrase is an optional user provided passphrase that will be used to encrypt the generated aezeed cipher seed. (optional)
+     * @param  string $seedEntropy * seed_entropy is an optional 16-bytes generated via CSPRNG. If not specified, then a fresh set of randomness will be used to create the seed. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createWalletAsync($body)
+    public function genSeedAsync($aezeedPassphrase = null, $seedEntropy = null)
     {
-        return $this->createWalletAsyncWithHttpInfo($body)
+        return $this->genSeedAsyncWithHttpInfo($aezeedPassphrase, $seedEntropy)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -195,19 +198,20 @@ class WalletUnlockerApi
     }
 
     /**
-     * Operation createWalletAsyncWithHttpInfo
+     * Operation genSeedAsyncWithHttpInfo
      *
-     * * lncli: `create` CreateWallet is used at lnd startup to set the encryption password for the wallet database.
+     * * GenSeed is the first method that should be used to instantiate a new lnd instance. This method allows a caller to generate a new aezeed cipher seed given an optional passphrase. If provided, the passphrase will be necessary to decrypt the cipherseed to expose the internal wallet seed.
      *
-     * @param  \Lnd\Rest\Model\LnrpcCreateWalletRequest $body (required)
+     * @param  string $aezeedPassphrase * aezeed_passphrase is an optional user provided passphrase that will be used to encrypt the generated aezeed cipher seed. (optional)
+     * @param  string $seedEntropy * seed_entropy is an optional 16-bytes generated via CSPRNG. If not specified, then a fresh set of randomness will be used to create the seed. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createWalletAsyncWithHttpInfo($body)
+    public function genSeedAsyncWithHttpInfo($aezeedPassphrase = null, $seedEntropy = null)
     {
-        $returnType = '\Lnd\Rest\Model\LnrpcCreateWalletResponse';
-        $request = $this->createWalletRequest($body);
+        $returnType = '\Lnd\Rest\Model\LnrpcGenSeedResponse';
+        $request = $this->genSeedRequest($aezeedPassphrase, $seedEntropy);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -247,23 +251,280 @@ class WalletUnlockerApi
     }
 
     /**
-     * Create request for operation 'createWallet'
+     * Create request for operation 'genSeed'
      *
-     * @param  \Lnd\Rest\Model\LnrpcCreateWalletRequest $body (required)
+     * @param  string $aezeedPassphrase * aezeed_passphrase is an optional user provided passphrase that will be used to encrypt the generated aezeed cipher seed. (optional)
+     * @param  string $seedEntropy * seed_entropy is an optional 16-bytes generated via CSPRNG. If not specified, then a fresh set of randomness will be used to create the seed. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function createWalletRequest($body)
+    protected function genSeedRequest($aezeedPassphrase = null, $seedEntropy = null)
+    {
+
+        $resourcePath = '/v1/genseed';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        if ($aezeedPassphrase !== null) {
+            $queryParams['aezeed_passphrase'] = ObjectSerializer::toQueryValue($aezeedPassphrase);
+        }
+        // query params
+        if ($seedEntropy !== null) {
+            $queryParams['seed_entropy'] = ObjectSerializer::toQueryValue($seedEntropy);
+        }
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation initWallet
+     *
+     * *  InitWallet is used when lnd is starting up for the first time to fully initialize the daemon and its internal wallet. At the very least a wallet password must be provided. This will be used to encrypt sensitive material on disk.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcInitWalletRequest $body body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcInitWalletResponse
+     */
+    public function initWallet($body)
+    {
+        list($response) = $this->initWalletWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation initWalletWithHttpInfo
+     *
+     * *  InitWallet is used when lnd is starting up for the first time to fully initialize the daemon and its internal wallet. At the very least a wallet password must be provided. This will be used to encrypt sensitive material on disk.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcInitWalletRequest $body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcInitWalletResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function initWalletWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcInitWalletResponse';
+        $request = $this->initWalletRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcInitWalletResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation initWalletAsync
+     *
+     * *  InitWallet is used when lnd is starting up for the first time to fully initialize the daemon and its internal wallet. At the very least a wallet password must be provided. This will be used to encrypt sensitive material on disk.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcInitWalletRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function initWalletAsync($body)
+    {
+        return $this->initWalletAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation initWalletAsyncWithHttpInfo
+     *
+     * *  InitWallet is used when lnd is starting up for the first time to fully initialize the daemon and its internal wallet. At the very least a wallet password must be provided. This will be used to encrypt sensitive material on disk.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcInitWalletRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function initWalletAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcInitWalletResponse';
+        $request = $this->initWalletRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'initWallet'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcInitWalletRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function initWalletRequest($body)
     {
         // verify the required parameter 'body' is set
         if ($body === null) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $body when calling createWallet'
+                'Missing the required parameter $body when calling initWallet'
             );
         }
 
-        $resourcePath = '/v1/createwallet';
+        $resourcePath = '/v1/initwallet';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];

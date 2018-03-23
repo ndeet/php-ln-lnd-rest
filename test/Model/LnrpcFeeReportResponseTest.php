@@ -83,4 +83,25 @@ class LnrpcFeeReportResponseTest extends \PHPUnit_Framework_TestCase
     public function testPropertyChannelFees()
     {
     }
+
+    /**
+     * Test attribute "dayFeeSum"
+     */
+    public function testPropertyDayFeeSum()
+    {
+    }
+
+    /**
+     * Test attribute "weekFeeSum"
+     */
+    public function testPropertyWeekFeeSum()
+    {
+    }
+
+    /**
+     * Test attribute "monthFeeSum"
+     */
+    public function testPropertyMonthFeeSum()
+    {
+    }
 }

@@ -111,4 +111,11 @@ class LnrpcPaymentTest extends \PHPUnit_Framework_TestCase
     public function testPropertyFee()
     {
     }
+
+    /**
+     * Test attribute "paymentPreimage"
+     */
+    public function testPropertyPaymentPreimage()
+    {
+    }
 }

@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**fundingTxid** | **string** |  | [optional] 
+**fundingTxidBytes** | **string** |  | [optional] 
 **fundingTxidStr** | **string** |  | [optional] 
 **outputIndex** | **int** |  | [optional] 
 

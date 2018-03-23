@@ -57,7 +57,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'fundingTxid' => 'string',
+        'fundingTxidBytes' => 'string',
         'fundingTxidStr' => 'string',
         'outputIndex' => 'int'
     ];
@@ -68,7 +68,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'fundingTxid' => 'byte',
+        'fundingTxidBytes' => 'byte',
         'fundingTxidStr' => null,
         'outputIndex' => 'int64'
     ];
@@ -100,7 +100,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'fundingTxid' => 'funding_txid',
+        'fundingTxidBytes' => 'funding_txid_bytes',
         'fundingTxidStr' => 'funding_txid_str',
         'outputIndex' => 'output_index'
     ];
@@ -111,7 +111,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'fundingTxid' => 'setFundingTxid',
+        'fundingTxidBytes' => 'setFundingTxidBytes',
         'fundingTxidStr' => 'setFundingTxidStr',
         'outputIndex' => 'setOutputIndex'
     ];
@@ -122,7 +122,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'fundingTxid' => 'getFundingTxid',
+        'fundingTxidBytes' => 'getFundingTxidBytes',
         'fundingTxidStr' => 'getFundingTxidStr',
         'outputIndex' => 'getOutputIndex'
     ];
@@ -187,7 +187,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['fundingTxid'] = isset($data['fundingTxid']) ? $data['fundingTxid'] : null;
+        $this->container['fundingTxidBytes'] = isset($data['fundingTxidBytes']) ? $data['fundingTxidBytes'] : null;
         $this->container['fundingTxidStr'] = isset($data['fundingTxidStr']) ? $data['fundingTxidStr'] : null;
         $this->container['outputIndex'] = isset($data['outputIndex']) ? $data['outputIndex'] : null;
     }
@@ -201,8 +201,8 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
     {
         $invalidProperties = [];
 
-        if (!is_null($this->container['fundingTxid']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['fundingTxid'])) {
-            $invalidProperties[] = "invalid value for 'fundingTxid', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        if (!is_null($this->container['fundingTxidBytes']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['fundingTxidBytes'])) {
+            $invalidProperties[] = "invalid value for 'fundingTxidBytes', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
         }
 
         return $invalidProperties;
@@ -217,7 +217,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
     public function valid()
     {
 
-        if (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['fundingTxid'])) {
+        if (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['fundingTxidBytes'])) {
             return false;
         }
         return true;
@@ -225,30 +225,30 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets fundingTxid
+     * Gets fundingTxidBytes
      *
      * @return string
      */
-    public function getFundingTxid()
+    public function getFundingTxidBytes()
     {
-        return $this->container['fundingTxid'];
+        return $this->container['fundingTxidBytes'];
     }
 
     /**
-     * Sets fundingTxid
+     * Sets fundingTxidBytes
      *
-     * @param string $fundingTxid fundingTxid
+     * @param string $fundingTxidBytes fundingTxidBytes
      *
      * @return $this
      */
-    public function setFundingTxid($fundingTxid)
+    public function setFundingTxidBytes($fundingTxidBytes)
     {
 
-        if (!is_null($fundingTxid) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $fundingTxid))) {
-            throw new \InvalidArgumentException("invalid value for $fundingTxid when calling LnrpcChannelPoint., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        if (!is_null($fundingTxidBytes) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $fundingTxidBytes))) {
+            throw new \InvalidArgumentException("invalid value for $fundingTxidBytes when calling LnrpcChannelPoint., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
         }
 
-        $this->container['fundingTxid'] = $fundingTxid;
+        $this->container['fundingTxidBytes'] = $fundingTxidBytes;
 
         return $this;
     }

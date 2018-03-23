@@ -162,6 +162,16 @@ class LightningApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test case for forwardingHistory
+     *
+     * * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLC's forwarded within the target time range, and integer offset within that time range. If no time-range is specified, then the first chunk of the past 24 hrs of forwarding history are returned..
+     *
+     */
+    public function testForwardingHistory()
+    {
+    }
+
+    /**
      * Test case for getChanInfo
      *
      * * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain..
@@ -254,7 +264,7 @@ class LightningApiTest extends \PHPUnit_Framework_TestCase
     /**
      * Test case for lookupInvoice
      *
-     * * lncli: `lookupinvoice` LookupInvoice attemps to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned..
+     * * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned..
      *
      */
     public function testLookupInvoice()
@@ -294,7 +304,7 @@ class LightningApiTest extends \PHPUnit_Framework_TestCase
     /**
      * Test case for queryRoutes
      *
-     * * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The retuned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsualted within the HTLC..
+     * * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The retuned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC..
      *
      */
     public function testQueryRoutes()
@@ -332,19 +342,19 @@ class LightningApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test case for updateFees
+     * Test case for updateChannelPolicy
      *
-     * * lncli: `updatefees` UpdateFees allows the caller to update the fee schedule for all channels globally, or a particular channel..
+     * * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel..
      *
      */
-    public function testUpdateFees()
+    public function testUpdateChannelPolicy()
     {
     }
 
     /**
      * Test case for walletBalance
      *
-     * * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control by the wallet. This method can be modified by having the request specify only witness outputs should be factored into the final output sum..
+     * * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet..
      *
      */
     public function testWalletBalance()

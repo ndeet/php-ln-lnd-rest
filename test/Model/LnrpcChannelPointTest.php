@@ -78,9 +78,9 @@ class LnrpcChannelPointTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test attribute "fundingTxid"
+     * Test attribute "fundingTxidBytes"
      */
-    public function testPropertyFundingTxid()
+    public function testPropertyFundingTxidBytes()
     {
     }
 

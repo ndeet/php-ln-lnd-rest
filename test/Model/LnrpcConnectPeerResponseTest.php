@@ -76,11 +76,4 @@ class LnrpcConnectPeerResponseTest extends \PHPUnit_Framework_TestCase
     public function testLnrpcConnectPeerResponse()
     {
     }
-
-    /**
-     * Test attribute "peerId"
-     */
-    public function testPropertyPeerId()
-    {
-    }
 }

@@ -57,7 +57,7 @@ class LnrpcConnectPeerResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'peerId' => 'int'
+        
     ];
 
     /**
@@ -66,7 +66,7 @@ class LnrpcConnectPeerResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'peerId' => 'int32'
+        
     ];
 
     /**
@@ -96,7 +96,7 @@ class LnrpcConnectPeerResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'peerId' => 'peer_id'
+        
     ];
 
     /**
@@ -105,7 +105,7 @@ class LnrpcConnectPeerResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'peerId' => 'setPeerId'
+        
     ];
 
     /**
@@ -114,7 +114,7 @@ class LnrpcConnectPeerResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'peerId' => 'getPeerId'
+        
     ];
 
     /**
@@ -177,7 +177,6 @@ class LnrpcConnectPeerResponse implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['peerId'] = isset($data['peerId']) ? $data['peerId'] : null;
     }
 
     /**
@@ -204,30 +203,6 @@ class LnrpcConnectPeerResponse implements ModelInterface, ArrayAccess
         return true;
     }
 
-
-    /**
-     * Gets peerId
-     *
-     * @return int
-     */
-    public function getPeerId()
-    {
-        return $this->container['peerId'];
-    }
-
-    /**
-     * Sets peerId
-     *
-     * @param int $peerId peerId
-     *
-     * @return $this
-     */
-    public function setPeerId($peerId)
-    {
-        $this->container['peerId'] = $peerId;
-
-        return $this;
-    }
     /**
      * Returns true if offset exists. False otherwise.
      *

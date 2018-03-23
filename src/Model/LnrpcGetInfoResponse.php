@@ -66,7 +66,9 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'blockHash' => 'string',
         'syncedToChain' => 'bool',
         'testnet' => 'bool',
-        'chains' => 'string[]'
+        'chains' => 'string[]',
+        'uris' => 'string[]',
+        'bestHeaderTimestamp' => 'string'
     ];
 
     /**
@@ -84,7 +86,9 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'blockHash' => null,
         'syncedToChain' => 'boolean',
         'testnet' => 'boolean',
-        'chains' => null
+        'chains' => null,
+        'uris' => null,
+        'bestHeaderTimestamp' => 'int64'
     ];
 
     /**
@@ -123,7 +127,9 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'blockHash' => 'block_hash',
         'syncedToChain' => 'synced_to_chain',
         'testnet' => 'testnet',
-        'chains' => 'chains'
+        'chains' => 'chains',
+        'uris' => 'uris',
+        'bestHeaderTimestamp' => 'best_header_timestamp'
     ];
 
     /**
@@ -141,7 +147,9 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'blockHash' => 'setBlockHash',
         'syncedToChain' => 'setSyncedToChain',
         'testnet' => 'setTestnet',
-        'chains' => 'setChains'
+        'chains' => 'setChains',
+        'uris' => 'setUris',
+        'bestHeaderTimestamp' => 'setBestHeaderTimestamp'
     ];
 
     /**
@@ -159,7 +167,9 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'blockHash' => 'getBlockHash',
         'syncedToChain' => 'getSyncedToChain',
         'testnet' => 'getTestnet',
-        'chains' => 'getChains'
+        'chains' => 'getChains',
+        'uris' => 'getUris',
+        'bestHeaderTimestamp' => 'getBestHeaderTimestamp'
     ];
 
     /**
@@ -232,6 +242,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         $this->container['syncedToChain'] = isset($data['syncedToChain']) ? $data['syncedToChain'] : null;
         $this->container['testnet'] = isset($data['testnet']) ? $data['testnet'] : null;
         $this->container['chains'] = isset($data['chains']) ? $data['chains'] : null;
+        $this->container['uris'] = isset($data['uris']) ? $data['uris'] : null;
+        $this->container['bestHeaderTimestamp'] = isset($data['bestHeaderTimestamp']) ? $data['bestHeaderTimestamp'] : null;
     }
 
     /**
@@ -495,6 +507,54 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     public function setChains($chains)
     {
         $this->container['chains'] = $chains;
+
+        return $this;
+    }
+
+    /**
+     * Gets uris
+     *
+     * @return string[]
+     */
+    public function getUris()
+    {
+        return $this->container['uris'];
+    }
+
+    /**
+     * Sets uris
+     *
+     * @param string[] $uris / The URIs of the current node.
+     *
+     * @return $this
+     */
+    public function setUris($uris)
+    {
+        $this->container['uris'] = $uris;
+
+        return $this;
+    }
+
+    /**
+     * Gets bestHeaderTimestamp
+     *
+     * @return string
+     */
+    public function getBestHeaderTimestamp()
+    {
+        return $this->container['bestHeaderTimestamp'];
+    }
+
+    /**
+     * Sets bestHeaderTimestamp
+     *
+     * @param string $bestHeaderTimestamp bestHeaderTimestamp
+     *
+     * @return $this
+     */
+    public function setBestHeaderTimestamp($bestHeaderTimestamp)
+    {
+        $this->container['bestHeaderTimestamp'] = $bestHeaderTimestamp;
 
         return $this;
     }

@@ -13,6 +13,8 @@ Name | Type | Description | Notes
 **syncedToChain** | **bool** |  | [optional] 
 **testnet** | **bool** |  | [optional] 
 **chains** | **string[]** |  | [optional] 
+**uris** | **string[]** | / The URIs of the current node. | [optional] 
+**bestHeaderTimestamp** | **string** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

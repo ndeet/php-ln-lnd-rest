@@ -57,14 +57,14 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'targetPeerId' => 'int',
         'nodePubkey' => 'string',
         'nodePubkeyString' => 'string',
         'localFundingAmount' => 'string',
         'pushSat' => 'string',
         'targetConf' => 'int',
         'satPerByte' => 'string',
-        'private' => 'bool'
+        'private' => 'bool',
+        'minHtlcMsat' => 'string'
     ];
 
     /**
@@ -73,14 +73,14 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'targetPeerId' => 'int32',
         'nodePubkey' => 'byte',
         'nodePubkeyString' => null,
         'localFundingAmount' => 'int64',
         'pushSat' => 'int64',
         'targetConf' => 'int32',
         'satPerByte' => 'int64',
-        'private' => 'boolean'
+        'private' => 'boolean',
+        'minHtlcMsat' => 'int64'
     ];
 
     /**
@@ -110,14 +110,14 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'targetPeerId' => 'target_peer_id',
         'nodePubkey' => 'node_pubkey',
         'nodePubkeyString' => 'node_pubkey_string',
         'localFundingAmount' => 'local_funding_amount',
         'pushSat' => 'push_sat',
         'targetConf' => 'target_conf',
         'satPerByte' => 'sat_per_byte',
-        'private' => 'private'
+        'private' => 'private',
+        'minHtlcMsat' => 'min_htlc_msat'
     ];
 
     /**
@@ -126,14 +126,14 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'targetPeerId' => 'setTargetPeerId',
         'nodePubkey' => 'setNodePubkey',
         'nodePubkeyString' => 'setNodePubkeyString',
         'localFundingAmount' => 'setLocalFundingAmount',
         'pushSat' => 'setPushSat',
         'targetConf' => 'setTargetConf',
         'satPerByte' => 'setSatPerByte',
-        'private' => 'setPrivate'
+        'private' => 'setPrivate',
+        'minHtlcMsat' => 'setMinHtlcMsat'
     ];
 
     /**
@@ -142,14 +142,14 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'targetPeerId' => 'getTargetPeerId',
         'nodePubkey' => 'getNodePubkey',
         'nodePubkeyString' => 'getNodePubkeyString',
         'localFundingAmount' => 'getLocalFundingAmount',
         'pushSat' => 'getPushSat',
         'targetConf' => 'getTargetConf',
         'satPerByte' => 'getSatPerByte',
-        'private' => 'getPrivate'
+        'private' => 'getPrivate',
+        'minHtlcMsat' => 'getMinHtlcMsat'
     ];
 
     /**
@@ -212,7 +212,6 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['targetPeerId'] = isset($data['targetPeerId']) ? $data['targetPeerId'] : null;
         $this->container['nodePubkey'] = isset($data['nodePubkey']) ? $data['nodePubkey'] : null;
         $this->container['nodePubkeyString'] = isset($data['nodePubkeyString']) ? $data['nodePubkeyString'] : null;
         $this->container['localFundingAmount'] = isset($data['localFundingAmount']) ? $data['localFundingAmount'] : null;
@@ -220,6 +219,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         $this->container['targetConf'] = isset($data['targetConf']) ? $data['targetConf'] : null;
         $this->container['satPerByte'] = isset($data['satPerByte']) ? $data['satPerByte'] : null;
         $this->container['private'] = isset($data['private']) ? $data['private'] : null;
+        $this->container['minHtlcMsat'] = isset($data['minHtlcMsat']) ? $data['minHtlcMsat'] : null;
     }
 
     /**
@@ -253,30 +253,6 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         return true;
     }
 
-
-    /**
-     * Gets targetPeerId
-     *
-     * @return int
-     */
-    public function getTargetPeerId()
-    {
-        return $this->container['targetPeerId'];
-    }
-
-    /**
-     * Sets targetPeerId
-     *
-     * @param int $targetPeerId targetPeerId
-     *
-     * @return $this
-     */
-    public function setTargetPeerId($targetPeerId)
-    {
-        $this->container['targetPeerId'] = $targetPeerId;
-
-        return $this;
-    }
 
     /**
      * Gets nodePubkey
@@ -447,6 +423,30 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     public function setPrivate($private)
     {
         $this->container['private'] = $private;
+
+        return $this;
+    }
+
+    /**
+     * Gets minHtlcMsat
+     *
+     * @return string
+     */
+    public function getMinHtlcMsat()
+    {
+        return $this->container['minHtlcMsat'];
+    }
+
+    /**
+     * Sets minHtlcMsat
+     *
+     * @param string $minHtlcMsat / The minimum value in millisatoshi we will require for incoming HTLCs on the channel.
+     *
+     * @return $this
+     */
+    public function setMinHtlcMsat($minHtlcMsat)
+    {
+        $this->container['minHtlcMsat'] = $minHtlcMsat;
 
         return $this;
     }

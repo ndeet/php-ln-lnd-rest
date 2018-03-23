@@ -85,13 +85,6 @@ class LnrpcPeerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test attribute "peerId"
-     */
-    public function testPropertyPeerId()
-    {
-    }
-
-    /**
      * Test attribute "address"
      */
     public function testPropertyAddress()

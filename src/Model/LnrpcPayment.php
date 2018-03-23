@@ -61,7 +61,8 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'value' => 'string',
         'creationDate' => 'string',
         'path' => 'string[]',
-        'fee' => 'string'
+        'fee' => 'string',
+        'paymentPreimage' => 'string'
     ];
 
     /**
@@ -74,7 +75,8 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'value' => 'int64',
         'creationDate' => 'int64',
         'path' => null,
-        'fee' => 'int64'
+        'fee' => 'int64',
+        'paymentPreimage' => null
     ];
 
     /**
@@ -108,7 +110,8 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'value' => 'value',
         'creationDate' => 'creation_date',
         'path' => 'path',
-        'fee' => 'fee'
+        'fee' => 'fee',
+        'paymentPreimage' => 'payment_preimage'
     ];
 
     /**
@@ -121,7 +124,8 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'value' => 'setValue',
         'creationDate' => 'setCreationDate',
         'path' => 'setPath',
-        'fee' => 'setFee'
+        'fee' => 'setFee',
+        'paymentPreimage' => 'setPaymentPreimage'
     ];
 
     /**
@@ -134,7 +138,8 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'value' => 'getValue',
         'creationDate' => 'getCreationDate',
         'path' => 'getPath',
-        'fee' => 'getFee'
+        'fee' => 'getFee',
+        'paymentPreimage' => 'getPaymentPreimage'
     ];
 
     /**
@@ -202,6 +207,7 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         $this->container['creationDate'] = isset($data['creationDate']) ? $data['creationDate'] : null;
         $this->container['path'] = isset($data['path']) ? $data['path'] : null;
         $this->container['fee'] = isset($data['fee']) ? $data['fee'] : null;
+        $this->container['paymentPreimage'] = isset($data['paymentPreimage']) ? $data['paymentPreimage'] : null;
     }
 
     /**
@@ -345,6 +351,30 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
     public function setFee($fee)
     {
         $this->container['fee'] = $fee;
+
+        return $this;
+    }
+
+    /**
+     * Gets paymentPreimage
+     *
+     * @return string
+     */
+    public function getPaymentPreimage()
+    {
+        return $this->container['paymentPreimage'];
+    }
+
+    /**
+     * Sets paymentPreimage
+     *
+     * @param string $paymentPreimage paymentPreimage
+     *
+     * @return $this
+     */
+    public function setPaymentPreimage($paymentPreimage)
+    {
+        $this->container['paymentPreimage'] = $paymentPreimage;
 
         return $this;
     }

@@ -6,32 +6,33 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**addInvoice**](LightningApi.md#addInvoice) | **POST** /v1/invoices | * lncli: &#x60;addinvoice&#x60; AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
 [**channelBalance**](LightningApi.md#channelBalance) | **GET** /v1/balance/channels | * lncli: &#x60;channelbalance&#x60; ChannelBalance returns the total funds available across all open channels in satoshis.
-[**closeChannel**](LightningApi.md#closeChannel) | **DELETE** /v1/channels/{channel_point.funding_txid}/{channel_point.output_index} | * lncli: &#x60;closechannel&#x60; CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
+[**closeChannel**](LightningApi.md#closeChannel) | **DELETE** /v1/channels/{channel_point.funding_txid_str}/{channel_point.output_index} | * lncli: &#x60;closechannel&#x60; CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
 [**connectPeer**](LightningApi.md#connectPeer) | **POST** /v1/peers | * lncli: &#x60;connect&#x60; ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
 [**decodePayReq**](LightningApi.md#decodePayReq) | **GET** /v1/payreq/{pay_req} | * lncli: &#x60;decodepayreq&#x60; DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
 [**deleteAllPayments**](LightningApi.md#deleteAllPayments) | **DELETE** /v1/payments | * DeleteAllPayments deletes all outgoing payments from DB.
 [**describeGraph**](LightningApi.md#describeGraph) | **GET** /v1/graph | * lncli: &#x60;describegraph&#x60; DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves.  As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
 [**disconnectPeer**](LightningApi.md#disconnectPeer) | **DELETE** /v1/peers/{pub_key} | * lncli: &#x60;disconnect&#x60; DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
 [**feeReport**](LightningApi.md#feeReport) | **GET** /v1/fees | * lncli: &#x60;feereport&#x60; FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
+[**forwardingHistory**](LightningApi.md#forwardingHistory) | **POST** /v1/switch | * lncli: &#x60;fwdinghistory&#x60; ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLC&#39;s forwarded within the target time range, and integer offset within that time range. If no time-range is specified, then the first chunk of the past 24 hrs of forwarding history are returned.
 [**getChanInfo**](LightningApi.md#getChanInfo) | **GET** /v1/graph/edge/{chan_id} | * lncli: &#x60;getchaninfo&#x60; GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction&#39;s funding output within the blockchain.
 [**getInfo**](LightningApi.md#getInfo) | **GET** /v1/getinfo | * lncli: &#x60;getinfo&#x60; GetInfo returns general information concerning the lightning node including it&#39;s identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
 [**getNetworkInfo**](LightningApi.md#getNetworkInfo) | **GET** /v1/graph/info | * lncli: &#x60;getnetworkinfo&#x60; GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
 [**getNodeInfo**](LightningApi.md#getNodeInfo) | **GET** /v1/graph/node/{pub_key} | * lncli: &#x60;getnodeinfo&#x60; GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
 [**getTransactions**](LightningApi.md#getTransactions) | **GET** /v1/transactions | * lncli: &#x60;listchaintxns&#x60; GetTransactions returns a list describing all the known transactions relevant to the wallet.
 [**listChannels**](LightningApi.md#listChannels) | **GET** /v1/channels | * lncli: &#x60;listchannels&#x60; ListChannels returns a description of all the open channels that this node is a participant in.
-[**listInvoices**](LightningApi.md#listInvoices) | **GET** /v1/invoices/{pending_only} | * lncli: &#x60;listinvoices&#x60; ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored.
+[**listInvoices**](LightningApi.md#listInvoices) | **GET** /v1/invoices | * lncli: &#x60;listinvoices&#x60; ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored.
 [**listPayments**](LightningApi.md#listPayments) | **GET** /v1/payments | * lncli: &#x60;listpayments&#x60; ListPayments returns a list of all outgoing payments.
 [**listPeers**](LightningApi.md#listPeers) | **GET** /v1/peers | * lncli: &#x60;listpeers&#x60; ListPeers returns a verbose listing of all currently active peers.
-[**lookupInvoice**](LightningApi.md#lookupInvoice) | **GET** /v1/invoices/{r_hash_str} | * lncli: &#x60;lookupinvoice&#x60; LookupInvoice attemps to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
+[**lookupInvoice**](LightningApi.md#lookupInvoice) | **GET** /v1/invoice/{r_hash_str} | * lncli: &#x60;lookupinvoice&#x60; LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
 [**newWitnessAddress**](LightningApi.md#newWitnessAddress) | **GET** /v1/newaddress | * NewWitnessAddress creates a new witness address under control of the local wallet.
 [**openChannelSync**](LightningApi.md#openChannelSync) | **POST** /v1/channels | * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
 [**pendingChannels**](LightningApi.md#pendingChannels) | **GET** /v1/channels/pending | * lncli: &#x60;pendingchannels&#x60; PendingChannels returns a list of all the channels that are currently considered \&quot;pending\&quot;. A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
-[**queryRoutes**](LightningApi.md#queryRoutes) | **GET** /v1/graph/routes/{pub_key}/{amt} | * lncli: &#x60;queryroutes&#x60; QueryRoutes attempts to query the daemon&#39;s Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The retuned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsualted within the HTLC.
+[**queryRoutes**](LightningApi.md#queryRoutes) | **GET** /v1/graph/routes/{pub_key}/{amt} | * lncli: &#x60;queryroutes&#x60; QueryRoutes attempts to query the daemon&#39;s Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The retuned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
 [**sendCoins**](LightningApi.md#sendCoins) | **POST** /v1/transactions | * lncli: &#x60;sendcoins&#x60; SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_byte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
 [**sendPaymentSync**](LightningApi.md#sendPaymentSync) | **POST** /v1/channels/transactions | * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination&#39;s public key and the payment hash (if any) to be encoded as hex strings.
 [**subscribeInvoices**](LightningApi.md#subscribeInvoices) | **GET** /v1/invoices/subscribe | * SubscribeInvoices returns a uni-directional stream (sever -&gt; client) for notifying the client of newly added/settled invoices.
-[**updateFees**](LightningApi.md#updateFees) | **POST** /v1/fees | * lncli: &#x60;updatefees&#x60; UpdateFees allows the caller to update the fee schedule for all channels globally, or a particular channel.
-[**walletBalance**](LightningApi.md#walletBalance) | **GET** /v1/balance/blockchain | * lncli: &#x60;walletbalance&#x60; WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control by the wallet. This method can be modified by having the request specify only witness outputs should be factored into the final output sum.
+[**updateChannelPolicy**](LightningApi.md#updateChannelPolicy) | **POST** /v1/chanpolicy | * lncli: &#x60;updatechanpolicy&#x60; UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
+[**walletBalance**](LightningApi.md#walletBalance) | **GET** /v1/balance/blockchain | * lncli: &#x60;walletbalance&#x60; WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
 
 
 # **addInvoice**
@@ -125,7 +126,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **closeChannel**
-> \Lnd\Rest\Model\LnrpcCloseStatusUpdate closeChannel($channelPointFundingTxid, $channelPointOutputIndex)
+> \Lnd\Rest\Model\LnrpcCloseStatusUpdate closeChannel($channelPointFundingTxidStr, $channelPointOutputIndex)
 
 * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
 
@@ -139,11 +140,11 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$channelPointFundingTxid = "B"; // string | 
+$channelPointFundingTxidStr = "channelPointFundingTxidStr_example"; // string | 
 $channelPointOutputIndex = 789; // int | 
 
 try {
-    $result = $apiInstance->closeChannel($channelPointFundingTxid, $channelPointOutputIndex);
+    $result = $apiInstance->closeChannel($channelPointFundingTxidStr, $channelPointOutputIndex);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling LightningApi->closeChannel: ', $e->getMessage(), PHP_EOL;
@@ -155,7 +156,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **channelPointFundingTxid** | **string**|  |
+ **channelPointFundingTxidStr** | **string**|  |
  **channelPointOutputIndex** | **int**|  |
 
 ### Return type
@@ -431,6 +432,55 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**\Lnd\Rest\Model\LnrpcFeeReportResponse**](../Model/LnrpcFeeReportResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+# **forwardingHistory**
+> \Lnd\Rest\Model\LnrpcForwardingHistoryResponse forwardingHistory($body)
+
+* lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLC's forwarded within the target time range, and integer offset within that time range. If no time-range is specified, then the first chunk of the past 24 hrs of forwarding history are returned.
+
+A list of forwarding events are returned. The size of each forwarding event is 40 bytes, and the max message size able to be returned in gRPC is 4 MiB. As a result each message can only contain 50k entries.  Each response has the index offset of the last entry. The index offset can be provided to the request to allow the caller to skip a series of records.
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Lnd\Rest\Api\LightningApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Lnd\Rest\Model\LnrpcForwardingHistoryRequest(); // \Lnd\Rest\Model\LnrpcForwardingHistoryRequest | 
+
+try {
+    $result = $apiInstance->forwardingHistory($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling LightningApi->forwardingHistory: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Lnd\Rest\Model\LnrpcForwardingHistoryRequest**](../Model/LnrpcForwardingHistoryRequest.md)|  |
+
+### Return type
+
+[**\Lnd\Rest\Model\LnrpcForwardingHistoryResponse**](../Model/LnrpcForwardingHistoryResponse.md)
 
 ### Authorization
 
@@ -724,7 +774,7 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$pendingOnly = true; // bool | 
+$pendingOnly = true; // bool | / Toggles if all invoices should be returned, or only those that are currently unsettled.
 
 try {
     $result = $apiInstance->listInvoices($pendingOnly);
@@ -739,7 +789,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **pendingOnly** | **bool**|  |
+ **pendingOnly** | **bool**| / Toggles if all invoices should be returned, or only those that are currently unsettled. | [optional]
 
 ### Return type
 
@@ -845,7 +895,7 @@ No authorization required
 # **lookupInvoice**
 > \Lnd\Rest\Model\LnrpcInvoice lookupInvoice($rHashStr, $rHash)
 
-* lncli: `lookupinvoice` LookupInvoice attemps to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
+* lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
 
 ### Example
 ```php
@@ -982,7 +1032,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **pendingChannels**
-> \Lnd\Rest\Model\LnrpcPendingChannelResponse pendingChannels()
+> \Lnd\Rest\Model\LnrpcPendingChannelsResponse pendingChannels()
 
 * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
 
@@ -1011,7 +1061,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**\Lnd\Rest\Model\LnrpcPendingChannelResponse**](../Model/LnrpcPendingChannelResponse.md)
+[**\Lnd\Rest\Model\LnrpcPendingChannelsResponse**](../Model/LnrpcPendingChannelsResponse.md)
 
 ### Authorization
 
@@ -1025,9 +1075,9 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **queryRoutes**
-> \Lnd\Rest\Model\LnrpcQueryRoutesResponse queryRoutes($pubKey, $amt)
+> \Lnd\Rest\Model\LnrpcQueryRoutesResponse queryRoutes($pubKey, $amt, $numRoutes)
 
-* lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The retuned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsualted within the HTLC.
+* lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The retuned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
 
 ### Example
 ```php
@@ -1041,9 +1091,10 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
 );
 $pubKey = "pubKey_example"; // string | 
 $amt = "amt_example"; // string | 
+$numRoutes = 56; // int | / The max number of routes to return.
 
 try {
-    $result = $apiInstance->queryRoutes($pubKey, $amt);
+    $result = $apiInstance->queryRoutes($pubKey, $amt, $numRoutes);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling LightningApi->queryRoutes: ', $e->getMessage(), PHP_EOL;
@@ -1057,6 +1108,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **pubKey** | **string**|  |
  **amt** | **string**|  |
+ **numRoutes** | **int**| / The max number of routes to return. | [optional]
 
 ### Return type
 
@@ -1210,10 +1262,10 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
-# **updateFees**
-> \Lnd\Rest\Model\LnrpcFeeUpdateResponse updateFees($body)
+# **updateChannelPolicy**
+> \Lnd\Rest\Model\LnrpcPolicyUpdateResponse updateChannelPolicy($body)
 
-* lncli: `updatefees` UpdateFees allows the caller to update the fee schedule for all channels globally, or a particular channel.
+* lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
 
 ### Example
 ```php
@@ -1225,13 +1277,13 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Lnd\Rest\Model\LnrpcFeeUpdateRequest(); // \Lnd\Rest\Model\LnrpcFeeUpdateRequest | 
+$body = new \Lnd\Rest\Model\LnrpcPolicyUpdateRequest(); // \Lnd\Rest\Model\LnrpcPolicyUpdateRequest | 
 
 try {
-    $result = $apiInstance->updateFees($body);
+    $result = $apiInstance->updateChannelPolicy($body);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling LightningApi->updateFees: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling LightningApi->updateChannelPolicy: ', $e->getMessage(), PHP_EOL;
 }
 ?>
 ```
@@ -1240,11 +1292,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Lnd\Rest\Model\LnrpcFeeUpdateRequest**](../Model/LnrpcFeeUpdateRequest.md)|  |
+ **body** | [**\Lnd\Rest\Model\LnrpcPolicyUpdateRequest**](../Model/LnrpcPolicyUpdateRequest.md)|  |
 
 ### Return type
 
-[**\Lnd\Rest\Model\LnrpcFeeUpdateResponse**](../Model/LnrpcFeeUpdateResponse.md)
+[**\Lnd\Rest\Model\LnrpcPolicyUpdateResponse**](../Model/LnrpcPolicyUpdateResponse.md)
 
 ### Authorization
 
@@ -1258,9 +1310,9 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **walletBalance**
-> \Lnd\Rest\Model\LnrpcWalletBalanceResponse walletBalance($witnessOnly)
+> \Lnd\Rest\Model\LnrpcWalletBalanceResponse walletBalance()
 
-* lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control by the wallet. This method can be modified by having the request specify only witness outputs should be factored into the final output sum.
+* lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
 
 ### Example
 ```php
@@ -1272,10 +1324,9 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$witnessOnly = true; // bool | / If only witness outputs should be considered when calculating the wallet's balance.
 
 try {
-    $result = $apiInstance->walletBalance($witnessOnly);
+    $result = $apiInstance->walletBalance();
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling LightningApi->walletBalance: ', $e->getMessage(), PHP_EOL;
@@ -1284,10 +1335,7 @@ try {
 ```
 
 ### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **witnessOnly** | **bool**| / If only witness outputs should be considered when calculating the wallet&#39;s balance. | [optional]
+This endpoint does not need any parameter.
 
 ### Return type
 

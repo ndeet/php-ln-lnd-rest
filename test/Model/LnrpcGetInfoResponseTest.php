@@ -146,4 +146,18 @@ class LnrpcGetInfoResponseTest extends \PHPUnit_Framework_TestCase
     public function testPropertyChains()
     {
     }
+
+    /**
+     * Test attribute "uris"
+     */
+    public function testPropertyUris()
+    {
+    }
+
+    /**
+     * Test attribute "bestHeaderTimestamp"
+     */
+    public function testPropertyBestHeaderTimestamp()
+    {
+    }
 }

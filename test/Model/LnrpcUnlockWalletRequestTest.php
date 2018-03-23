@@ -78,9 +78,9 @@ class LnrpcUnlockWalletRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test attribute "password"
+     * Test attribute "walletPassword"
      */
-    public function testPropertyPassword()
+    public function testPropertyWalletPassword()
     {
     }
 }

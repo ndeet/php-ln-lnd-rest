@@ -118,4 +118,11 @@ class LnrpcSendRequestTest extends \PHPUnit_Framework_TestCase
     public function testPropertyPaymentRequest()
     {
     }
+
+    /**
+     * Test attribute "finalCltvDelta"
+     */
+    public function testPropertyFinalCltvDelta()
+    {
+    }
 }

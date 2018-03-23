@@ -58,7 +58,6 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'pubKey' => 'string',
-        'peerId' => 'int',
         'address' => 'string',
         'bytesSent' => 'string',
         'bytesRecv' => 'string',
@@ -75,7 +74,6 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'pubKey' => null,
-        'peerId' => 'int32',
         'address' => null,
         'bytesSent' => 'uint64',
         'bytesRecv' => 'uint64',
@@ -113,7 +111,6 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'pubKey' => 'pub_key',
-        'peerId' => 'peer_id',
         'address' => 'address',
         'bytesSent' => 'bytes_sent',
         'bytesRecv' => 'bytes_recv',
@@ -130,7 +127,6 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'pubKey' => 'setPubKey',
-        'peerId' => 'setPeerId',
         'address' => 'setAddress',
         'bytesSent' => 'setBytesSent',
         'bytesRecv' => 'setBytesRecv',
@@ -147,7 +143,6 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'pubKey' => 'getPubKey',
-        'peerId' => 'getPeerId',
         'address' => 'getAddress',
         'bytesSent' => 'getBytesSent',
         'bytesRecv' => 'getBytesRecv',
@@ -218,7 +213,6 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['pubKey'] = isset($data['pubKey']) ? $data['pubKey'] : null;
-        $this->container['peerId'] = isset($data['peerId']) ? $data['peerId'] : null;
         $this->container['address'] = isset($data['address']) ? $data['address'] : null;
         $this->container['bytesSent'] = isset($data['bytesSent']) ? $data['bytesSent'] : null;
         $this->container['bytesRecv'] = isset($data['bytesRecv']) ? $data['bytesRecv'] : null;
@@ -273,30 +267,6 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
     public function setPubKey($pubKey)
     {
         $this->container['pubKey'] = $pubKey;
-
-        return $this;
-    }
-
-    /**
-     * Gets peerId
-     *
-     * @return int
-     */
-    public function getPeerId()
-    {
-        return $this->container['peerId'];
-    }
-
-    /**
-     * Sets peerId
-     *
-     * @param int $peerId peerId
-     *
-     * @return $this
-     */
-    public function setPeerId($peerId)
-    {
-        $this->container['peerId'] = $peerId;
 
         return $this;
     }

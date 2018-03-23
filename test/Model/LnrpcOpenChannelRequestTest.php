@@ -78,13 +78,6 @@ class LnrpcOpenChannelRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test attribute "targetPeerId"
-     */
-    public function testPropertyTargetPeerId()
-    {
-    }
-
-    /**
      * Test attribute "nodePubkey"
      */
     public function testPropertyNodePubkey()
@@ -130,6 +123,13 @@ class LnrpcOpenChannelRequestTest extends \PHPUnit_Framework_TestCase
      * Test attribute "private"
      */
     public function testPropertyPrivate()
+    {
+    }
+
+    /**
+     * Test attribute "minHtlcMsat"
+     */
+    public function testPropertyMinHtlcMsat()
     {
     }
 }

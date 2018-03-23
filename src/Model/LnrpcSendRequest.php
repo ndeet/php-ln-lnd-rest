@@ -62,7 +62,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'amt' => 'string',
         'paymentHash' => 'string',
         'paymentHashString' => 'string',
-        'paymentRequest' => 'string'
+        'paymentRequest' => 'string',
+        'finalCltvDelta' => 'int'
     ];
 
     /**
@@ -76,7 +77,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'amt' => 'int64',
         'paymentHash' => 'byte',
         'paymentHashString' => null,
-        'paymentRequest' => null
+        'paymentRequest' => null,
+        'finalCltvDelta' => 'int32'
     ];
 
     /**
@@ -111,7 +113,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'amt' => 'amt',
         'paymentHash' => 'payment_hash',
         'paymentHashString' => 'payment_hash_string',
-        'paymentRequest' => 'payment_request'
+        'paymentRequest' => 'payment_request',
+        'finalCltvDelta' => 'final_cltv_delta'
     ];
 
     /**
@@ -125,7 +128,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'amt' => 'setAmt',
         'paymentHash' => 'setPaymentHash',
         'paymentHashString' => 'setPaymentHashString',
-        'paymentRequest' => 'setPaymentRequest'
+        'paymentRequest' => 'setPaymentRequest',
+        'finalCltvDelta' => 'setFinalCltvDelta'
     ];
 
     /**
@@ -139,7 +143,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'amt' => 'getAmt',
         'paymentHash' => 'getPaymentHash',
         'paymentHashString' => 'getPaymentHashString',
-        'paymentRequest' => 'getPaymentRequest'
+        'paymentRequest' => 'getPaymentRequest',
+        'finalCltvDelta' => 'getFinalCltvDelta'
     ];
 
     /**
@@ -208,6 +213,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         $this->container['paymentHash'] = isset($data['paymentHash']) ? $data['paymentHash'] : null;
         $this->container['paymentHashString'] = isset($data['paymentHashString']) ? $data['paymentHashString'] : null;
         $this->container['paymentRequest'] = isset($data['paymentRequest']) ? $data['paymentRequest'] : null;
+        $this->container['finalCltvDelta'] = isset($data['finalCltvDelta']) ? $data['finalCltvDelta'] : null;
     }
 
     /**
@@ -399,6 +405,30 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     public function setPaymentRequest($paymentRequest)
     {
         $this->container['paymentRequest'] = $paymentRequest;
+
+        return $this;
+    }
+
+    /**
+     * Gets finalCltvDelta
+     *
+     * @return int
+     */
+    public function getFinalCltvDelta()
+    {
+        return $this->container['finalCltvDelta'];
+    }
+
+    /**
+     * Sets finalCltvDelta
+     *
+     * @param int $finalCltvDelta / The CLTV delta from the current height that should be used to set the timelock for the final hop.
+     *
+     * @return $this
+     */
+    public function setFinalCltvDelta($finalCltvDelta)
+    {
+        $this->container['finalCltvDelta'] = $finalCltvDelta;
 
         return $this;
     }

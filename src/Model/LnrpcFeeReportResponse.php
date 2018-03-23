@@ -57,7 +57,10 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'channelFees' => '\Lnd\Rest\Model\LnrpcChannelFeeReport[]'
+        'channelFees' => '\Lnd\Rest\Model\LnrpcChannelFeeReport[]',
+        'dayFeeSum' => 'string',
+        'weekFeeSum' => 'string',
+        'monthFeeSum' => 'string'
     ];
 
     /**
@@ -66,7 +69,10 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'channelFees' => null
+        'channelFees' => null,
+        'dayFeeSum' => 'uint64',
+        'weekFeeSum' => 'uint64',
+        'monthFeeSum' => 'uint64'
     ];
 
     /**
@@ -96,7 +102,10 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'channelFees' => 'channel_fees'
+        'channelFees' => 'channel_fees',
+        'dayFeeSum' => 'day_fee_sum',
+        'weekFeeSum' => 'week_fee_sum',
+        'monthFeeSum' => 'month_fee_sum'
     ];
 
     /**
@@ -105,7 +114,10 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'channelFees' => 'setChannelFees'
+        'channelFees' => 'setChannelFees',
+        'dayFeeSum' => 'setDayFeeSum',
+        'weekFeeSum' => 'setWeekFeeSum',
+        'monthFeeSum' => 'setMonthFeeSum'
     ];
 
     /**
@@ -114,7 +126,10 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'channelFees' => 'getChannelFees'
+        'channelFees' => 'getChannelFees',
+        'dayFeeSum' => 'getDayFeeSum',
+        'weekFeeSum' => 'getWeekFeeSum',
+        'monthFeeSum' => 'getMonthFeeSum'
     ];
 
     /**
@@ -178,6 +193,9 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['channelFees'] = isset($data['channelFees']) ? $data['channelFees'] : null;
+        $this->container['dayFeeSum'] = isset($data['dayFeeSum']) ? $data['dayFeeSum'] : null;
+        $this->container['weekFeeSum'] = isset($data['weekFeeSum']) ? $data['weekFeeSum'] : null;
+        $this->container['monthFeeSum'] = isset($data['monthFeeSum']) ? $data['monthFeeSum'] : null;
     }
 
     /**
@@ -225,6 +243,78 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
     public function setChannelFees($channelFees)
     {
         $this->container['channelFees'] = $channelFees;
+
+        return $this;
+    }
+
+    /**
+     * Gets dayFeeSum
+     *
+     * @return string
+     */
+    public function getDayFeeSum()
+    {
+        return $this->container['dayFeeSum'];
+    }
+
+    /**
+     * Sets dayFeeSum
+     *
+     * @param string $dayFeeSum / The total amount of fee revenue (in satoshis) the switch has collected over the past 24 hrs.
+     *
+     * @return $this
+     */
+    public function setDayFeeSum($dayFeeSum)
+    {
+        $this->container['dayFeeSum'] = $dayFeeSum;
+
+        return $this;
+    }
+
+    /**
+     * Gets weekFeeSum
+     *
+     * @return string
+     */
+    public function getWeekFeeSum()
+    {
+        return $this->container['weekFeeSum'];
+    }
+
+    /**
+     * Sets weekFeeSum
+     *
+     * @param string $weekFeeSum / The total amount of fee revenue (in satoshis) the switch has collected over the past 1 week.
+     *
+     * @return $this
+     */
+    public function setWeekFeeSum($weekFeeSum)
+    {
+        $this->container['weekFeeSum'] = $weekFeeSum;
+
+        return $this;
+    }
+
+    /**
+     * Gets monthFeeSum
+     *
+     * @return string
+     */
+    public function getMonthFeeSum()
+    {
+        return $this->container['monthFeeSum'];
+    }
+
+    /**
+     * Sets monthFeeSum
+     *
+     * @param string $monthFeeSum / The total amount of fee revenue (in satoshis) the switch has collected over the past 1 month.
+     *
+     * @return $this
+     */
+    public function setMonthFeeSum($monthFeeSum)
+    {
+        $this->container['monthFeeSum'] = $monthFeeSum;
 
         return $this;
     }

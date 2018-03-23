@@ -72,12 +72,22 @@ class WalletUnlockerApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test case for createWallet
+     * Test case for genSeed
      *
-     * * lncli: `create` CreateWallet is used at lnd startup to set the encryption password for the wallet database..
+     * * GenSeed is the first method that should be used to instantiate a new lnd instance. This method allows a caller to generate a new aezeed cipher seed given an optional passphrase. If provided, the passphrase will be necessary to decrypt the cipherseed to expose the internal wallet seed..
      *
      */
-    public function testCreateWallet()
+    public function testGenSeed()
+    {
+    }
+
+    /**
+     * Test case for initWallet
+     *
+     * *  InitWallet is used when lnd is starting up for the first time to fully initialize the daemon and its internal wallet. At the very least a wallet password must be provided. This will be used to encrypt sensitive material on disk..
+     *
+     */
+    public function testInitWallet()
     {
     }
 

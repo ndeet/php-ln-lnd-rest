@@ -4,7 +4,6 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **pubKey** | **string** |  | [optional] 
-**peerId** | **int** |  | [optional] 
 **address** | **string** |  | [optional] 
 **bytesSent** | **string** |  | [optional] 
 **bytesRecv** | **string** |  | [optional] 

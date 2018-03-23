@@ -57,7 +57,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'password' => 'string'
+        'walletPassword' => 'string'
     ];
 
     /**
@@ -66,7 +66,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'password' => 'byte'
+        'walletPassword' => 'byte'
     ];
 
     /**
@@ -96,7 +96,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'password' => 'password'
+        'walletPassword' => 'wallet_password'
     ];
 
     /**
@@ -105,7 +105,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'password' => 'setPassword'
+        'walletPassword' => 'setWalletPassword'
     ];
 
     /**
@@ -114,7 +114,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'password' => 'getPassword'
+        'walletPassword' => 'getWalletPassword'
     ];
 
     /**
@@ -177,7 +177,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['password'] = isset($data['password']) ? $data['password'] : null;
+        $this->container['walletPassword'] = isset($data['walletPassword']) ? $data['walletPassword'] : null;
     }
 
     /**
@@ -189,8 +189,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
     {
         $invalidProperties = [];
 
-        if (!is_null($this->container['password']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['password'])) {
-            $invalidProperties[] = "invalid value for 'password', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        if (!is_null($this->container['walletPassword']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['walletPassword'])) {
+            $invalidProperties[] = "invalid value for 'walletPassword', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
         }
 
         return $invalidProperties;
@@ -205,7 +205,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
     public function valid()
     {
 
-        if (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['password'])) {
+        if (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['walletPassword'])) {
             return false;
         }
         return true;
@@ -213,30 +213,30 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets password
+     * Gets walletPassword
      *
      * @return string
      */
-    public function getPassword()
+    public function getWalletPassword()
     {
-        return $this->container['password'];
+        return $this->container['walletPassword'];
     }
 
     /**
-     * Sets password
+     * Sets walletPassword
      *
-     * @param string $password password
+     * @param string $walletPassword * wallet_password should be the current valid passphrase for the daemon. This will be required to decrypt on-disk material that the daemon requires to function properly.
      *
      * @return $this
      */
-    public function setPassword($password)
+    public function setWalletPassword($walletPassword)
     {
 
-        if (!is_null($password) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $password))) {
-            throw new \InvalidArgumentException("invalid value for $password when calling LnrpcUnlockWalletRequest., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        if (!is_null($walletPassword) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $walletPassword))) {
+            throw new \InvalidArgumentException("invalid value for $walletPassword when calling LnrpcUnlockWalletRequest., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
         }
 
-        $this->container['password'] = $password;
+        $this->container['walletPassword'] = $walletPassword;
 
         return $this;
     }
