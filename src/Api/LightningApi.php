@@ -3888,14 +3888,18 @@ class LightningApi
      *
      * * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
      *
+     * @param  bool $activeOnly activeOnly (optional)
+     * @param  bool $inactiveOnly inactiveOnly (optional)
+     * @param  bool $publicOnly publicOnly (optional)
+     * @param  bool $privateOnly privateOnly (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcListChannelsResponse
      */
-    public function listChannels()
+    public function listChannels($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
     {
-        list($response) = $this->listChannelsWithHttpInfo();
+        list($response) = $this->listChannelsWithHttpInfo($activeOnly, $inactiveOnly, $publicOnly, $privateOnly);
         return $response;
     }
 
@@ -3904,15 +3908,19 @@ class LightningApi
      *
      * * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
      *
+     * @param  bool $activeOnly (optional)
+     * @param  bool $inactiveOnly (optional)
+     * @param  bool $publicOnly (optional)
+     * @param  bool $privateOnly (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcListChannelsResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listChannelsWithHttpInfo()
+    public function listChannelsWithHttpInfo($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListChannelsResponse';
-        $request = $this->listChannelsRequest();
+        $request = $this->listChannelsRequest($activeOnly, $inactiveOnly, $publicOnly, $privateOnly);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3978,13 +3986,17 @@ class LightningApi
      *
      * * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
      *
+     * @param  bool $activeOnly (optional)
+     * @param  bool $inactiveOnly (optional)
+     * @param  bool $publicOnly (optional)
+     * @param  bool $privateOnly (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listChannelsAsync()
+    public function listChannelsAsync($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
     {
-        return $this->listChannelsAsyncWithHttpInfo()
+        return $this->listChannelsAsyncWithHttpInfo($activeOnly, $inactiveOnly, $publicOnly, $privateOnly)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3997,14 +4009,18 @@ class LightningApi
      *
      * * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
      *
+     * @param  bool $activeOnly (optional)
+     * @param  bool $inactiveOnly (optional)
+     * @param  bool $publicOnly (optional)
+     * @param  bool $privateOnly (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listChannelsAsyncWithHttpInfo()
+    public function listChannelsAsyncWithHttpInfo($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListChannelsResponse';
-        $request = $this->listChannelsRequest();
+        $request = $this->listChannelsRequest($activeOnly, $inactiveOnly, $publicOnly, $privateOnly);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4046,11 +4062,15 @@ class LightningApi
     /**
      * Create request for operation 'listChannels'
      *
+     * @param  bool $activeOnly (optional)
+     * @param  bool $inactiveOnly (optional)
+     * @param  bool $publicOnly (optional)
+     * @param  bool $privateOnly (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function listChannelsRequest()
+    protected function listChannelsRequest($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
     {
 
         $resourcePath = '/v1/channels';
@@ -4060,6 +4080,22 @@ class LightningApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        if ($activeOnly !== null) {
+            $queryParams['active_only'] = ObjectSerializer::toQueryValue($activeOnly);
+        }
+        // query params
+        if ($inactiveOnly !== null) {
+            $queryParams['inactive_only'] = ObjectSerializer::toQueryValue($inactiveOnly);
+        }
+        // query params
+        if ($publicOnly !== null) {
+            $queryParams['public_only'] = ObjectSerializer::toQueryValue($publicOnly);
+        }
+        // query params
+        if ($privateOnly !== null) {
+            $queryParams['private_only'] = ObjectSerializer::toQueryValue($privateOnly);
+        }
 
 
         // body params

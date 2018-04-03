@@ -717,7 +717,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **listChannels**
-> \Lnd\Rest\Model\LnrpcListChannelsResponse listChannels()
+> \Lnd\Rest\Model\LnrpcListChannelsResponse listChannels($activeOnly, $inactiveOnly, $publicOnly, $privateOnly)
 
 * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
 
@@ -731,9 +731,13 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
+$activeOnly = true; // bool | 
+$inactiveOnly = true; // bool | 
+$publicOnly = true; // bool | 
+$privateOnly = true; // bool | 
 
 try {
-    $result = $apiInstance->listChannels();
+    $result = $apiInstance->listChannels($activeOnly, $inactiveOnly, $publicOnly, $privateOnly);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling LightningApi->listChannels: ', $e->getMessage(), PHP_EOL;
@@ -742,7 +746,13 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **activeOnly** | **bool**|  | [optional]
+ **inactiveOnly** | **bool**|  | [optional]
+ **publicOnly** | **bool**|  | [optional]
+ **privateOnly** | **bool**|  | [optional]
 
 ### Return type
 

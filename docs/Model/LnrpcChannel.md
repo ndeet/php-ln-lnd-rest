@@ -1,4 +1,4 @@
-# LnrpcActiveChannel
+# LnrpcChannel
 
 ## Properties
 Name | Type | Description | Notes
@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **numUpdates** | **string** | * The total number of updates conducted within this channel. | [optional] 
 **pendingHtlcs** | [**\Lnd\Rest\Model\LnrpcHTLC[]**](LnrpcHTLC.md) | * The list of active, uncleared HTLCs currently pending within the channel. | [optional] 
 **csvDelay** | **int** | * The CSV delay expressed in relative blocks. If the channel is force closed, we&#39;ll need to wait for this many blocks before we can regain our funds. | [optional] 
+**private** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

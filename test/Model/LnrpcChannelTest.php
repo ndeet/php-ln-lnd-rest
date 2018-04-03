@@ -1,6 +1,6 @@
 <?php
 /**
- * LnrpcActiveChannelTest
+ * LnrpcChannelTest
  *
  * PHP version 5
  *
@@ -30,16 +30,16 @@
 namespace Lnd\Rest;
 
 /**
- * LnrpcActiveChannelTest Class Doc Comment
+ * LnrpcChannelTest Class Doc Comment
  *
  * @category    Class */
-// * @description LnrpcActiveChannel
+// * @description LnrpcChannel
 /**
  * @package     Lnd\Rest
  * @author      Swagger Codegen team
  * @link        https://github.com/swagger-api/swagger-codegen
  */
-class LnrpcActiveChannelTest extends \PHPUnit_Framework_TestCase
+class LnrpcChannelTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -71,9 +71,9 @@ class LnrpcActiveChannelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test "LnrpcActiveChannel"
+     * Test "LnrpcChannel"
      */
-    public function testLnrpcActiveChannel()
+    public function testLnrpcChannel()
     {
     }
 
@@ -186,6 +186,13 @@ class LnrpcActiveChannelTest extends \PHPUnit_Framework_TestCase
      * Test attribute "csvDelay"
      */
     public function testPropertyCsvDelay()
+    {
+    }
+
+    /**
+     * Test attribute "private"
+     */
+    public function testPropertyPrivate()
     {
     }
 }

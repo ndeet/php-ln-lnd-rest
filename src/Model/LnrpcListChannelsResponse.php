@@ -57,7 +57,7 @@ class LnrpcListChannelsResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'channels' => '\Lnd\Rest\Model\LnrpcActiveChannel[]'
+        'channels' => '\Lnd\Rest\Model\LnrpcChannel[]'
     ];
 
     /**
@@ -208,7 +208,7 @@ class LnrpcListChannelsResponse implements ModelInterface, ArrayAccess
     /**
      * Gets channels
      *
-     * @return \Lnd\Rest\Model\LnrpcActiveChannel[]
+     * @return \Lnd\Rest\Model\LnrpcChannel[]
      */
     public function getChannels()
     {
@@ -218,7 +218,7 @@ class LnrpcListChannelsResponse implements ModelInterface, ArrayAccess
     /**
      * Sets channels
      *
-     * @param \Lnd\Rest\Model\LnrpcActiveChannel[] $channels channels
+     * @param \Lnd\Rest\Model\LnrpcChannel[] $channels channels
      *
      * @return $this
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * LnrpcActiveChannel
+ * LnrpcChannel
  *
  * PHP version 5
  *
@@ -33,14 +33,14 @@ use \ArrayAccess;
 use \Lnd\Rest\ObjectSerializer;
 
 /**
- * LnrpcActiveChannel Class Doc Comment
+ * LnrpcChannel Class Doc Comment
  *
  * @category Class
  * @package  Lnd\Rest
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
  */
-class LnrpcActiveChannel implements ModelInterface, ArrayAccess
+class LnrpcChannel implements ModelInterface, ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class LnrpcActiveChannel implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'lnrpcActiveChannel';
+    protected static $swaggerModelName = 'lnrpcChannel';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -72,7 +72,8 @@ class LnrpcActiveChannel implements ModelInterface, ArrayAccess
         'totalSatoshisReceived' => 'string',
         'numUpdates' => 'string',
         'pendingHtlcs' => '\Lnd\Rest\Model\LnrpcHTLC[]',
-        'csvDelay' => 'int'
+        'csvDelay' => 'int',
+        'private' => 'bool'
     ];
 
     /**
@@ -96,7 +97,8 @@ class LnrpcActiveChannel implements ModelInterface, ArrayAccess
         'totalSatoshisReceived' => 'int64',
         'numUpdates' => 'uint64',
         'pendingHtlcs' => null,
-        'csvDelay' => 'int64'
+        'csvDelay' => 'int64',
+        'private' => 'boolean'
     ];
 
     /**
@@ -141,7 +143,8 @@ class LnrpcActiveChannel implements ModelInterface, ArrayAccess
         'totalSatoshisReceived' => 'total_satoshis_received',
         'numUpdates' => 'num_updates',
         'pendingHtlcs' => 'pending_htlcs',
-        'csvDelay' => 'csv_delay'
+        'csvDelay' => 'csv_delay',
+        'private' => 'private'
     ];
 
     /**
@@ -165,7 +168,8 @@ class LnrpcActiveChannel implements ModelInterface, ArrayAccess
         'totalSatoshisReceived' => 'setTotalSatoshisReceived',
         'numUpdates' => 'setNumUpdates',
         'pendingHtlcs' => 'setPendingHtlcs',
-        'csvDelay' => 'setCsvDelay'
+        'csvDelay' => 'setCsvDelay',
+        'private' => 'setPrivate'
     ];
 
     /**
@@ -189,7 +193,8 @@ class LnrpcActiveChannel implements ModelInterface, ArrayAccess
         'totalSatoshisReceived' => 'getTotalSatoshisReceived',
         'numUpdates' => 'getNumUpdates',
         'pendingHtlcs' => 'getPendingHtlcs',
-        'csvDelay' => 'getCsvDelay'
+        'csvDelay' => 'getCsvDelay',
+        'private' => 'getPrivate'
     ];
 
     /**
@@ -268,6 +273,7 @@ class LnrpcActiveChannel implements ModelInterface, ArrayAccess
         $this->container['numUpdates'] = isset($data['numUpdates']) ? $data['numUpdates'] : null;
         $this->container['pendingHtlcs'] = isset($data['pendingHtlcs']) ? $data['pendingHtlcs'] : null;
         $this->container['csvDelay'] = isset($data['csvDelay']) ? $data['csvDelay'] : null;
+        $this->container['private'] = isset($data['private']) ? $data['private'] : null;
     }
 
     /**
@@ -675,6 +681,30 @@ class LnrpcActiveChannel implements ModelInterface, ArrayAccess
     public function setCsvDelay($csvDelay)
     {
         $this->container['csvDelay'] = $csvDelay;
+
+        return $this;
+    }
+
+    /**
+     * Gets private
+     *
+     * @return bool
+     */
+    public function getPrivate()
+    {
+        return $this->container['private'];
+    }
+
+    /**
+     * Sets private
+     *
+     * @param bool $private private
+     *
+     * @return $this
+     */
+    public function setPrivate($private)
+    {
+        $this->container['private'] = $private;
 
         return $this;
     }
