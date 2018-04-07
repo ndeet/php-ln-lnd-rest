@@ -113,6 +113,20 @@ try {
   echo 'Exception when calling LightningApi->getInfo: ', $e->getMessage(), PHP_EOL;
 }
 
+// Let's generate an lightning invoice.
+$invoice = new \Lnd\Rest\Model\LnrpcInvoice([
+  'memo' => 'testinvoice memo',
+  'value' => 1001,
+  'expiry' => 3600
+]);
+
+try {
+  $invoiceResult = $apiInstance->addInvoice($invoice);
+  var_dump($invoiceResult);
+} catch (Exception $e) {
+  echo 'Exception when calling LightningApi->addInvoice: ', $e->getMessage(), PHP_EOL;
+}
+
 ?>
 ```
 
