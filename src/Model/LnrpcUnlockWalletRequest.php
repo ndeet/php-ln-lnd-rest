@@ -57,7 +57,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'walletPassword' => 'string'
+        'walletPassword' => 'string',
+        'recoveryWindow' => 'int'
     ];
 
     /**
@@ -66,7 +67,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'walletPassword' => 'byte'
+        'walletPassword' => 'byte',
+        'recoveryWindow' => 'int32'
     ];
 
     /**
@@ -96,7 +98,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'walletPassword' => 'wallet_password'
+        'walletPassword' => 'wallet_password',
+        'recoveryWindow' => 'recovery_window'
     ];
 
     /**
@@ -105,7 +108,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'walletPassword' => 'setWalletPassword'
+        'walletPassword' => 'setWalletPassword',
+        'recoveryWindow' => 'setRecoveryWindow'
     ];
 
     /**
@@ -114,7 +118,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'walletPassword' => 'getWalletPassword'
+        'walletPassword' => 'getWalletPassword',
+        'recoveryWindow' => 'getRecoveryWindow'
     ];
 
     /**
@@ -178,6 +183,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['walletPassword'] = isset($data['walletPassword']) ? $data['walletPassword'] : null;
+        $this->container['recoveryWindow'] = isset($data['recoveryWindow']) ? $data['recoveryWindow'] : null;
     }
 
     /**
@@ -237,6 +243,30 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
         }
 
         $this->container['walletPassword'] = $walletPassword;
+
+        return $this;
+    }
+
+    /**
+     * Gets recoveryWindow
+     *
+     * @return int
+     */
+    public function getRecoveryWindow()
+    {
+        return $this->container['recoveryWindow'];
+    }
+
+    /**
+     * Sets recoveryWindow
+     *
+     * @param int $recoveryWindow * recovery_window is an optional argument specifying the address lookahead when restoring a wallet seed. The recovery window applies to each invdividual branch of the BIP44 derivation paths. Supplying a recovery window of zero indicates that no addresses should be recovered, such after the first initialization of the wallet.
+     *
+     * @return $this
+     */
+    public function setRecoveryWindow($recoveryWindow)
+    {
+        $this->container['recoveryWindow'] = $recoveryWindow;
 
         return $this;
     }

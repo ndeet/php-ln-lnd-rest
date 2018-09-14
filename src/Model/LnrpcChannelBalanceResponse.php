@@ -57,7 +57,8 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'balance' => 'string'
+        'balance' => 'string',
+        'pendingOpenBalance' => 'string'
     ];
 
     /**
@@ -66,7 +67,8 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'balance' => 'int64'
+        'balance' => 'int64',
+        'pendingOpenBalance' => 'int64'
     ];
 
     /**
@@ -96,7 +98,8 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'balance' => 'balance'
+        'balance' => 'balance',
+        'pendingOpenBalance' => 'pending_open_balance'
     ];
 
     /**
@@ -105,7 +108,8 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'balance' => 'setBalance'
+        'balance' => 'setBalance',
+        'pendingOpenBalance' => 'setPendingOpenBalance'
     ];
 
     /**
@@ -114,7 +118,8 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'balance' => 'getBalance'
+        'balance' => 'getBalance',
+        'pendingOpenBalance' => 'getPendingOpenBalance'
     ];
 
     /**
@@ -178,6 +183,7 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['balance'] = isset($data['balance']) ? $data['balance'] : null;
+        $this->container['pendingOpenBalance'] = isset($data['pendingOpenBalance']) ? $data['pendingOpenBalance'] : null;
     }
 
     /**
@@ -225,6 +231,30 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
     public function setBalance($balance)
     {
         $this->container['balance'] = $balance;
+
+        return $this;
+    }
+
+    /**
+     * Gets pendingOpenBalance
+     *
+     * @return string
+     */
+    public function getPendingOpenBalance()
+    {
+        return $this->container['pendingOpenBalance'];
+    }
+
+    /**
+     * Sets pendingOpenBalance
+     *
+     * @param string $pendingOpenBalance pendingOpenBalance
+     *
+     * @return $this
+     */
+    public function setPendingOpenBalance($pendingOpenBalance)
+    {
+        $this->container['pendingOpenBalance'] = $pendingOpenBalance;
 
         return $this;
     }

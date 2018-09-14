@@ -58,7 +58,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'rHash' => 'string',
-        'paymentRequest' => 'string'
+        'paymentRequest' => 'string',
+        'addIndex' => 'string'
     ];
 
     /**
@@ -68,7 +69,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'rHash' => 'byte',
-        'paymentRequest' => null
+        'paymentRequest' => null,
+        'addIndex' => 'uint64'
     ];
 
     /**
@@ -99,7 +101,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'rHash' => 'r_hash',
-        'paymentRequest' => 'payment_request'
+        'paymentRequest' => 'payment_request',
+        'addIndex' => 'add_index'
     ];
 
     /**
@@ -109,7 +112,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'rHash' => 'setRHash',
-        'paymentRequest' => 'setPaymentRequest'
+        'paymentRequest' => 'setPaymentRequest',
+        'addIndex' => 'setAddIndex'
     ];
 
     /**
@@ -119,7 +123,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'rHash' => 'getRHash',
-        'paymentRequest' => 'getPaymentRequest'
+        'paymentRequest' => 'getPaymentRequest',
+        'addIndex' => 'getAddIndex'
     ];
 
     /**
@@ -184,6 +189,7 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     {
         $this->container['rHash'] = isset($data['rHash']) ? $data['rHash'] : null;
         $this->container['paymentRequest'] = isset($data['paymentRequest']) ? $data['paymentRequest'] : null;
+        $this->container['addIndex'] = isset($data['addIndex']) ? $data['addIndex'] : null;
     }
 
     /**
@@ -267,6 +273,30 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     public function setPaymentRequest($paymentRequest)
     {
         $this->container['paymentRequest'] = $paymentRequest;
+
+        return $this;
+    }
+
+    /**
+     * Gets addIndex
+     *
+     * @return string
+     */
+    public function getAddIndex()
+    {
+        return $this->container['addIndex'];
+    }
+
+    /**
+     * Sets addIndex
+     *
+     * @param string $addIndex * The \"add\" index of this invoice. Each newly created invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all added invoices with an add_index greater than this one.
+     *
+     * @return $this
+     */
+    public function setAddIndex($addIndex)
+    {
+        $this->container['addIndex'] = $addIndex;
 
         return $this;
     }

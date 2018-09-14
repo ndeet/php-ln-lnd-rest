@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**addInvoice**](LightningApi.md#addInvoice) | **POST** /v1/invoices | * lncli: &#x60;addinvoice&#x60; AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
 [**channelBalance**](LightningApi.md#channelBalance) | **GET** /v1/balance/channels | * lncli: &#x60;channelbalance&#x60; ChannelBalance returns the total funds available across all open channels in satoshis.
 [**closeChannel**](LightningApi.md#closeChannel) | **DELETE** /v1/channels/{channel_point.funding_txid_str}/{channel_point.output_index} | * lncli: &#x60;closechannel&#x60; CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
+[**closedChannels**](LightningApi.md#closedChannels) | **GET** /v1/channels/closed | * lncli: &#x60;closedchannels&#x60; ClosedChannels returns a description of all the closed channels that  this node was a participant in.
 [**connectPeer**](LightningApi.md#connectPeer) | **POST** /v1/peers | * lncli: &#x60;connect&#x60; ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
 [**decodePayReq**](LightningApi.md#decodePayReq) | **GET** /v1/payreq/{pay_req} | * lncli: &#x60;decodepayreq&#x60; DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
 [**deleteAllPayments**](LightningApi.md#deleteAllPayments) | **DELETE** /v1/payments | * DeleteAllPayments deletes all outgoing payments from DB.
@@ -20,7 +21,7 @@ Method | HTTP request | Description
 [**getNodeInfo**](LightningApi.md#getNodeInfo) | **GET** /v1/graph/node/{pub_key} | * lncli: &#x60;getnodeinfo&#x60; GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
 [**getTransactions**](LightningApi.md#getTransactions) | **GET** /v1/transactions | * lncli: &#x60;listchaintxns&#x60; GetTransactions returns a list describing all the known transactions relevant to the wallet.
 [**listChannels**](LightningApi.md#listChannels) | **GET** /v1/channels | * lncli: &#x60;listchannels&#x60; ListChannels returns a description of all the open channels that this node is a participant in.
-[**listInvoices**](LightningApi.md#listInvoices) | **GET** /v1/invoices | * lncli: &#x60;listinvoices&#x60; ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored.
+[**listInvoices**](LightningApi.md#listInvoices) | **GET** /v1/invoices | * lncli: &#x60;listinvoices&#x60; ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. The reversed flag is set by default in order to paginate backwards. If you wish to paginate forwards, you must explicitly set the flag to false. If none of the parameters are specified, then the last 100 invoices will be returned.
 [**listPayments**](LightningApi.md#listPayments) | **GET** /v1/payments | * lncli: &#x60;listpayments&#x60; ListPayments returns a list of all outgoing payments.
 [**listPeers**](LightningApi.md#listPeers) | **GET** /v1/peers | * lncli: &#x60;listpeers&#x60; ListPeers returns a verbose listing of all currently active peers.
 [**lookupInvoice**](LightningApi.md#lookupInvoice) | **GET** /v1/invoice/{r_hash_str} | * lncli: &#x60;lookupinvoice&#x60; LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
@@ -30,7 +31,8 @@ Method | HTTP request | Description
 [**queryRoutes**](LightningApi.md#queryRoutes) | **GET** /v1/graph/routes/{pub_key}/{amt} | * lncli: &#x60;queryroutes&#x60; QueryRoutes attempts to query the daemon&#39;s Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The retuned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
 [**sendCoins**](LightningApi.md#sendCoins) | **POST** /v1/transactions | * lncli: &#x60;sendcoins&#x60; SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_byte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
 [**sendPaymentSync**](LightningApi.md#sendPaymentSync) | **POST** /v1/channels/transactions | * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination&#39;s public key and the payment hash (if any) to be encoded as hex strings.
-[**subscribeInvoices**](LightningApi.md#subscribeInvoices) | **GET** /v1/invoices/subscribe | * SubscribeInvoices returns a uni-directional stream (sever -&gt; client) for notifying the client of newly added/settled invoices.
+[**sendToRouteSync**](LightningApi.md#sendToRouteSync) | **POST** /v1/channels/transactions/route | * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+[**subscribeInvoices**](LightningApi.md#subscribeInvoices) | **GET** /v1/invoices/subscribe | * SubscribeInvoices returns a uni-directional stream (sever -&gt; client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we&#39;ll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we&#39;ll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we&#39;ll only send out the latest add/settle events.
 [**updateChannelPolicy**](LightningApi.md#updateChannelPolicy) | **POST** /v1/chanpolicy | * lncli: &#x60;updatechanpolicy&#x60; UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
 [**walletBalance**](LightningApi.md#walletBalance) | **GET** /v1/balance/blockchain | * lncli: &#x60;walletbalance&#x60; WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
 
@@ -162,6 +164,61 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**\Lnd\Rest\Model\LnrpcCloseStatusUpdate**](../Model/LnrpcCloseStatusUpdate.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+# **closedChannels**
+> \Lnd\Rest\Model\LnrpcClosedChannelsResponse closedChannels($cooperative, $localForce, $remoteForce, $breach, $fundingCanceled)
+
+* lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that  this node was a participant in.
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Lnd\Rest\Api\LightningApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$cooperative = true; // bool | 
+$localForce = true; // bool | 
+$remoteForce = true; // bool | 
+$breach = true; // bool | 
+$fundingCanceled = true; // bool | 
+
+try {
+    $result = $apiInstance->closedChannels($cooperative, $localForce, $remoteForce, $breach, $fundingCanceled);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling LightningApi->closedChannels: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cooperative** | **bool**|  | [optional]
+ **localForce** | **bool**|  | [optional]
+ **remoteForce** | **bool**|  | [optional]
+ **breach** | **bool**|  | [optional]
+ **fundingCanceled** | **bool**|  | [optional]
+
+### Return type
+
+[**\Lnd\Rest\Model\LnrpcClosedChannelsResponse**](../Model/LnrpcClosedChannelsResponse.md)
 
 ### Authorization
 
@@ -770,9 +827,9 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **listInvoices**
-> \Lnd\Rest\Model\LnrpcListInvoiceResponse listInvoices($pendingOnly)
+> \Lnd\Rest\Model\LnrpcListInvoiceResponse listInvoices($pendingOnly, $indexOffset, $numMaxInvoices, $reversed)
 
-* lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored.
+* lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. The reversed flag is set by default in order to paginate backwards. If you wish to paginate forwards, you must explicitly set the flag to false. If none of the parameters are specified, then the last 100 invoices will be returned.
 
 ### Example
 ```php
@@ -784,10 +841,13 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$pendingOnly = true; // bool | / Toggles if all invoices should be returned, or only those that are currently unsettled.
+$pendingOnly = true; // bool | / If set, only unsettled invoices will be returned in the response.
+$indexOffset = "indexOffset_example"; // string | * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response.
+$numMaxInvoices = "numMaxInvoices_example"; // string | / The max number of invoices to return in the response to this query.
+$reversed = true; // bool | * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards.
 
 try {
-    $result = $apiInstance->listInvoices($pendingOnly);
+    $result = $apiInstance->listInvoices($pendingOnly, $indexOffset, $numMaxInvoices, $reversed);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling LightningApi->listInvoices: ', $e->getMessage(), PHP_EOL;
@@ -799,7 +859,10 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **pendingOnly** | **bool**| / Toggles if all invoices should be returned, or only those that are currently unsettled. | [optional]
+ **pendingOnly** | **bool**| / If set, only unsettled invoices will be returned in the response. | [optional]
+ **indexOffset** | **string**| * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. | [optional]
+ **numMaxInvoices** | **string**| / The max number of invoices to return in the response to this query. | [optional]
+ **reversed** | **bool**| * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. | [optional]
 
 ### Return type
 
@@ -1085,7 +1148,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **queryRoutes**
-> \Lnd\Rest\Model\LnrpcQueryRoutesResponse queryRoutes($pubKey, $amt, $numRoutes)
+> \Lnd\Rest\Model\LnrpcQueryRoutesResponse queryRoutes($pubKey, $amt, $numRoutes, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent)
 
 * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The retuned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
 
@@ -1102,9 +1165,12 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
 $pubKey = "pubKey_example"; // string | 
 $amt = "amt_example"; // string | 
 $numRoutes = 56; // int | / The max number of routes to return.
+$finalCltvDelta = 56; // int | / An optional CLTV delta from the current height that should be used for the timelock of the final hop.
+$feeLimitFixed = "feeLimitFixed_example"; // string | / The fee limit expressed as a fixed amount of satoshis.
+$feeLimitPercent = "feeLimitPercent_example"; // string | / The fee limit expressed as a percentage of the payment amount.
 
 try {
-    $result = $apiInstance->queryRoutes($pubKey, $amt, $numRoutes);
+    $result = $apiInstance->queryRoutes($pubKey, $amt, $numRoutes, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling LightningApi->queryRoutes: ', $e->getMessage(), PHP_EOL;
@@ -1119,6 +1185,9 @@ Name | Type | Description  | Notes
  **pubKey** | **string**|  |
  **amt** | **string**|  |
  **numRoutes** | **int**| / The max number of routes to return. | [optional]
+ **finalCltvDelta** | **int**| / An optional CLTV delta from the current height that should be used for the timelock of the final hop. | [optional]
+ **feeLimitFixed** | **string**| / The fee limit expressed as a fixed amount of satoshis. | [optional]
+ **feeLimitPercent** | **string**| / The fee limit expressed as a percentage of the payment amount. | [optional]
 
 ### Return type
 
@@ -1229,10 +1298,10 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
-# **subscribeInvoices**
-> \Lnd\Rest\Model\LnrpcInvoice subscribeInvoices()
+# **sendToRouteSync**
+> \Lnd\Rest\Model\LnrpcSendResponse sendToRouteSync($body)
 
-* SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices.
+* SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
 
 ### Example
 ```php
@@ -1244,9 +1313,58 @@ $apiInstance = new Lnd\Rest\Api\LightningApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
+$body = new \Lnd\Rest\Model\LnrpcSendToRouteRequest(); // \Lnd\Rest\Model\LnrpcSendToRouteRequest | 
 
 try {
-    $result = $apiInstance->subscribeInvoices();
+    $result = $apiInstance->sendToRouteSync($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling LightningApi->sendToRouteSync: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Lnd\Rest\Model\LnrpcSendToRouteRequest**](../Model/LnrpcSendToRouteRequest.md)|  |
+
+### Return type
+
+[**\Lnd\Rest\Model\LnrpcSendResponse**](../Model/LnrpcSendResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+# **subscribeInvoices**
+> \Lnd\Rest\Model\LnrpcInvoice subscribeInvoices($addIndex, $settleIndex)
+
+* SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Lnd\Rest\Api\LightningApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$addIndex = "addIndex_example"; // string | * If specified (non-zero), then we'll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren't connected to the streaming RPC.
+$settleIndex = "settleIndex_example"; // string | * If specified (non-zero), then we'll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren't connected to the streaming RPC.
+
+try {
+    $result = $apiInstance->subscribeInvoices($addIndex, $settleIndex);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling LightningApi->subscribeInvoices: ', $e->getMessage(), PHP_EOL;
@@ -1255,7 +1373,11 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **addIndex** | **string**| * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. | [optional]
+ **settleIndex** | **string**| * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. | [optional]
 
 ### Return type
 

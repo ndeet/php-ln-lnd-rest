@@ -65,7 +65,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'satPerByte' => 'string',
         'private' => 'bool',
         'minHtlcMsat' => 'string',
-        'remoteCsvDelay' => 'int'
+        'remoteCsvDelay' => 'int',
+        'minConfs' => 'int'
     ];
 
     /**
@@ -82,7 +83,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'satPerByte' => 'int64',
         'private' => 'boolean',
         'minHtlcMsat' => 'int64',
-        'remoteCsvDelay' => 'int64'
+        'remoteCsvDelay' => 'int64',
+        'minConfs' => 'int32'
     ];
 
     /**
@@ -120,7 +122,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'satPerByte' => 'sat_per_byte',
         'private' => 'private',
         'minHtlcMsat' => 'min_htlc_msat',
-        'remoteCsvDelay' => 'remote_csv_delay'
+        'remoteCsvDelay' => 'remote_csv_delay',
+        'minConfs' => 'min_confs'
     ];
 
     /**
@@ -137,7 +140,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'satPerByte' => 'setSatPerByte',
         'private' => 'setPrivate',
         'minHtlcMsat' => 'setMinHtlcMsat',
-        'remoteCsvDelay' => 'setRemoteCsvDelay'
+        'remoteCsvDelay' => 'setRemoteCsvDelay',
+        'minConfs' => 'setMinConfs'
     ];
 
     /**
@@ -154,7 +158,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'satPerByte' => 'getSatPerByte',
         'private' => 'getPrivate',
         'minHtlcMsat' => 'getMinHtlcMsat',
-        'remoteCsvDelay' => 'getRemoteCsvDelay'
+        'remoteCsvDelay' => 'getRemoteCsvDelay',
+        'minConfs' => 'getMinConfs'
     ];
 
     /**
@@ -226,6 +231,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         $this->container['private'] = isset($data['private']) ? $data['private'] : null;
         $this->container['minHtlcMsat'] = isset($data['minHtlcMsat']) ? $data['minHtlcMsat'] : null;
         $this->container['remoteCsvDelay'] = isset($data['remoteCsvDelay']) ? $data['remoteCsvDelay'] : null;
+        $this->container['minConfs'] = isset($data['minConfs']) ? $data['minConfs'] : null;
     }
 
     /**
@@ -477,6 +483,30 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     public function setRemoteCsvDelay($remoteCsvDelay)
     {
         $this->container['remoteCsvDelay'] = $remoteCsvDelay;
+
+        return $this;
+    }
+
+    /**
+     * Gets minConfs
+     *
+     * @return int
+     */
+    public function getMinConfs()
+    {
+        return $this->container['minConfs'];
+    }
+
+    /**
+     * Sets minConfs
+     *
+     * @param int $minConfs / The minimum number of confirmations each one of your outputs used for the funding transaction must satisfy.
+     *
+     * @return $this
+     */
+    public function setMinConfs($minConfs)
+    {
+        $this->container['minConfs'] = $minConfs;
 
         return $this;
     }

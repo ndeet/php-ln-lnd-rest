@@ -61,7 +61,9 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
         'totalTimeLock' => 'int',
         'totalFees' => 'string',
         'totalAmt' => 'string',
-        'hops' => '\Lnd\Rest\Model\LnrpcHop[]'
+        'hops' => '\Lnd\Rest\Model\LnrpcHop[]',
+        'totalFeesMsat' => 'string',
+        'totalAmtMsat' => 'string'
     ];
 
     /**
@@ -73,7 +75,9 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
         'totalTimeLock' => 'int64',
         'totalFees' => 'int64',
         'totalAmt' => 'int64',
-        'hops' => null
+        'hops' => null,
+        'totalFeesMsat' => 'int64',
+        'totalAmtMsat' => 'int64'
     ];
 
     /**
@@ -106,7 +110,9 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
         'totalTimeLock' => 'total_time_lock',
         'totalFees' => 'total_fees',
         'totalAmt' => 'total_amt',
-        'hops' => 'hops'
+        'hops' => 'hops',
+        'totalFeesMsat' => 'total_fees_msat',
+        'totalAmtMsat' => 'total_amt_msat'
     ];
 
     /**
@@ -118,7 +124,9 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
         'totalTimeLock' => 'setTotalTimeLock',
         'totalFees' => 'setTotalFees',
         'totalAmt' => 'setTotalAmt',
-        'hops' => 'setHops'
+        'hops' => 'setHops',
+        'totalFeesMsat' => 'setTotalFeesMsat',
+        'totalAmtMsat' => 'setTotalAmtMsat'
     ];
 
     /**
@@ -130,7 +138,9 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
         'totalTimeLock' => 'getTotalTimeLock',
         'totalFees' => 'getTotalFees',
         'totalAmt' => 'getTotalAmt',
-        'hops' => 'getHops'
+        'hops' => 'getHops',
+        'totalFeesMsat' => 'getTotalFeesMsat',
+        'totalAmtMsat' => 'getTotalAmtMsat'
     ];
 
     /**
@@ -197,6 +207,8 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
         $this->container['totalFees'] = isset($data['totalFees']) ? $data['totalFees'] : null;
         $this->container['totalAmt'] = isset($data['totalAmt']) ? $data['totalAmt'] : null;
         $this->container['hops'] = isset($data['hops']) ? $data['hops'] : null;
+        $this->container['totalFeesMsat'] = isset($data['totalFeesMsat']) ? $data['totalFeesMsat'] : null;
+        $this->container['totalAmtMsat'] = isset($data['totalAmtMsat']) ? $data['totalAmtMsat'] : null;
     }
 
     /**
@@ -316,6 +328,54 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
     public function setHops($hops)
     {
         $this->container['hops'] = $hops;
+
+        return $this;
+    }
+
+    /**
+     * Gets totalFeesMsat
+     *
+     * @return string
+     */
+    public function getTotalFeesMsat()
+    {
+        return $this->container['totalFeesMsat'];
+    }
+
+    /**
+     * Sets totalFeesMsat
+     *
+     * @param string $totalFeesMsat * The total fees in millisatoshis.
+     *
+     * @return $this
+     */
+    public function setTotalFeesMsat($totalFeesMsat)
+    {
+        $this->container['totalFeesMsat'] = $totalFeesMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets totalAmtMsat
+     *
+     * @return string
+     */
+    public function getTotalAmtMsat()
+    {
+        return $this->container['totalAmtMsat'];
+    }
+
+    /**
+     * Sets totalAmtMsat
+     *
+     * @param string $totalAmtMsat * The total amount in millisatoshis.
+     *
+     * @return $this
+     */
+    public function setTotalAmtMsat($totalAmtMsat)
+    {
+        $this->container['totalAmtMsat'] = $totalAmtMsat;
 
         return $this;
     }

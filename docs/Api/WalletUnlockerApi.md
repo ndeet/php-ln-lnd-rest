@@ -4,10 +4,58 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**changePassword**](WalletUnlockerApi.md#changePassword) | **POST** /v1/changepassword | * lncli: &#x60;changepassword&#x60; ChangePassword changes the password of the encrypted wallet. This will automatically unlock the wallet database if successful.
 [**genSeed**](WalletUnlockerApi.md#genSeed) | **GET** /v1/genseed | * GenSeed is the first method that should be used to instantiate a new lnd instance. This method allows a caller to generate a new aezeed cipher seed given an optional passphrase. If provided, the passphrase will be necessary to decrypt the cipherseed to expose the internal wallet seed.
 [**initWallet**](WalletUnlockerApi.md#initWallet) | **POST** /v1/initwallet | *  InitWallet is used when lnd is starting up for the first time to fully initialize the daemon and its internal wallet. At the very least a wallet password must be provided. This will be used to encrypt sensitive material on disk.
 [**unlockWallet**](WalletUnlockerApi.md#unlockWallet) | **POST** /v1/unlockwallet | * lncli: &#x60;unlock&#x60; UnlockWallet is used at startup of lnd to provide a password to unlock the wallet database.
 
+
+# **changePassword**
+> \Lnd\Rest\Model\LnrpcChangePasswordResponse changePassword($body)
+
+* lncli: `changepassword` ChangePassword changes the password of the encrypted wallet. This will automatically unlock the wallet database if successful.
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Lnd\Rest\Api\WalletUnlockerApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Lnd\Rest\Model\LnrpcChangePasswordRequest(); // \Lnd\Rest\Model\LnrpcChangePasswordRequest | 
+
+try {
+    $result = $apiInstance->changePassword($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling WalletUnlockerApi->changePassword: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Lnd\Rest\Model\LnrpcChangePasswordRequest**](../Model/LnrpcChangePasswordRequest.md)|  |
+
+### Return type
+
+[**\Lnd\Rest\Model\LnrpcChangePasswordResponse**](../Model/LnrpcChangePasswordResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **genSeed**
 > \Lnd\Rest\Model\LnrpcGenSeedResponse genSeed($aezeedPassphrase, $seedEntropy)

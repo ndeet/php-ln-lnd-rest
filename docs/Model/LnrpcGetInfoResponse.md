@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **chains** | **string[]** |  | [optional] 
 **uris** | **string[]** | / The URIs of the current node. | [optional] 
 **bestHeaderTimestamp** | **string** |  | [optional] 
+**version** | **string** | / The version of the LND software that the node is running. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

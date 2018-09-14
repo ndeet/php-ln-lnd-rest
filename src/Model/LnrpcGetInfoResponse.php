@@ -68,7 +68,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'testnet' => 'bool',
         'chains' => 'string[]',
         'uris' => 'string[]',
-        'bestHeaderTimestamp' => 'string'
+        'bestHeaderTimestamp' => 'string',
+        'version' => 'string'
     ];
 
     /**
@@ -88,7 +89,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'testnet' => 'boolean',
         'chains' => null,
         'uris' => null,
-        'bestHeaderTimestamp' => 'int64'
+        'bestHeaderTimestamp' => 'int64',
+        'version' => null
     ];
 
     /**
@@ -129,7 +131,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'testnet' => 'testnet',
         'chains' => 'chains',
         'uris' => 'uris',
-        'bestHeaderTimestamp' => 'best_header_timestamp'
+        'bestHeaderTimestamp' => 'best_header_timestamp',
+        'version' => 'version'
     ];
 
     /**
@@ -149,7 +152,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'testnet' => 'setTestnet',
         'chains' => 'setChains',
         'uris' => 'setUris',
-        'bestHeaderTimestamp' => 'setBestHeaderTimestamp'
+        'bestHeaderTimestamp' => 'setBestHeaderTimestamp',
+        'version' => 'setVersion'
     ];
 
     /**
@@ -169,7 +173,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'testnet' => 'getTestnet',
         'chains' => 'getChains',
         'uris' => 'getUris',
-        'bestHeaderTimestamp' => 'getBestHeaderTimestamp'
+        'bestHeaderTimestamp' => 'getBestHeaderTimestamp',
+        'version' => 'getVersion'
     ];
 
     /**
@@ -244,6 +249,7 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         $this->container['chains'] = isset($data['chains']) ? $data['chains'] : null;
         $this->container['uris'] = isset($data['uris']) ? $data['uris'] : null;
         $this->container['bestHeaderTimestamp'] = isset($data['bestHeaderTimestamp']) ? $data['bestHeaderTimestamp'] : null;
+        $this->container['version'] = isset($data['version']) ? $data['version'] : null;
     }
 
     /**
@@ -555,6 +561,30 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     public function setBestHeaderTimestamp($bestHeaderTimestamp)
     {
         $this->container['bestHeaderTimestamp'] = $bestHeaderTimestamp;
+
+        return $this;
+    }
+
+    /**
+     * Gets version
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->container['version'];
+    }
+
+    /**
+     * Sets version
+     *
+     * @param string $version / The version of the LND software that the node is running.
+     *
+     * @return $this
+     */
+    public function setVersion($version)
+    {
+        $this->container['version'] = $version;
 
         return $this;
     }

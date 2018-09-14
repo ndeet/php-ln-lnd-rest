@@ -65,7 +65,8 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'description' => 'string',
         'descriptionHash' => 'string',
         'fallbackAddr' => 'string',
-        'cltvExpiry' => 'string'
+        'cltvExpiry' => 'string',
+        'routeHints' => '\Lnd\Rest\Model\LnrpcRouteHint[]'
     ];
 
     /**
@@ -82,7 +83,8 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'description' => null,
         'descriptionHash' => null,
         'fallbackAddr' => null,
-        'cltvExpiry' => 'int64'
+        'cltvExpiry' => 'int64',
+        'routeHints' => null
     ];
 
     /**
@@ -120,7 +122,8 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'description' => 'description',
         'descriptionHash' => 'description_hash',
         'fallbackAddr' => 'fallback_addr',
-        'cltvExpiry' => 'cltv_expiry'
+        'cltvExpiry' => 'cltv_expiry',
+        'routeHints' => 'route_hints'
     ];
 
     /**
@@ -137,7 +140,8 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'description' => 'setDescription',
         'descriptionHash' => 'setDescriptionHash',
         'fallbackAddr' => 'setFallbackAddr',
-        'cltvExpiry' => 'setCltvExpiry'
+        'cltvExpiry' => 'setCltvExpiry',
+        'routeHints' => 'setRouteHints'
     ];
 
     /**
@@ -154,7 +158,8 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'description' => 'getDescription',
         'descriptionHash' => 'getDescriptionHash',
         'fallbackAddr' => 'getFallbackAddr',
-        'cltvExpiry' => 'getCltvExpiry'
+        'cltvExpiry' => 'getCltvExpiry',
+        'routeHints' => 'getRouteHints'
     ];
 
     /**
@@ -226,6 +231,7 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         $this->container['descriptionHash'] = isset($data['descriptionHash']) ? $data['descriptionHash'] : null;
         $this->container['fallbackAddr'] = isset($data['fallbackAddr']) ? $data['fallbackAddr'] : null;
         $this->container['cltvExpiry'] = isset($data['cltvExpiry']) ? $data['cltvExpiry'] : null;
+        $this->container['routeHints'] = isset($data['routeHints']) ? $data['routeHints'] : null;
     }
 
     /**
@@ -465,6 +471,30 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
     public function setCltvExpiry($cltvExpiry)
     {
         $this->container['cltvExpiry'] = $cltvExpiry;
+
+        return $this;
+    }
+
+    /**
+     * Gets routeHints
+     *
+     * @return \Lnd\Rest\Model\LnrpcRouteHint[]
+     */
+    public function getRouteHints()
+    {
+        return $this->container['routeHints'];
+    }
+
+    /**
+     * Sets routeHints
+     *
+     * @param \Lnd\Rest\Model\LnrpcRouteHint[] $routeHints routeHints
+     *
+     * @return $this
+     */
+    public function setRouteHints($routeHints)
+    {
+        $this->container['routeHints'] = $routeHints;
 
         return $this;
     }

@@ -57,7 +57,9 @@ class LnrpcListInvoiceResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'invoices' => '\Lnd\Rest\Model\LnrpcInvoice[]'
+        'invoices' => '\Lnd\Rest\Model\LnrpcInvoice[]',
+        'lastIndexOffset' => 'string',
+        'firstIndexOffset' => 'string'
     ];
 
     /**
@@ -66,7 +68,9 @@ class LnrpcListInvoiceResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'invoices' => null
+        'invoices' => null,
+        'lastIndexOffset' => 'uint64',
+        'firstIndexOffset' => 'uint64'
     ];
 
     /**
@@ -96,7 +100,9 @@ class LnrpcListInvoiceResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'invoices' => 'invoices'
+        'invoices' => 'invoices',
+        'lastIndexOffset' => 'last_index_offset',
+        'firstIndexOffset' => 'first_index_offset'
     ];
 
     /**
@@ -105,7 +111,9 @@ class LnrpcListInvoiceResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'invoices' => 'setInvoices'
+        'invoices' => 'setInvoices',
+        'lastIndexOffset' => 'setLastIndexOffset',
+        'firstIndexOffset' => 'setFirstIndexOffset'
     ];
 
     /**
@@ -114,7 +122,9 @@ class LnrpcListInvoiceResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'invoices' => 'getInvoices'
+        'invoices' => 'getInvoices',
+        'lastIndexOffset' => 'getLastIndexOffset',
+        'firstIndexOffset' => 'getFirstIndexOffset'
     ];
 
     /**
@@ -178,6 +188,8 @@ class LnrpcListInvoiceResponse implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['invoices'] = isset($data['invoices']) ? $data['invoices'] : null;
+        $this->container['lastIndexOffset'] = isset($data['lastIndexOffset']) ? $data['lastIndexOffset'] : null;
+        $this->container['firstIndexOffset'] = isset($data['firstIndexOffset']) ? $data['firstIndexOffset'] : null;
     }
 
     /**
@@ -218,13 +230,61 @@ class LnrpcListInvoiceResponse implements ModelInterface, ArrayAccess
     /**
      * Sets invoices
      *
-     * @param \Lnd\Rest\Model\LnrpcInvoice[] $invoices invoices
+     * @param \Lnd\Rest\Model\LnrpcInvoice[] $invoices * A list of invoices from the time slice of the time series specified in the request.
      *
      * @return $this
      */
     public function setInvoices($invoices)
     {
         $this->container['invoices'] = $invoices;
+
+        return $this;
+    }
+
+    /**
+     * Gets lastIndexOffset
+     *
+     * @return string
+     */
+    public function getLastIndexOffset()
+    {
+        return $this->container['lastIndexOffset'];
+    }
+
+    /**
+     * Sets lastIndexOffset
+     *
+     * @param string $lastIndexOffset * The index of the last item in the set of returned invoices. This can be used to seek further, pagination style.
+     *
+     * @return $this
+     */
+    public function setLastIndexOffset($lastIndexOffset)
+    {
+        $this->container['lastIndexOffset'] = $lastIndexOffset;
+
+        return $this;
+    }
+
+    /**
+     * Gets firstIndexOffset
+     *
+     * @return string
+     */
+    public function getFirstIndexOffset()
+    {
+        return $this->container['firstIndexOffset'];
+    }
+
+    /**
+     * Sets firstIndexOffset
+     *
+     * @param string $firstIndexOffset * The index of the last item in the set of returned invoices. This can be used to seek backwards, pagination style.
+     *
+     * @return $this
+     */
+    public function setFirstIndexOffset($firstIndexOffset)
+    {
+        $this->container['firstIndexOffset'] = $firstIndexOffset;
 
         return $this;
     }

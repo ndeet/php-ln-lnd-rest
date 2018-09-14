@@ -59,7 +59,8 @@ class LnrpcInitWalletRequest implements ModelInterface, ArrayAccess
     protected static $swaggerTypes = [
         'walletPassword' => 'string',
         'cipherSeedMnemonic' => 'string[]',
-        'aezeedPassphrase' => 'string'
+        'aezeedPassphrase' => 'string',
+        'recoveryWindow' => 'int'
     ];
 
     /**
@@ -70,7 +71,8 @@ class LnrpcInitWalletRequest implements ModelInterface, ArrayAccess
     protected static $swaggerFormats = [
         'walletPassword' => 'byte',
         'cipherSeedMnemonic' => null,
-        'aezeedPassphrase' => 'byte'
+        'aezeedPassphrase' => 'byte',
+        'recoveryWindow' => 'int32'
     ];
 
     /**
@@ -102,7 +104,8 @@ class LnrpcInitWalletRequest implements ModelInterface, ArrayAccess
     protected static $attributeMap = [
         'walletPassword' => 'wallet_password',
         'cipherSeedMnemonic' => 'cipher_seed_mnemonic',
-        'aezeedPassphrase' => 'aezeed_passphrase'
+        'aezeedPassphrase' => 'aezeed_passphrase',
+        'recoveryWindow' => 'recovery_window'
     ];
 
     /**
@@ -113,7 +116,8 @@ class LnrpcInitWalletRequest implements ModelInterface, ArrayAccess
     protected static $setters = [
         'walletPassword' => 'setWalletPassword',
         'cipherSeedMnemonic' => 'setCipherSeedMnemonic',
-        'aezeedPassphrase' => 'setAezeedPassphrase'
+        'aezeedPassphrase' => 'setAezeedPassphrase',
+        'recoveryWindow' => 'setRecoveryWindow'
     ];
 
     /**
@@ -124,7 +128,8 @@ class LnrpcInitWalletRequest implements ModelInterface, ArrayAccess
     protected static $getters = [
         'walletPassword' => 'getWalletPassword',
         'cipherSeedMnemonic' => 'getCipherSeedMnemonic',
-        'aezeedPassphrase' => 'getAezeedPassphrase'
+        'aezeedPassphrase' => 'getAezeedPassphrase',
+        'recoveryWindow' => 'getRecoveryWindow'
     ];
 
     /**
@@ -190,6 +195,7 @@ class LnrpcInitWalletRequest implements ModelInterface, ArrayAccess
         $this->container['walletPassword'] = isset($data['walletPassword']) ? $data['walletPassword'] : null;
         $this->container['cipherSeedMnemonic'] = isset($data['cipherSeedMnemonic']) ? $data['cipherSeedMnemonic'] : null;
         $this->container['aezeedPassphrase'] = isset($data['aezeedPassphrase']) ? $data['aezeedPassphrase'] : null;
+        $this->container['recoveryWindow'] = isset($data['recoveryWindow']) ? $data['recoveryWindow'] : null;
     }
 
     /**
@@ -309,6 +315,30 @@ class LnrpcInitWalletRequest implements ModelInterface, ArrayAccess
         }
 
         $this->container['aezeedPassphrase'] = $aezeedPassphrase;
+
+        return $this;
+    }
+
+    /**
+     * Gets recoveryWindow
+     *
+     * @return int
+     */
+    public function getRecoveryWindow()
+    {
+        return $this->container['recoveryWindow'];
+    }
+
+    /**
+     * Sets recoveryWindow
+     *
+     * @param int $recoveryWindow * recovery_window is an optional argument specifying the address lookahead when restoring a wallet seed. The recovery window applies to each invdividual branch of the BIP44 derivation paths. Supplying a recovery window of zero indicates that no addresses should be recovered, such after the first initialization of the wallet.
+     *
+     * @return $this
+     */
+    public function setRecoveryWindow($recoveryWindow)
+    {
+        $this->container['recoveryWindow'] = $recoveryWindow;
 
         return $this;
     }

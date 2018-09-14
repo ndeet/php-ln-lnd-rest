@@ -63,7 +63,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHash' => 'string',
         'paymentHashString' => 'string',
         'paymentRequest' => 'string',
-        'finalCltvDelta' => 'int'
+        'finalCltvDelta' => 'int',
+        'feeLimit' => '\Lnd\Rest\Model\LnrpcFeeLimit'
     ];
 
     /**
@@ -78,7 +79,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHash' => 'byte',
         'paymentHashString' => null,
         'paymentRequest' => null,
-        'finalCltvDelta' => 'int32'
+        'finalCltvDelta' => 'int32',
+        'feeLimit' => null
     ];
 
     /**
@@ -114,7 +116,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHash' => 'payment_hash',
         'paymentHashString' => 'payment_hash_string',
         'paymentRequest' => 'payment_request',
-        'finalCltvDelta' => 'final_cltv_delta'
+        'finalCltvDelta' => 'final_cltv_delta',
+        'feeLimit' => 'fee_limit'
     ];
 
     /**
@@ -129,7 +132,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHash' => 'setPaymentHash',
         'paymentHashString' => 'setPaymentHashString',
         'paymentRequest' => 'setPaymentRequest',
-        'finalCltvDelta' => 'setFinalCltvDelta'
+        'finalCltvDelta' => 'setFinalCltvDelta',
+        'feeLimit' => 'setFeeLimit'
     ];
 
     /**
@@ -144,7 +148,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHash' => 'getPaymentHash',
         'paymentHashString' => 'getPaymentHashString',
         'paymentRequest' => 'getPaymentRequest',
-        'finalCltvDelta' => 'getFinalCltvDelta'
+        'finalCltvDelta' => 'getFinalCltvDelta',
+        'feeLimit' => 'getFeeLimit'
     ];
 
     /**
@@ -214,6 +219,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         $this->container['paymentHashString'] = isset($data['paymentHashString']) ? $data['paymentHashString'] : null;
         $this->container['paymentRequest'] = isset($data['paymentRequest']) ? $data['paymentRequest'] : null;
         $this->container['finalCltvDelta'] = isset($data['finalCltvDelta']) ? $data['finalCltvDelta'] : null;
+        $this->container['feeLimit'] = isset($data['feeLimit']) ? $data['feeLimit'] : null;
     }
 
     /**
@@ -422,13 +428,37 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets finalCltvDelta
      *
-     * @param int $finalCltvDelta / The CLTV delta from the current height that should be used to set the timelock for the final hop.
+     * @param int $finalCltvDelta * The CLTV delta from the current height that should be used to set the timelock for the final hop.
      *
      * @return $this
      */
     public function setFinalCltvDelta($finalCltvDelta)
     {
         $this->container['finalCltvDelta'] = $finalCltvDelta;
+
+        return $this;
+    }
+
+    /**
+     * Gets feeLimit
+     *
+     * @return \Lnd\Rest\Model\LnrpcFeeLimit
+     */
+    public function getFeeLimit()
+    {
+        return $this->container['feeLimit'];
+    }
+
+    /**
+     * Sets feeLimit
+     *
+     * @param \Lnd\Rest\Model\LnrpcFeeLimit $feeLimit * The maximum number of satoshis that will be paid as a fee of the payment. This value can be represented either as a percentage of the amount being sent, or as a fixed amount of the maximum fee the user is willing the pay to send the payment.
+     *
+     * @return $this
+     */
+    public function setFeeLimit($feeLimit)
+    {
+        $this->container['feeLimit'] = $feeLimit;
 
         return $this;
     }

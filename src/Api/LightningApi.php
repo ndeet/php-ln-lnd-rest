@@ -864,6 +864,294 @@ class LightningApi
     }
 
     /**
+     * Operation closedChannels
+     *
+     * * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that  this node was a participant in.
+     *
+     * @param  bool $cooperative cooperative (optional)
+     * @param  bool $localForce localForce (optional)
+     * @param  bool $remoteForce remoteForce (optional)
+     * @param  bool $breach breach (optional)
+     * @param  bool $fundingCanceled fundingCanceled (optional)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcClosedChannelsResponse
+     */
+    public function closedChannels($cooperative = null, $localForce = null, $remoteForce = null, $breach = null, $fundingCanceled = null)
+    {
+        list($response) = $this->closedChannelsWithHttpInfo($cooperative, $localForce, $remoteForce, $breach, $fundingCanceled);
+        return $response;
+    }
+
+    /**
+     * Operation closedChannelsWithHttpInfo
+     *
+     * * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that  this node was a participant in.
+     *
+     * @param  bool $cooperative (optional)
+     * @param  bool $localForce (optional)
+     * @param  bool $remoteForce (optional)
+     * @param  bool $breach (optional)
+     * @param  bool $fundingCanceled (optional)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcClosedChannelsResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function closedChannelsWithHttpInfo($cooperative = null, $localForce = null, $remoteForce = null, $breach = null, $fundingCanceled = null)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcClosedChannelsResponse';
+        $request = $this->closedChannelsRequest($cooperative, $localForce, $remoteForce, $breach, $fundingCanceled);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcClosedChannelsResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation closedChannelsAsync
+     *
+     * * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that  this node was a participant in.
+     *
+     * @param  bool $cooperative (optional)
+     * @param  bool $localForce (optional)
+     * @param  bool $remoteForce (optional)
+     * @param  bool $breach (optional)
+     * @param  bool $fundingCanceled (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function closedChannelsAsync($cooperative = null, $localForce = null, $remoteForce = null, $breach = null, $fundingCanceled = null)
+    {
+        return $this->closedChannelsAsyncWithHttpInfo($cooperative, $localForce, $remoteForce, $breach, $fundingCanceled)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation closedChannelsAsyncWithHttpInfo
+     *
+     * * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that  this node was a participant in.
+     *
+     * @param  bool $cooperative (optional)
+     * @param  bool $localForce (optional)
+     * @param  bool $remoteForce (optional)
+     * @param  bool $breach (optional)
+     * @param  bool $fundingCanceled (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function closedChannelsAsyncWithHttpInfo($cooperative = null, $localForce = null, $remoteForce = null, $breach = null, $fundingCanceled = null)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcClosedChannelsResponse';
+        $request = $this->closedChannelsRequest($cooperative, $localForce, $remoteForce, $breach, $fundingCanceled);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'closedChannels'
+     *
+     * @param  bool $cooperative (optional)
+     * @param  bool $localForce (optional)
+     * @param  bool $remoteForce (optional)
+     * @param  bool $breach (optional)
+     * @param  bool $fundingCanceled (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function closedChannelsRequest($cooperative = null, $localForce = null, $remoteForce = null, $breach = null, $fundingCanceled = null)
+    {
+
+        $resourcePath = '/v1/channels/closed';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        if ($cooperative !== null) {
+            $queryParams['cooperative'] = ObjectSerializer::toQueryValue($cooperative);
+        }
+        // query params
+        if ($localForce !== null) {
+            $queryParams['local_force'] = ObjectSerializer::toQueryValue($localForce);
+        }
+        // query params
+        if ($remoteForce !== null) {
+            $queryParams['remote_force'] = ObjectSerializer::toQueryValue($remoteForce);
+        }
+        // query params
+        if ($breach !== null) {
+            $queryParams['breach'] = ObjectSerializer::toQueryValue($breach);
+        }
+        // query params
+        if ($fundingCanceled !== null) {
+            $queryParams['funding_canceled'] = ObjectSerializer::toQueryValue($fundingCanceled);
+        }
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation connectPeer
      *
      * * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
@@ -4165,35 +4453,41 @@ class LightningApi
     /**
      * Operation listInvoices
      *
-     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored.
+     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. The reversed flag is set by default in order to paginate backwards. If you wish to paginate forwards, you must explicitly set the flag to false. If none of the parameters are specified, then the last 100 invoices will be returned.
      *
-     * @param  bool $pendingOnly / Toggles if all invoices should be returned, or only those that are currently unsettled. (optional)
+     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
+     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcListInvoiceResponse
      */
-    public function listInvoices($pendingOnly = null)
+    public function listInvoices($pendingOnly = null, $indexOffset = null, $numMaxInvoices = null, $reversed = null)
     {
-        list($response) = $this->listInvoicesWithHttpInfo($pendingOnly);
+        list($response) = $this->listInvoicesWithHttpInfo($pendingOnly, $indexOffset, $numMaxInvoices, $reversed);
         return $response;
     }
 
     /**
      * Operation listInvoicesWithHttpInfo
      *
-     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored.
+     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. The reversed flag is set by default in order to paginate backwards. If you wish to paginate forwards, you must explicitly set the flag to false. If none of the parameters are specified, then the last 100 invoices will be returned.
      *
-     * @param  bool $pendingOnly / Toggles if all invoices should be returned, or only those that are currently unsettled. (optional)
+     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
+     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcListInvoiceResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listInvoicesWithHttpInfo($pendingOnly = null)
+    public function listInvoicesWithHttpInfo($pendingOnly = null, $indexOffset = null, $numMaxInvoices = null, $reversed = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListInvoiceResponse';
-        $request = $this->listInvoicesRequest($pendingOnly);
+        $request = $this->listInvoicesRequest($pendingOnly, $indexOffset, $numMaxInvoices, $reversed);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4257,16 +4551,19 @@ class LightningApi
     /**
      * Operation listInvoicesAsync
      *
-     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored.
+     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. The reversed flag is set by default in order to paginate backwards. If you wish to paginate forwards, you must explicitly set the flag to false. If none of the parameters are specified, then the last 100 invoices will be returned.
      *
-     * @param  bool $pendingOnly / Toggles if all invoices should be returned, or only those that are currently unsettled. (optional)
+     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
+     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listInvoicesAsync($pendingOnly = null)
+    public function listInvoicesAsync($pendingOnly = null, $indexOffset = null, $numMaxInvoices = null, $reversed = null)
     {
-        return $this->listInvoicesAsyncWithHttpInfo($pendingOnly)
+        return $this->listInvoicesAsyncWithHttpInfo($pendingOnly, $indexOffset, $numMaxInvoices, $reversed)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4277,17 +4574,20 @@ class LightningApi
     /**
      * Operation listInvoicesAsyncWithHttpInfo
      *
-     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored.
+     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. The reversed flag is set by default in order to paginate backwards. If you wish to paginate forwards, you must explicitly set the flag to false. If none of the parameters are specified, then the last 100 invoices will be returned.
      *
-     * @param  bool $pendingOnly / Toggles if all invoices should be returned, or only those that are currently unsettled. (optional)
+     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
+     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listInvoicesAsyncWithHttpInfo($pendingOnly = null)
+    public function listInvoicesAsyncWithHttpInfo($pendingOnly = null, $indexOffset = null, $numMaxInvoices = null, $reversed = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListInvoiceResponse';
-        $request = $this->listInvoicesRequest($pendingOnly);
+        $request = $this->listInvoicesRequest($pendingOnly, $indexOffset, $numMaxInvoices, $reversed);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4329,12 +4629,15 @@ class LightningApi
     /**
      * Create request for operation 'listInvoices'
      *
-     * @param  bool $pendingOnly / Toggles if all invoices should be returned, or only those that are currently unsettled. (optional)
+     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
+     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function listInvoicesRequest($pendingOnly = null)
+    protected function listInvoicesRequest($pendingOnly = null, $indexOffset = null, $numMaxInvoices = null, $reversed = null)
     {
 
         $resourcePath = '/v1/invoices';
@@ -4347,6 +4650,18 @@ class LightningApi
         // query params
         if ($pendingOnly !== null) {
             $queryParams['pending_only'] = ObjectSerializer::toQueryValue($pendingOnly);
+        }
+        // query params
+        if ($indexOffset !== null) {
+            $queryParams['index_offset'] = ObjectSerializer::toQueryValue($indexOffset);
+        }
+        // query params
+        if ($numMaxInvoices !== null) {
+            $queryParams['num_max_invoices'] = ObjectSerializer::toQueryValue($numMaxInvoices);
+        }
+        // query params
+        if ($reversed !== null) {
+            $queryParams['reversed'] = ObjectSerializer::toQueryValue($reversed);
         }
 
 
@@ -5922,14 +6237,17 @@ class LightningApi
      * @param  string $pubKey pubKey (required)
      * @param  string $amt amt (required)
      * @param  int $numRoutes / The max number of routes to return. (optional)
+     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
+     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
+     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcQueryRoutesResponse
      */
-    public function queryRoutes($pubKey, $amt, $numRoutes = null)
+    public function queryRoutes($pubKey, $amt, $numRoutes = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null)
     {
-        list($response) = $this->queryRoutesWithHttpInfo($pubKey, $amt, $numRoutes);
+        list($response) = $this->queryRoutesWithHttpInfo($pubKey, $amt, $numRoutes, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent);
         return $response;
     }
 
@@ -5941,15 +6259,18 @@ class LightningApi
      * @param  string $pubKey (required)
      * @param  string $amt (required)
      * @param  int $numRoutes / The max number of routes to return. (optional)
+     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
+     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
+     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcQueryRoutesResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function queryRoutesWithHttpInfo($pubKey, $amt, $numRoutes = null)
+    public function queryRoutesWithHttpInfo($pubKey, $amt, $numRoutes = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcQueryRoutesResponse';
-        $request = $this->queryRoutesRequest($pubKey, $amt, $numRoutes);
+        $request = $this->queryRoutesRequest($pubKey, $amt, $numRoutes, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6018,13 +6339,16 @@ class LightningApi
      * @param  string $pubKey (required)
      * @param  string $amt (required)
      * @param  int $numRoutes / The max number of routes to return. (optional)
+     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
+     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
+     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function queryRoutesAsync($pubKey, $amt, $numRoutes = null)
+    public function queryRoutesAsync($pubKey, $amt, $numRoutes = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null)
     {
-        return $this->queryRoutesAsyncWithHttpInfo($pubKey, $amt, $numRoutes)
+        return $this->queryRoutesAsyncWithHttpInfo($pubKey, $amt, $numRoutes, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6040,14 +6364,17 @@ class LightningApi
      * @param  string $pubKey (required)
      * @param  string $amt (required)
      * @param  int $numRoutes / The max number of routes to return. (optional)
+     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
+     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
+     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function queryRoutesAsyncWithHttpInfo($pubKey, $amt, $numRoutes = null)
+    public function queryRoutesAsyncWithHttpInfo($pubKey, $amt, $numRoutes = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcQueryRoutesResponse';
-        $request = $this->queryRoutesRequest($pubKey, $amt, $numRoutes);
+        $request = $this->queryRoutesRequest($pubKey, $amt, $numRoutes, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -6092,11 +6419,14 @@ class LightningApi
      * @param  string $pubKey (required)
      * @param  string $amt (required)
      * @param  int $numRoutes / The max number of routes to return. (optional)
+     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
+     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
+     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function queryRoutesRequest($pubKey, $amt, $numRoutes = null)
+    protected function queryRoutesRequest($pubKey, $amt, $numRoutes = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null)
     {
         // verify the required parameter 'pubKey' is set
         if ($pubKey === null) {
@@ -6121,6 +6451,18 @@ class LightningApi
         // query params
         if ($numRoutes !== null) {
             $queryParams['num_routes'] = ObjectSerializer::toQueryValue($numRoutes);
+        }
+        // query params
+        if ($finalCltvDelta !== null) {
+            $queryParams['final_cltv_delta'] = ObjectSerializer::toQueryValue($finalCltvDelta);
+        }
+        // query params
+        if ($feeLimitFixed !== null) {
+            $queryParams['fee_limit.fixed'] = ObjectSerializer::toQueryValue($feeLimitFixed);
+        }
+        // query params
+        if ($feeLimitPercent !== null) {
+            $queryParams['fee_limit.percent'] = ObjectSerializer::toQueryValue($feeLimitPercent);
         }
 
         // path params
@@ -6719,35 +7061,296 @@ class LightningApi
     }
 
     /**
+     * Operation sendToRouteSync
+     *
+     * * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcSendResponse
+     */
+    public function sendToRouteSync($body)
+    {
+        list($response) = $this->sendToRouteSyncWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation sendToRouteSyncWithHttpInfo
+     *
+     * * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcSendResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function sendToRouteSyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcSendResponse';
+        $request = $this->sendToRouteSyncRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcSendResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation sendToRouteSyncAsync
+     *
+     * * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function sendToRouteSyncAsync($body)
+    {
+        return $this->sendToRouteSyncAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation sendToRouteSyncAsyncWithHttpInfo
+     *
+     * * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function sendToRouteSyncAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcSendResponse';
+        $request = $this->sendToRouteSyncRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'sendToRouteSync'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function sendToRouteSyncRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling sendToRouteSync'
+            );
+        }
+
+        $resourcePath = '/v1/channels/transactions/route';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation subscribeInvoices
      *
-     * * SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices.
+     * * SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
      *
+     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcInvoice
      */
-    public function subscribeInvoices()
+    public function subscribeInvoices($addIndex = null, $settleIndex = null)
     {
-        list($response) = $this->subscribeInvoicesWithHttpInfo();
+        list($response) = $this->subscribeInvoicesWithHttpInfo($addIndex, $settleIndex);
         return $response;
     }
 
     /**
      * Operation subscribeInvoicesWithHttpInfo
      *
-     * * SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices.
+     * * SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
      *
+     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcInvoice, HTTP status code, HTTP response headers (array of strings)
      */
-    public function subscribeInvoicesWithHttpInfo()
+    public function subscribeInvoicesWithHttpInfo($addIndex = null, $settleIndex = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcInvoice';
-        $request = $this->subscribeInvoicesRequest();
+        $request = $this->subscribeInvoicesRequest($addIndex, $settleIndex);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6811,15 +7414,17 @@ class LightningApi
     /**
      * Operation subscribeInvoicesAsync
      *
-     * * SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices.
+     * * SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
      *
+     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function subscribeInvoicesAsync()
+    public function subscribeInvoicesAsync($addIndex = null, $settleIndex = null)
     {
-        return $this->subscribeInvoicesAsyncWithHttpInfo()
+        return $this->subscribeInvoicesAsyncWithHttpInfo($addIndex, $settleIndex)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6830,16 +7435,18 @@ class LightningApi
     /**
      * Operation subscribeInvoicesAsyncWithHttpInfo
      *
-     * * SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices.
+     * * SubscribeInvoices returns a uni-directional stream (sever -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
      *
+     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function subscribeInvoicesAsyncWithHttpInfo()
+    public function subscribeInvoicesAsyncWithHttpInfo($addIndex = null, $settleIndex = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcInvoice';
-        $request = $this->subscribeInvoicesRequest();
+        $request = $this->subscribeInvoicesRequest($addIndex, $settleIndex);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -6881,11 +7488,13 @@ class LightningApi
     /**
      * Create request for operation 'subscribeInvoices'
      *
+     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function subscribeInvoicesRequest()
+    protected function subscribeInvoicesRequest($addIndex = null, $settleIndex = null)
     {
 
         $resourcePath = '/v1/invoices/subscribe';
@@ -6895,6 +7504,14 @@ class LightningApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        if ($addIndex !== null) {
+            $queryParams['add_index'] = ObjectSerializer::toQueryValue($addIndex);
+        }
+        // query params
+        if ($settleIndex !== null) {
+            $queryParams['settle_index'] = ObjectSerializer::toQueryValue($settleIndex);
+        }
 
 
         // body params

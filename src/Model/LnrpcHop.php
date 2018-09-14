@@ -61,7 +61,9 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'chanCapacity' => 'string',
         'amtToForward' => 'string',
         'fee' => 'string',
-        'expiry' => 'int'
+        'expiry' => 'int',
+        'amtToForwardMsat' => 'string',
+        'feeMsat' => 'string'
     ];
 
     /**
@@ -74,7 +76,9 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'chanCapacity' => 'int64',
         'amtToForward' => 'int64',
         'fee' => 'int64',
-        'expiry' => 'int64'
+        'expiry' => 'int64',
+        'amtToForwardMsat' => 'int64',
+        'feeMsat' => 'int64'
     ];
 
     /**
@@ -108,7 +112,9 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'chanCapacity' => 'chan_capacity',
         'amtToForward' => 'amt_to_forward',
         'fee' => 'fee',
-        'expiry' => 'expiry'
+        'expiry' => 'expiry',
+        'amtToForwardMsat' => 'amt_to_forward_msat',
+        'feeMsat' => 'fee_msat'
     ];
 
     /**
@@ -121,7 +127,9 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'chanCapacity' => 'setChanCapacity',
         'amtToForward' => 'setAmtToForward',
         'fee' => 'setFee',
-        'expiry' => 'setExpiry'
+        'expiry' => 'setExpiry',
+        'amtToForwardMsat' => 'setAmtToForwardMsat',
+        'feeMsat' => 'setFeeMsat'
     ];
 
     /**
@@ -134,7 +142,9 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'chanCapacity' => 'getChanCapacity',
         'amtToForward' => 'getAmtToForward',
         'fee' => 'getFee',
-        'expiry' => 'getExpiry'
+        'expiry' => 'getExpiry',
+        'amtToForwardMsat' => 'getAmtToForwardMsat',
+        'feeMsat' => 'getFeeMsat'
     ];
 
     /**
@@ -202,6 +212,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         $this->container['amtToForward'] = isset($data['amtToForward']) ? $data['amtToForward'] : null;
         $this->container['fee'] = isset($data['fee']) ? $data['fee'] : null;
         $this->container['expiry'] = isset($data['expiry']) ? $data['expiry'] : null;
+        $this->container['amtToForwardMsat'] = isset($data['amtToForwardMsat']) ? $data['amtToForwardMsat'] : null;
+        $this->container['feeMsat'] = isset($data['feeMsat']) ? $data['feeMsat'] : null;
     }
 
     /**
@@ -345,6 +357,54 @@ class LnrpcHop implements ModelInterface, ArrayAccess
     public function setExpiry($expiry)
     {
         $this->container['expiry'] = $expiry;
+
+        return $this;
+    }
+
+    /**
+     * Gets amtToForwardMsat
+     *
+     * @return string
+     */
+    public function getAmtToForwardMsat()
+    {
+        return $this->container['amtToForwardMsat'];
+    }
+
+    /**
+     * Sets amtToForwardMsat
+     *
+     * @param string $amtToForwardMsat amtToForwardMsat
+     *
+     * @return $this
+     */
+    public function setAmtToForwardMsat($amtToForwardMsat)
+    {
+        $this->container['amtToForwardMsat'] = $amtToForwardMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets feeMsat
+     *
+     * @return string
+     */
+    public function getFeeMsat()
+    {
+        return $this->container['feeMsat'];
+    }
+
+    /**
+     * Sets feeMsat
+     *
+     * @param string $feeMsat feeMsat
+     *
+     * @return $this
+     */
+    public function setFeeMsat($feeMsat)
+    {
+        $this->container['feeMsat'] = $feeMsat;
 
         return $this;
     }

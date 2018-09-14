@@ -60,7 +60,8 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'timeLockDelta' => 'int',
         'minHtlc' => 'string',
         'feeBaseMsat' => 'string',
-        'feeRateMilliMsat' => 'string'
+        'feeRateMilliMsat' => 'string',
+        'disabled' => 'bool'
     ];
 
     /**
@@ -72,7 +73,8 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'timeLockDelta' => 'int64',
         'minHtlc' => 'int64',
         'feeBaseMsat' => 'int64',
-        'feeRateMilliMsat' => 'int64'
+        'feeRateMilliMsat' => 'int64',
+        'disabled' => 'boolean'
     ];
 
     /**
@@ -105,7 +107,8 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'timeLockDelta' => 'time_lock_delta',
         'minHtlc' => 'min_htlc',
         'feeBaseMsat' => 'fee_base_msat',
-        'feeRateMilliMsat' => 'fee_rate_milli_msat'
+        'feeRateMilliMsat' => 'fee_rate_milli_msat',
+        'disabled' => 'disabled'
     ];
 
     /**
@@ -117,7 +120,8 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'timeLockDelta' => 'setTimeLockDelta',
         'minHtlc' => 'setMinHtlc',
         'feeBaseMsat' => 'setFeeBaseMsat',
-        'feeRateMilliMsat' => 'setFeeRateMilliMsat'
+        'feeRateMilliMsat' => 'setFeeRateMilliMsat',
+        'disabled' => 'setDisabled'
     ];
 
     /**
@@ -129,7 +133,8 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'timeLockDelta' => 'getTimeLockDelta',
         'minHtlc' => 'getMinHtlc',
         'feeBaseMsat' => 'getFeeBaseMsat',
-        'feeRateMilliMsat' => 'getFeeRateMilliMsat'
+        'feeRateMilliMsat' => 'getFeeRateMilliMsat',
+        'disabled' => 'getDisabled'
     ];
 
     /**
@@ -196,6 +201,7 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         $this->container['minHtlc'] = isset($data['minHtlc']) ? $data['minHtlc'] : null;
         $this->container['feeBaseMsat'] = isset($data['feeBaseMsat']) ? $data['feeBaseMsat'] : null;
         $this->container['feeRateMilliMsat'] = isset($data['feeRateMilliMsat']) ? $data['feeRateMilliMsat'] : null;
+        $this->container['disabled'] = isset($data['disabled']) ? $data['disabled'] : null;
     }
 
     /**
@@ -315,6 +321,30 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
     public function setFeeRateMilliMsat($feeRateMilliMsat)
     {
         $this->container['feeRateMilliMsat'] = $feeRateMilliMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets disabled
+     *
+     * @return bool
+     */
+    public function getDisabled()
+    {
+        return $this->container['disabled'];
+    }
+
+    /**
+     * Sets disabled
+     *
+     * @param bool $disabled disabled
+     *
+     * @return $this
+     */
+    public function setDisabled($disabled)
+    {
+        $this->container['disabled'] = $disabled;
 
         return $this;
     }

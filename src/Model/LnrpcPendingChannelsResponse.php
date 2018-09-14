@@ -60,7 +60,8 @@ class LnrpcPendingChannelsResponse implements ModelInterface, ArrayAccess
         'totalLimboBalance' => 'string',
         'pendingOpenChannels' => '\Lnd\Rest\Model\PendingChannelsResponsePendingOpenChannel[]',
         'pendingClosingChannels' => '\Lnd\Rest\Model\PendingChannelsResponseClosedChannel[]',
-        'pendingForceClosingChannels' => '\Lnd\Rest\Model\PendingChannelsResponseForceClosedChannel[]'
+        'pendingForceClosingChannels' => '\Lnd\Rest\Model\PendingChannelsResponseForceClosedChannel[]',
+        'waitingCloseChannels' => '\Lnd\Rest\Model\PendingChannelsResponseWaitingCloseChannel[]'
     ];
 
     /**
@@ -72,7 +73,8 @@ class LnrpcPendingChannelsResponse implements ModelInterface, ArrayAccess
         'totalLimboBalance' => 'int64',
         'pendingOpenChannels' => null,
         'pendingClosingChannels' => null,
-        'pendingForceClosingChannels' => null
+        'pendingForceClosingChannels' => null,
+        'waitingCloseChannels' => null
     ];
 
     /**
@@ -105,7 +107,8 @@ class LnrpcPendingChannelsResponse implements ModelInterface, ArrayAccess
         'totalLimboBalance' => 'total_limbo_balance',
         'pendingOpenChannels' => 'pending_open_channels',
         'pendingClosingChannels' => 'pending_closing_channels',
-        'pendingForceClosingChannels' => 'pending_force_closing_channels'
+        'pendingForceClosingChannels' => 'pending_force_closing_channels',
+        'waitingCloseChannels' => 'waiting_close_channels'
     ];
 
     /**
@@ -117,7 +120,8 @@ class LnrpcPendingChannelsResponse implements ModelInterface, ArrayAccess
         'totalLimboBalance' => 'setTotalLimboBalance',
         'pendingOpenChannels' => 'setPendingOpenChannels',
         'pendingClosingChannels' => 'setPendingClosingChannels',
-        'pendingForceClosingChannels' => 'setPendingForceClosingChannels'
+        'pendingForceClosingChannels' => 'setPendingForceClosingChannels',
+        'waitingCloseChannels' => 'setWaitingCloseChannels'
     ];
 
     /**
@@ -129,7 +133,8 @@ class LnrpcPendingChannelsResponse implements ModelInterface, ArrayAccess
         'totalLimboBalance' => 'getTotalLimboBalance',
         'pendingOpenChannels' => 'getPendingOpenChannels',
         'pendingClosingChannels' => 'getPendingClosingChannels',
-        'pendingForceClosingChannels' => 'getPendingForceClosingChannels'
+        'pendingForceClosingChannels' => 'getPendingForceClosingChannels',
+        'waitingCloseChannels' => 'getWaitingCloseChannels'
     ];
 
     /**
@@ -196,6 +201,7 @@ class LnrpcPendingChannelsResponse implements ModelInterface, ArrayAccess
         $this->container['pendingOpenChannels'] = isset($data['pendingOpenChannels']) ? $data['pendingOpenChannels'] : null;
         $this->container['pendingClosingChannels'] = isset($data['pendingClosingChannels']) ? $data['pendingClosingChannels'] : null;
         $this->container['pendingForceClosingChannels'] = isset($data['pendingForceClosingChannels']) ? $data['pendingForceClosingChannels'] : null;
+        $this->container['waitingCloseChannels'] = isset($data['waitingCloseChannels']) ? $data['waitingCloseChannels'] : null;
     }
 
     /**
@@ -315,6 +321,30 @@ class LnrpcPendingChannelsResponse implements ModelInterface, ArrayAccess
     public function setPendingForceClosingChannels($pendingForceClosingChannels)
     {
         $this->container['pendingForceClosingChannels'] = $pendingForceClosingChannels;
+
+        return $this;
+    }
+
+    /**
+     * Gets waitingCloseChannels
+     *
+     * @return \Lnd\Rest\Model\PendingChannelsResponseWaitingCloseChannel[]
+     */
+    public function getWaitingCloseChannels()
+    {
+        return $this->container['waitingCloseChannels'];
+    }
+
+    /**
+     * Sets waitingCloseChannels
+     *
+     * @param \Lnd\Rest\Model\PendingChannelsResponseWaitingCloseChannel[] $waitingCloseChannels waitingCloseChannels
+     *
+     * @return $this
+     */
+    public function setWaitingCloseChannels($waitingCloseChannels)
+    {
+        $this->container['waitingCloseChannels'] = $waitingCloseChannels;
 
         return $this;
     }

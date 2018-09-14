@@ -36,7 +36,7 @@ use \Lnd\Rest\ObjectSerializer;
  * LnrpcChannelEdge Class Doc Comment
  *
  * @category Class
- * @description * A fully authenticated channel along with all its unique attributes. Once an authenticated channel announcement has been processed on the network, then a instance of ChannelEdgeInfo encapsulating the channels attributes is stored. The other portions relevant to routing policy of a channel are stored within a ChannelEdgePolicy for each direction of the channel.
+ * @description * A fully authenticated channel along with all its unique attributes. Once an authenticated channel announcement has been processed on the network, then an instance of ChannelEdgeInfo encapsulating the channels attributes is stored. The other portions relevant to routing policy of a channel are stored within a ChannelEdgePolicy for each direction of the channel.
  * @package  Lnd\Rest
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen

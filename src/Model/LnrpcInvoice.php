@@ -69,7 +69,14 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'descriptionHash' => 'string',
         'expiry' => 'string',
         'fallbackAddr' => 'string',
-        'cltvExpiry' => 'string'
+        'cltvExpiry' => 'string',
+        'routeHints' => '\Lnd\Rest\Model\LnrpcRouteHint[]',
+        'private' => 'bool',
+        'addIndex' => 'string',
+        'settleIndex' => 'string',
+        'amtPaid' => 'string',
+        'amtPaidSat' => 'string',
+        'amtPaidMsat' => 'string'
     ];
 
     /**
@@ -90,7 +97,14 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'descriptionHash' => 'byte',
         'expiry' => 'int64',
         'fallbackAddr' => null,
-        'cltvExpiry' => 'uint64'
+        'cltvExpiry' => 'uint64',
+        'routeHints' => null,
+        'private' => 'boolean',
+        'addIndex' => 'uint64',
+        'settleIndex' => 'uint64',
+        'amtPaid' => 'int64',
+        'amtPaidSat' => 'int64',
+        'amtPaidMsat' => 'int64'
     ];
 
     /**
@@ -132,7 +146,14 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'descriptionHash' => 'description_hash',
         'expiry' => 'expiry',
         'fallbackAddr' => 'fallback_addr',
-        'cltvExpiry' => 'cltv_expiry'
+        'cltvExpiry' => 'cltv_expiry',
+        'routeHints' => 'route_hints',
+        'private' => 'private',
+        'addIndex' => 'add_index',
+        'settleIndex' => 'settle_index',
+        'amtPaid' => 'amt_paid',
+        'amtPaidSat' => 'amt_paid_sat',
+        'amtPaidMsat' => 'amt_paid_msat'
     ];
 
     /**
@@ -153,7 +174,14 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'descriptionHash' => 'setDescriptionHash',
         'expiry' => 'setExpiry',
         'fallbackAddr' => 'setFallbackAddr',
-        'cltvExpiry' => 'setCltvExpiry'
+        'cltvExpiry' => 'setCltvExpiry',
+        'routeHints' => 'setRouteHints',
+        'private' => 'setPrivate',
+        'addIndex' => 'setAddIndex',
+        'settleIndex' => 'setSettleIndex',
+        'amtPaid' => 'setAmtPaid',
+        'amtPaidSat' => 'setAmtPaidSat',
+        'amtPaidMsat' => 'setAmtPaidMsat'
     ];
 
     /**
@@ -174,7 +202,14 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'descriptionHash' => 'getDescriptionHash',
         'expiry' => 'getExpiry',
         'fallbackAddr' => 'getFallbackAddr',
-        'cltvExpiry' => 'getCltvExpiry'
+        'cltvExpiry' => 'getCltvExpiry',
+        'routeHints' => 'getRouteHints',
+        'private' => 'getPrivate',
+        'addIndex' => 'getAddIndex',
+        'settleIndex' => 'getSettleIndex',
+        'amtPaid' => 'getAmtPaid',
+        'amtPaidSat' => 'getAmtPaidSat',
+        'amtPaidMsat' => 'getAmtPaidMsat'
     ];
 
     /**
@@ -250,6 +285,13 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         $this->container['expiry'] = isset($data['expiry']) ? $data['expiry'] : null;
         $this->container['fallbackAddr'] = isset($data['fallbackAddr']) ? $data['fallbackAddr'] : null;
         $this->container['cltvExpiry'] = isset($data['cltvExpiry']) ? $data['cltvExpiry'] : null;
+        $this->container['routeHints'] = isset($data['routeHints']) ? $data['routeHints'] : null;
+        $this->container['private'] = isset($data['private']) ? $data['private'] : null;
+        $this->container['addIndex'] = isset($data['addIndex']) ? $data['addIndex'] : null;
+        $this->container['settleIndex'] = isset($data['settleIndex']) ? $data['settleIndex'] : null;
+        $this->container['amtPaid'] = isset($data['amtPaid']) ? $data['amtPaid'] : null;
+        $this->container['amtPaidSat'] = isset($data['amtPaidSat']) ? $data['amtPaidSat'] : null;
+        $this->container['amtPaidMsat'] = isset($data['amtPaidMsat']) ? $data['amtPaidMsat'] : null;
     }
 
     /**
@@ -633,6 +675,174 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     public function setCltvExpiry($cltvExpiry)
     {
         $this->container['cltvExpiry'] = $cltvExpiry;
+
+        return $this;
+    }
+
+    /**
+     * Gets routeHints
+     *
+     * @return \Lnd\Rest\Model\LnrpcRouteHint[]
+     */
+    public function getRouteHints()
+    {
+        return $this->container['routeHints'];
+    }
+
+    /**
+     * Sets routeHints
+     *
+     * @param \Lnd\Rest\Model\LnrpcRouteHint[] $routeHints * Route hints that can each be individually used to assist in reaching the invoice's destination.
+     *
+     * @return $this
+     */
+    public function setRouteHints($routeHints)
+    {
+        $this->container['routeHints'] = $routeHints;
+
+        return $this;
+    }
+
+    /**
+     * Gets private
+     *
+     * @return bool
+     */
+    public function getPrivate()
+    {
+        return $this->container['private'];
+    }
+
+    /**
+     * Sets private
+     *
+     * @param bool $private / Whether this invoice should include routing hints for private channels.
+     *
+     * @return $this
+     */
+    public function setPrivate($private)
+    {
+        $this->container['private'] = $private;
+
+        return $this;
+    }
+
+    /**
+     * Gets addIndex
+     *
+     * @return string
+     */
+    public function getAddIndex()
+    {
+        return $this->container['addIndex'];
+    }
+
+    /**
+     * Sets addIndex
+     *
+     * @param string $addIndex * The \"add\" index of this invoice. Each newly created invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all added invoices with an add_index greater than this one.
+     *
+     * @return $this
+     */
+    public function setAddIndex($addIndex)
+    {
+        $this->container['addIndex'] = $addIndex;
+
+        return $this;
+    }
+
+    /**
+     * Gets settleIndex
+     *
+     * @return string
+     */
+    public function getSettleIndex()
+    {
+        return $this->container['settleIndex'];
+    }
+
+    /**
+     * Sets settleIndex
+     *
+     * @param string $settleIndex * The \"settle\" index of this invoice. Each newly settled invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all settled invoices with an settle_index greater than this one.
+     *
+     * @return $this
+     */
+    public function setSettleIndex($settleIndex)
+    {
+        $this->container['settleIndex'] = $settleIndex;
+
+        return $this;
+    }
+
+    /**
+     * Gets amtPaid
+     *
+     * @return string
+     */
+    public function getAmtPaid()
+    {
+        return $this->container['amtPaid'];
+    }
+
+    /**
+     * Sets amtPaid
+     *
+     * @param string $amtPaid / Deprecated, use amt_paid_sat or amt_paid_msat.
+     *
+     * @return $this
+     */
+    public function setAmtPaid($amtPaid)
+    {
+        $this->container['amtPaid'] = $amtPaid;
+
+        return $this;
+    }
+
+    /**
+     * Gets amtPaidSat
+     *
+     * @return string
+     */
+    public function getAmtPaidSat()
+    {
+        return $this->container['amtPaidSat'];
+    }
+
+    /**
+     * Sets amtPaidSat
+     *
+     * @param string $amtPaidSat * The amount that was accepted for this invoice, in satoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it's possible that the sender paid MORE that was specified in the original invoice. So we'll record that here as well.
+     *
+     * @return $this
+     */
+    public function setAmtPaidSat($amtPaidSat)
+    {
+        $this->container['amtPaidSat'] = $amtPaidSat;
+
+        return $this;
+    }
+
+    /**
+     * Gets amtPaidMsat
+     *
+     * @return string
+     */
+    public function getAmtPaidMsat()
+    {
+        return $this->container['amtPaidMsat'];
+    }
+
+    /**
+     * Sets amtPaidMsat
+     *
+     * @param string $amtPaidMsat * The amount that was accepted for this invoice, in millisatoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it's possible that the sender paid MORE that was specified in the original invoice. So we'll record that here as well.
+     *
+     * @return $this
+     */
+    public function setAmtPaidMsat($amtPaidMsat)
+    {
+        $this->container['amtPaidMsat'] = $amtPaidMsat;
 
         return $this;
     }
