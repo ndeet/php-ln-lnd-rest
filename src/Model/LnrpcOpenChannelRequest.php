@@ -66,7 +66,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'private' => 'bool',
         'minHtlcMsat' => 'string',
         'remoteCsvDelay' => 'int',
-        'minConfs' => 'int'
+        'minConfs' => 'int',
+        'spendUnconfirmed' => 'bool'
     ];
 
     /**
@@ -84,7 +85,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'private' => 'boolean',
         'minHtlcMsat' => 'int64',
         'remoteCsvDelay' => 'int64',
-        'minConfs' => 'int32'
+        'minConfs' => 'int32',
+        'spendUnconfirmed' => 'boolean'
     ];
 
     /**
@@ -123,7 +125,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'private' => 'private',
         'minHtlcMsat' => 'min_htlc_msat',
         'remoteCsvDelay' => 'remote_csv_delay',
-        'minConfs' => 'min_confs'
+        'minConfs' => 'min_confs',
+        'spendUnconfirmed' => 'spend_unconfirmed'
     ];
 
     /**
@@ -141,7 +144,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'private' => 'setPrivate',
         'minHtlcMsat' => 'setMinHtlcMsat',
         'remoteCsvDelay' => 'setRemoteCsvDelay',
-        'minConfs' => 'setMinConfs'
+        'minConfs' => 'setMinConfs',
+        'spendUnconfirmed' => 'setSpendUnconfirmed'
     ];
 
     /**
@@ -159,7 +163,8 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'private' => 'getPrivate',
         'minHtlcMsat' => 'getMinHtlcMsat',
         'remoteCsvDelay' => 'getRemoteCsvDelay',
-        'minConfs' => 'getMinConfs'
+        'minConfs' => 'getMinConfs',
+        'spendUnconfirmed' => 'getSpendUnconfirmed'
     ];
 
     /**
@@ -232,6 +237,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         $this->container['minHtlcMsat'] = isset($data['minHtlcMsat']) ? $data['minHtlcMsat'] : null;
         $this->container['remoteCsvDelay'] = isset($data['remoteCsvDelay']) ? $data['remoteCsvDelay'] : null;
         $this->container['minConfs'] = isset($data['minConfs']) ? $data['minConfs'] : null;
+        $this->container['spendUnconfirmed'] = isset($data['spendUnconfirmed']) ? $data['spendUnconfirmed'] : null;
     }
 
     /**
@@ -507,6 +513,30 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     public function setMinConfs($minConfs)
     {
         $this->container['minConfs'] = $minConfs;
+
+        return $this;
+    }
+
+    /**
+     * Gets spendUnconfirmed
+     *
+     * @return bool
+     */
+    public function getSpendUnconfirmed()
+    {
+        return $this->container['spendUnconfirmed'];
+    }
+
+    /**
+     * Sets spendUnconfirmed
+     *
+     * @param bool $spendUnconfirmed / Whether unconfirmed outputs should be used as inputs for the funding transaction.
+     *
+     * @return $this
+     */
+    public function setSpendUnconfirmed($spendUnconfirmed)
+    {
+        $this->container['spendUnconfirmed'] = $spendUnconfirmed;
 
         return $this;
     }

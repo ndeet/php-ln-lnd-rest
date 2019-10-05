@@ -273,7 +273,7 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
     /**
      * Sets totalFees
      *
-     * @param string $totalFees * The sum of the fees paid at each hop within the final route.  In the case of a one-hop payment, this value will be zero as we don't need to pay a fee it ourself.
+     * @param string $totalFees * The sum of the fees paid at each hop within the final route.  In the case of a one-hop payment, this value will be zero as we don't need to pay a fee to ourselves.
      *
      * @return $this
      */

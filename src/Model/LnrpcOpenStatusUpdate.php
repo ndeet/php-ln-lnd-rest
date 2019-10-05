@@ -58,7 +58,6 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'chanPending' => '\Lnd\Rest\Model\LnrpcPendingUpdate',
-        'confirmation' => '\Lnd\Rest\Model\LnrpcConfirmationUpdate',
         'chanOpen' => '\Lnd\Rest\Model\LnrpcChannelOpenUpdate'
     ];
 
@@ -69,7 +68,6 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'chanPending' => null,
-        'confirmation' => null,
         'chanOpen' => null
     ];
 
@@ -101,7 +99,6 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'chanPending' => 'chan_pending',
-        'confirmation' => 'confirmation',
         'chanOpen' => 'chan_open'
     ];
 
@@ -112,7 +109,6 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'chanPending' => 'setChanPending',
-        'confirmation' => 'setConfirmation',
         'chanOpen' => 'setChanOpen'
     ];
 
@@ -123,7 +119,6 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'chanPending' => 'getChanPending',
-        'confirmation' => 'getConfirmation',
         'chanOpen' => 'getChanOpen'
     ];
 
@@ -188,7 +183,6 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['chanPending'] = isset($data['chanPending']) ? $data['chanPending'] : null;
-        $this->container['confirmation'] = isset($data['confirmation']) ? $data['confirmation'] : null;
         $this->container['chanOpen'] = isset($data['chanOpen']) ? $data['chanOpen'] : null;
     }
 
@@ -237,30 +231,6 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
     public function setChanPending($chanPending)
     {
         $this->container['chanPending'] = $chanPending;
-
-        return $this;
-    }
-
-    /**
-     * Gets confirmation
-     *
-     * @return \Lnd\Rest\Model\LnrpcConfirmationUpdate
-     */
-    public function getConfirmation()
-    {
-        return $this->container['confirmation'];
-    }
-
-    /**
-     * Sets confirmation
-     *
-     * @param \Lnd\Rest\Model\LnrpcConfirmationUpdate $confirmation confirmation
-     *
-     * @return $this
-     */
-    public function setConfirmation($confirmation)
-    {
-        $this->container['confirmation'] = $confirmation;
 
         return $this;
     }

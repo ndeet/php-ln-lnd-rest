@@ -62,7 +62,8 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'chanIdOut' => 'string',
         'amtIn' => 'string',
         'amtOut' => 'string',
-        'fee' => 'string'
+        'fee' => 'string',
+        'feeMsat' => 'string'
     ];
 
     /**
@@ -76,7 +77,8 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'chanIdOut' => 'uint64',
         'amtIn' => 'uint64',
         'amtOut' => 'uint64',
-        'fee' => 'uint64'
+        'fee' => 'uint64',
+        'feeMsat' => 'uint64'
     ];
 
     /**
@@ -111,7 +113,8 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'chanIdOut' => 'chan_id_out',
         'amtIn' => 'amt_in',
         'amtOut' => 'amt_out',
-        'fee' => 'fee'
+        'fee' => 'fee',
+        'feeMsat' => 'fee_msat'
     ];
 
     /**
@@ -125,7 +128,8 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'chanIdOut' => 'setChanIdOut',
         'amtIn' => 'setAmtIn',
         'amtOut' => 'setAmtOut',
-        'fee' => 'setFee'
+        'fee' => 'setFee',
+        'feeMsat' => 'setFeeMsat'
     ];
 
     /**
@@ -139,7 +143,8 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'chanIdOut' => 'getChanIdOut',
         'amtIn' => 'getAmtIn',
         'amtOut' => 'getAmtOut',
-        'fee' => 'getFee'
+        'fee' => 'getFee',
+        'feeMsat' => 'getFeeMsat'
     ];
 
     /**
@@ -208,6 +213,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         $this->container['amtIn'] = isset($data['amtIn']) ? $data['amtIn'] : null;
         $this->container['amtOut'] = isset($data['amtOut']) ? $data['amtOut'] : null;
         $this->container['fee'] = isset($data['fee']) ? $data['fee'] : null;
+        $this->container['feeMsat'] = isset($data['feeMsat']) ? $data['feeMsat'] : null;
     }
 
     /**
@@ -320,7 +326,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets amtIn
      *
-     * @param string $amtIn / The total amount of the incoming HTLC that created half the circuit.
+     * @param string $amtIn / The total amount (in satoshis) of the incoming HTLC that created half the circuit.
      *
      * @return $this
      */
@@ -344,7 +350,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets amtOut
      *
-     * @param string $amtOut / The total amount of the outgoign HTLC that created the second half of the circuit.
+     * @param string $amtOut / The total amount (in satoshis) of the outgoing HTLC that created the second half of the circuit.
      *
      * @return $this
      */
@@ -368,13 +374,37 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets fee
      *
-     * @param string $fee / The total fee that this payment circuit carried.
+     * @param string $fee / The total fee (in satoshis) that this payment circuit carried.
      *
      * @return $this
      */
     public function setFee($fee)
     {
         $this->container['fee'] = $fee;
+
+        return $this;
+    }
+
+    /**
+     * Gets feeMsat
+     *
+     * @return string
+     */
+    public function getFeeMsat()
+    {
+        return $this->container['feeMsat'];
+    }
+
+    /**
+     * Sets feeMsat
+     *
+     * @param string $feeMsat / The total fee (in milli-satoshis) that this payment circuit carried.
+     *
+     * @return $this
+     */
+    public function setFeeMsat($feeMsat)
+    {
+        $this->container['feeMsat'] = $feeMsat;
 
         return $this;
     }

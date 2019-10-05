@@ -92,9 +92,9 @@ class LnrpcSendToRouteRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test attribute "routes"
+     * Test attribute "route"
      */
-    public function testPropertyRoutes()
+    public function testPropertyRoute()
     {
     }
 }

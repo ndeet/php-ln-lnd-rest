@@ -58,7 +58,6 @@ class LnrpcCloseStatusUpdate implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'closePending' => '\Lnd\Rest\Model\LnrpcPendingUpdate',
-        'confirmation' => '\Lnd\Rest\Model\LnrpcConfirmationUpdate',
         'chanClose' => '\Lnd\Rest\Model\LnrpcChannelCloseUpdate'
     ];
 
@@ -69,7 +68,6 @@ class LnrpcCloseStatusUpdate implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'closePending' => null,
-        'confirmation' => null,
         'chanClose' => null
     ];
 
@@ -101,7 +99,6 @@ class LnrpcCloseStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'closePending' => 'close_pending',
-        'confirmation' => 'confirmation',
         'chanClose' => 'chan_close'
     ];
 
@@ -112,7 +109,6 @@ class LnrpcCloseStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'closePending' => 'setClosePending',
-        'confirmation' => 'setConfirmation',
         'chanClose' => 'setChanClose'
     ];
 
@@ -123,7 +119,6 @@ class LnrpcCloseStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'closePending' => 'getClosePending',
-        'confirmation' => 'getConfirmation',
         'chanClose' => 'getChanClose'
     ];
 
@@ -188,7 +183,6 @@ class LnrpcCloseStatusUpdate implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['closePending'] = isset($data['closePending']) ? $data['closePending'] : null;
-        $this->container['confirmation'] = isset($data['confirmation']) ? $data['confirmation'] : null;
         $this->container['chanClose'] = isset($data['chanClose']) ? $data['chanClose'] : null;
     }
 
@@ -237,30 +231,6 @@ class LnrpcCloseStatusUpdate implements ModelInterface, ArrayAccess
     public function setClosePending($closePending)
     {
         $this->container['closePending'] = $closePending;
-
-        return $this;
-    }
-
-    /**
-     * Gets confirmation
-     *
-     * @return \Lnd\Rest\Model\LnrpcConfirmationUpdate
-     */
-    public function getConfirmation()
-    {
-        return $this->container['confirmation'];
-    }
-
-    /**
-     * Sets confirmation
-     *
-     * @param \Lnd\Rest\Model\LnrpcConfirmationUpdate $confirmation confirmation
-     *
-     * @return $this
-     */
-    public function setConfirmation($confirmation)
-    {
-        $this->container['confirmation'] = $confirmation;
 
         return $this;
     }

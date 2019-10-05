@@ -58,7 +58,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'walletPassword' => 'string',
-        'recoveryWindow' => 'int'
+        'recoveryWindow' => 'int',
+        'channelBackups' => '\Lnd\Rest\Model\LnrpcChanBackupSnapshot'
     ];
 
     /**
@@ -68,7 +69,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'walletPassword' => 'byte',
-        'recoveryWindow' => 'int32'
+        'recoveryWindow' => 'int32',
+        'channelBackups' => null
     ];
 
     /**
@@ -99,7 +101,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'walletPassword' => 'wallet_password',
-        'recoveryWindow' => 'recovery_window'
+        'recoveryWindow' => 'recovery_window',
+        'channelBackups' => 'channel_backups'
     ];
 
     /**
@@ -109,7 +112,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'walletPassword' => 'setWalletPassword',
-        'recoveryWindow' => 'setRecoveryWindow'
+        'recoveryWindow' => 'setRecoveryWindow',
+        'channelBackups' => 'setChannelBackups'
     ];
 
     /**
@@ -119,7 +123,8 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'walletPassword' => 'getWalletPassword',
-        'recoveryWindow' => 'getRecoveryWindow'
+        'recoveryWindow' => 'getRecoveryWindow',
+        'channelBackups' => 'getChannelBackups'
     ];
 
     /**
@@ -184,6 +189,7 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
     {
         $this->container['walletPassword'] = isset($data['walletPassword']) ? $data['walletPassword'] : null;
         $this->container['recoveryWindow'] = isset($data['recoveryWindow']) ? $data['recoveryWindow'] : null;
+        $this->container['channelBackups'] = isset($data['channelBackups']) ? $data['channelBackups'] : null;
     }
 
     /**
@@ -260,13 +266,37 @@ class LnrpcUnlockWalletRequest implements ModelInterface, ArrayAccess
     /**
      * Sets recoveryWindow
      *
-     * @param int $recoveryWindow * recovery_window is an optional argument specifying the address lookahead when restoring a wallet seed. The recovery window applies to each invdividual branch of the BIP44 derivation paths. Supplying a recovery window of zero indicates that no addresses should be recovered, such after the first initialization of the wallet.
+     * @param int $recoveryWindow * recovery_window is an optional argument specifying the address lookahead when restoring a wallet seed. The recovery window applies to each individual branch of the BIP44 derivation paths. Supplying a recovery window of zero indicates that no addresses should be recovered, such after the first initialization of the wallet.
      *
      * @return $this
      */
     public function setRecoveryWindow($recoveryWindow)
     {
         $this->container['recoveryWindow'] = $recoveryWindow;
+
+        return $this;
+    }
+
+    /**
+     * Gets channelBackups
+     *
+     * @return \Lnd\Rest\Model\LnrpcChanBackupSnapshot
+     */
+    public function getChannelBackups()
+    {
+        return $this->container['channelBackups'];
+    }
+
+    /**
+     * Sets channelBackups
+     *
+     * @param \Lnd\Rest\Model\LnrpcChanBackupSnapshot $channelBackups * channel_backups is an optional argument that allows clients to recover the settled funds within a set of channels. This should be populated if the user was unable to close out all channels and sweep funds before partial or total data loss occurred. If specified, then after on-chain recovery of funds, lnd begin to carry out the data loss recovery protocol in order to recover the funds in each channel from a remote force closed transaction.
+     *
+     * @return $this
+     */
+    public function setChannelBackups($channelBackups)
+    {
+        $this->container['channelBackups'] = $channelBackups;
 
         return $this;
     }

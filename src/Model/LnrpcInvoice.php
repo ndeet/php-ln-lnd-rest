@@ -76,7 +76,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'settleIndex' => 'string',
         'amtPaid' => 'string',
         'amtPaidSat' => 'string',
-        'amtPaidMsat' => 'string'
+        'amtPaidMsat' => 'string',
+        'state' => '\Lnd\Rest\Model\InvoiceInvoiceState'
     ];
 
     /**
@@ -104,7 +105,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'settleIndex' => 'uint64',
         'amtPaid' => 'int64',
         'amtPaidSat' => 'int64',
-        'amtPaidMsat' => 'int64'
+        'amtPaidMsat' => 'int64',
+        'state' => null
     ];
 
     /**
@@ -153,7 +155,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'settleIndex' => 'settle_index',
         'amtPaid' => 'amt_paid',
         'amtPaidSat' => 'amt_paid_sat',
-        'amtPaidMsat' => 'amt_paid_msat'
+        'amtPaidMsat' => 'amt_paid_msat',
+        'state' => 'state'
     ];
 
     /**
@@ -181,7 +184,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'settleIndex' => 'setSettleIndex',
         'amtPaid' => 'setAmtPaid',
         'amtPaidSat' => 'setAmtPaidSat',
-        'amtPaidMsat' => 'setAmtPaidMsat'
+        'amtPaidMsat' => 'setAmtPaidMsat',
+        'state' => 'setState'
     ];
 
     /**
@@ -209,7 +213,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'settleIndex' => 'getSettleIndex',
         'amtPaid' => 'getAmtPaid',
         'amtPaidSat' => 'getAmtPaidSat',
-        'amtPaidMsat' => 'getAmtPaidMsat'
+        'amtPaidMsat' => 'getAmtPaidMsat',
+        'state' => 'getState'
     ];
 
     /**
@@ -292,6 +297,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         $this->container['amtPaid'] = isset($data['amtPaid']) ? $data['amtPaid'] : null;
         $this->container['amtPaidSat'] = isset($data['amtPaidSat']) ? $data['amtPaidSat'] : null;
         $this->container['amtPaidMsat'] = isset($data['amtPaidMsat']) ? $data['amtPaidMsat'] : null;
+        $this->container['state'] = isset($data['state']) ? $data['state'] : null;
     }
 
     /**
@@ -384,7 +390,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets receipt
      *
-     * @param string $receipt receipt
+     * @param string $receipt * Deprecated. An optional cryptographic receipt of payment which is not implemented.
      *
      * @return $this
      */
@@ -843,6 +849,30 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     public function setAmtPaidMsat($amtPaidMsat)
     {
         $this->container['amtPaidMsat'] = $amtPaidMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets state
+     *
+     * @return \Lnd\Rest\Model\InvoiceInvoiceState
+     */
+    public function getState()
+    {
+        return $this->container['state'];
+    }
+
+    /**
+     * Sets state
+     *
+     * @param \Lnd\Rest\Model\InvoiceInvoiceState $state * The state the invoice is in.
+     *
+     * @return $this
+     */
+    public function setState($state)
+    {
+        $this->container['state'] = $state;
 
         return $this;
     }

@@ -61,7 +61,9 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'minHtlc' => 'string',
         'feeBaseMsat' => 'string',
         'feeRateMilliMsat' => 'string',
-        'disabled' => 'bool'
+        'disabled' => 'bool',
+        'maxHtlcMsat' => 'string',
+        'lastUpdate' => 'int'
     ];
 
     /**
@@ -74,7 +76,9 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'minHtlc' => 'int64',
         'feeBaseMsat' => 'int64',
         'feeRateMilliMsat' => 'int64',
-        'disabled' => 'boolean'
+        'disabled' => 'boolean',
+        'maxHtlcMsat' => 'uint64',
+        'lastUpdate' => 'int64'
     ];
 
     /**
@@ -108,7 +112,9 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'minHtlc' => 'min_htlc',
         'feeBaseMsat' => 'fee_base_msat',
         'feeRateMilliMsat' => 'fee_rate_milli_msat',
-        'disabled' => 'disabled'
+        'disabled' => 'disabled',
+        'maxHtlcMsat' => 'max_htlc_msat',
+        'lastUpdate' => 'last_update'
     ];
 
     /**
@@ -121,7 +127,9 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'minHtlc' => 'setMinHtlc',
         'feeBaseMsat' => 'setFeeBaseMsat',
         'feeRateMilliMsat' => 'setFeeRateMilliMsat',
-        'disabled' => 'setDisabled'
+        'disabled' => 'setDisabled',
+        'maxHtlcMsat' => 'setMaxHtlcMsat',
+        'lastUpdate' => 'setLastUpdate'
     ];
 
     /**
@@ -134,7 +142,9 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         'minHtlc' => 'getMinHtlc',
         'feeBaseMsat' => 'getFeeBaseMsat',
         'feeRateMilliMsat' => 'getFeeRateMilliMsat',
-        'disabled' => 'getDisabled'
+        'disabled' => 'getDisabled',
+        'maxHtlcMsat' => 'getMaxHtlcMsat',
+        'lastUpdate' => 'getLastUpdate'
     ];
 
     /**
@@ -202,6 +212,8 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
         $this->container['feeBaseMsat'] = isset($data['feeBaseMsat']) ? $data['feeBaseMsat'] : null;
         $this->container['feeRateMilliMsat'] = isset($data['feeRateMilliMsat']) ? $data['feeRateMilliMsat'] : null;
         $this->container['disabled'] = isset($data['disabled']) ? $data['disabled'] : null;
+        $this->container['maxHtlcMsat'] = isset($data['maxHtlcMsat']) ? $data['maxHtlcMsat'] : null;
+        $this->container['lastUpdate'] = isset($data['lastUpdate']) ? $data['lastUpdate'] : null;
     }
 
     /**
@@ -345,6 +357,54 @@ class LnrpcRoutingPolicy implements ModelInterface, ArrayAccess
     public function setDisabled($disabled)
     {
         $this->container['disabled'] = $disabled;
+
+        return $this;
+    }
+
+    /**
+     * Gets maxHtlcMsat
+     *
+     * @return string
+     */
+    public function getMaxHtlcMsat()
+    {
+        return $this->container['maxHtlcMsat'];
+    }
+
+    /**
+     * Sets maxHtlcMsat
+     *
+     * @param string $maxHtlcMsat maxHtlcMsat
+     *
+     * @return $this
+     */
+    public function setMaxHtlcMsat($maxHtlcMsat)
+    {
+        $this->container['maxHtlcMsat'] = $maxHtlcMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets lastUpdate
+     *
+     * @return int
+     */
+    public function getLastUpdate()
+    {
+        return $this->container['lastUpdate'];
+    }
+
+    /**
+     * Sets lastUpdate
+     *
+     * @param int $lastUpdate lastUpdate
+     *
+     * @return $this
+     */
+    public function setLastUpdate($lastUpdate)
+    {
+        $this->container['lastUpdate'] = $lastUpdate;
 
         return $this;
     }

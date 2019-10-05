@@ -48,6 +48,7 @@ class ChannelCloseSummaryClosureType
     const REMOTE_FORCE_CLOSE = 'REMOTE_FORCE_CLOSE';
     const BREACH_CLOSE = 'BREACH_CLOSE';
     const FUNDING_CANCELED = 'FUNDING_CANCELED';
+    const ABANDONED = 'ABANDONED';
     
     /**
      * Gets allowable values of the enum
@@ -61,6 +62,7 @@ class ChannelCloseSummaryClosureType
             self::REMOTE_FORCE_CLOSE,
             self::BREACH_CLOSE,
             self::FUNDING_CANCELED,
+            self::ABANDONED,
         ];
     }
 }

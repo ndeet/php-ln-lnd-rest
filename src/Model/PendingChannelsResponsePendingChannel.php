@@ -61,7 +61,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'channelPoint' => 'string',
         'capacity' => 'string',
         'localBalance' => 'string',
-        'remoteBalance' => 'string'
+        'remoteBalance' => 'string',
+        'localChanReserveSat' => 'string',
+        'remoteChanReserveSat' => 'string'
     ];
 
     /**
@@ -74,7 +76,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'channelPoint' => null,
         'capacity' => 'int64',
         'localBalance' => 'int64',
-        'remoteBalance' => 'int64'
+        'remoteBalance' => 'int64',
+        'localChanReserveSat' => 'int64',
+        'remoteChanReserveSat' => 'int64'
     ];
 
     /**
@@ -108,7 +112,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'channelPoint' => 'channel_point',
         'capacity' => 'capacity',
         'localBalance' => 'local_balance',
-        'remoteBalance' => 'remote_balance'
+        'remoteBalance' => 'remote_balance',
+        'localChanReserveSat' => 'local_chan_reserve_sat',
+        'remoteChanReserveSat' => 'remote_chan_reserve_sat'
     ];
 
     /**
@@ -121,7 +127,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'channelPoint' => 'setChannelPoint',
         'capacity' => 'setCapacity',
         'localBalance' => 'setLocalBalance',
-        'remoteBalance' => 'setRemoteBalance'
+        'remoteBalance' => 'setRemoteBalance',
+        'localChanReserveSat' => 'setLocalChanReserveSat',
+        'remoteChanReserveSat' => 'setRemoteChanReserveSat'
     ];
 
     /**
@@ -134,7 +142,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'channelPoint' => 'getChannelPoint',
         'capacity' => 'getCapacity',
         'localBalance' => 'getLocalBalance',
-        'remoteBalance' => 'getRemoteBalance'
+        'remoteBalance' => 'getRemoteBalance',
+        'localChanReserveSat' => 'getLocalChanReserveSat',
+        'remoteChanReserveSat' => 'getRemoteChanReserveSat'
     ];
 
     /**
@@ -202,6 +212,8 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         $this->container['capacity'] = isset($data['capacity']) ? $data['capacity'] : null;
         $this->container['localBalance'] = isset($data['localBalance']) ? $data['localBalance'] : null;
         $this->container['remoteBalance'] = isset($data['remoteBalance']) ? $data['remoteBalance'] : null;
+        $this->container['localChanReserveSat'] = isset($data['localChanReserveSat']) ? $data['localChanReserveSat'] : null;
+        $this->container['remoteChanReserveSat'] = isset($data['remoteChanReserveSat']) ? $data['remoteChanReserveSat'] : null;
     }
 
     /**
@@ -345,6 +357,54 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
     public function setRemoteBalance($remoteBalance)
     {
         $this->container['remoteBalance'] = $remoteBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets localChanReserveSat
+     *
+     * @return string
+     */
+    public function getLocalChanReserveSat()
+    {
+        return $this->container['localChanReserveSat'];
+    }
+
+    /**
+     * Sets localChanReserveSat
+     *
+     * @param string $localChanReserveSat / The minimum satoshis this node is required to reserve in its balance.
+     *
+     * @return $this
+     */
+    public function setLocalChanReserveSat($localChanReserveSat)
+    {
+        $this->container['localChanReserveSat'] = $localChanReserveSat;
+
+        return $this;
+    }
+
+    /**
+     * Gets remoteChanReserveSat
+     *
+     * @return string
+     */
+    public function getRemoteChanReserveSat()
+    {
+        return $this->container['remoteChanReserveSat'];
+    }
+
+    /**
+     * Sets remoteChanReserveSat
+     *
+     * @param string $remoteChanReserveSat * The minimum satoshis the other node is required to reserve in its balance.
+     *
+     * @return $this
+     */
+    public function setRemoteChanReserveSat($remoteChanReserveSat)
+    {
+        $this->container['remoteChanReserveSat'] = $remoteChanReserveSat;
 
         return $this;
     }

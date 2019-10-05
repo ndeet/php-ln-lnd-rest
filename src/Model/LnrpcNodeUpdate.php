@@ -60,7 +60,8 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'addresses' => 'string[]',
         'identityKey' => 'string',
         'globalFeatures' => 'string',
-        'alias' => 'string'
+        'alias' => 'string',
+        'color' => 'string'
     ];
 
     /**
@@ -72,7 +73,8 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'addresses' => null,
         'identityKey' => null,
         'globalFeatures' => 'byte',
-        'alias' => null
+        'alias' => null,
+        'color' => null
     ];
 
     /**
@@ -105,7 +107,8 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'addresses' => 'addresses',
         'identityKey' => 'identity_key',
         'globalFeatures' => 'global_features',
-        'alias' => 'alias'
+        'alias' => 'alias',
+        'color' => 'color'
     ];
 
     /**
@@ -117,7 +120,8 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'addresses' => 'setAddresses',
         'identityKey' => 'setIdentityKey',
         'globalFeatures' => 'setGlobalFeatures',
-        'alias' => 'setAlias'
+        'alias' => 'setAlias',
+        'color' => 'setColor'
     ];
 
     /**
@@ -129,7 +133,8 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'addresses' => 'getAddresses',
         'identityKey' => 'getIdentityKey',
         'globalFeatures' => 'getGlobalFeatures',
-        'alias' => 'getAlias'
+        'alias' => 'getAlias',
+        'color' => 'getColor'
     ];
 
     /**
@@ -196,6 +201,7 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         $this->container['identityKey'] = isset($data['identityKey']) ? $data['identityKey'] : null;
         $this->container['globalFeatures'] = isset($data['globalFeatures']) ? $data['globalFeatures'] : null;
         $this->container['alias'] = isset($data['alias']) ? $data['alias'] : null;
+        $this->container['color'] = isset($data['color']) ? $data['color'] : null;
     }
 
     /**
@@ -327,6 +333,30 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
     public function setAlias($alias)
     {
         $this->container['alias'] = $alias;
+
+        return $this;
+    }
+
+    /**
+     * Gets color
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->container['color'];
+    }
+
+    /**
+     * Sets color
+     *
+     * @param string $color color
+     *
+     * @return $this
+     */
+    public function setColor($color)
+    {
+        $this->container['color'] = $color;
 
         return $this;
     }

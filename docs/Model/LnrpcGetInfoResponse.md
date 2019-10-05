@@ -12,10 +12,12 @@ Name | Type | Description | Notes
 **blockHash** | **string** |  | [optional] 
 **syncedToChain** | **bool** |  | [optional] 
 **testnet** | **bool** |  | [optional] 
-**chains** | **string[]** |  | [optional] 
 **uris** | **string[]** | / The URIs of the current node. | [optional] 
 **bestHeaderTimestamp** | **string** |  | [optional] 
 **version** | **string** | / The version of the LND software that the node is running. | [optional] 
+**numInactiveChannels** | **int** |  | [optional] 
+**chains** | [**\Lnd\Rest\Model\LnrpcChain[]**](LnrpcChain.md) |  | [optional] 
+**color** | **string** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

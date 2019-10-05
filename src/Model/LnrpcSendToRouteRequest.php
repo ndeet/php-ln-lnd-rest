@@ -59,7 +59,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     protected static $swaggerTypes = [
         'paymentHash' => 'string',
         'paymentHashString' => 'string',
-        'routes' => '\Lnd\Rest\Model\LnrpcRoute[]'
+        'route' => '\Lnd\Rest\Model\LnrpcRoute'
     ];
 
     /**
@@ -70,7 +70,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     protected static $swaggerFormats = [
         'paymentHash' => 'byte',
         'paymentHashString' => null,
-        'routes' => null
+        'route' => null
     ];
 
     /**
@@ -102,7 +102,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     protected static $attributeMap = [
         'paymentHash' => 'payment_hash',
         'paymentHashString' => 'payment_hash_string',
-        'routes' => 'routes'
+        'route' => 'route'
     ];
 
     /**
@@ -113,7 +113,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     protected static $setters = [
         'paymentHash' => 'setPaymentHash',
         'paymentHashString' => 'setPaymentHashString',
-        'routes' => 'setRoutes'
+        'route' => 'setRoute'
     ];
 
     /**
@@ -124,7 +124,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     protected static $getters = [
         'paymentHash' => 'getPaymentHash',
         'paymentHashString' => 'getPaymentHashString',
-        'routes' => 'getRoutes'
+        'route' => 'getRoute'
     ];
 
     /**
@@ -189,7 +189,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     {
         $this->container['paymentHash'] = isset($data['paymentHash']) ? $data['paymentHash'] : null;
         $this->container['paymentHashString'] = isset($data['paymentHashString']) ? $data['paymentHashString'] : null;
-        $this->container['routes'] = isset($data['routes']) ? $data['routes'] : null;
+        $this->container['route'] = isset($data['route']) ? $data['route'] : null;
     }
 
     /**
@@ -278,25 +278,25 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     }
 
     /**
-     * Gets routes
+     * Gets route
      *
-     * @return \Lnd\Rest\Model\LnrpcRoute[]
+     * @return \Lnd\Rest\Model\LnrpcRoute
      */
-    public function getRoutes()
+    public function getRoute()
     {
-        return $this->container['routes'];
+        return $this->container['route'];
     }
 
     /**
-     * Sets routes
+     * Sets route
      *
-     * @param \Lnd\Rest\Model\LnrpcRoute[] $routes / The set of routes that should be used to attempt to complete the payment.
+     * @param \Lnd\Rest\Model\LnrpcRoute $route / Route that should be used to attempt to complete the payment.
      *
      * @return $this
      */
-    public function setRoutes($routes)
+    public function setRoute($route)
     {
-        $this->container['routes'] = $routes;
+        $this->container['route'] = $route;
 
         return $this;
     }

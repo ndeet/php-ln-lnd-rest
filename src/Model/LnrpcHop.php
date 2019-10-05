@@ -63,7 +63,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'fee' => 'string',
         'expiry' => 'int',
         'amtToForwardMsat' => 'string',
-        'feeMsat' => 'string'
+        'feeMsat' => 'string',
+        'pubKey' => 'string'
     ];
 
     /**
@@ -78,7 +79,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'fee' => 'int64',
         'expiry' => 'int64',
         'amtToForwardMsat' => 'int64',
-        'feeMsat' => 'int64'
+        'feeMsat' => 'int64',
+        'pubKey' => null
     ];
 
     /**
@@ -114,7 +116,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'fee' => 'fee',
         'expiry' => 'expiry',
         'amtToForwardMsat' => 'amt_to_forward_msat',
-        'feeMsat' => 'fee_msat'
+        'feeMsat' => 'fee_msat',
+        'pubKey' => 'pub_key'
     ];
 
     /**
@@ -129,7 +132,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'fee' => 'setFee',
         'expiry' => 'setExpiry',
         'amtToForwardMsat' => 'setAmtToForwardMsat',
-        'feeMsat' => 'setFeeMsat'
+        'feeMsat' => 'setFeeMsat',
+        'pubKey' => 'setPubKey'
     ];
 
     /**
@@ -144,7 +148,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'fee' => 'getFee',
         'expiry' => 'getExpiry',
         'amtToForwardMsat' => 'getAmtToForwardMsat',
-        'feeMsat' => 'getFeeMsat'
+        'feeMsat' => 'getFeeMsat',
+        'pubKey' => 'getPubKey'
     ];
 
     /**
@@ -214,6 +219,7 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         $this->container['expiry'] = isset($data['expiry']) ? $data['expiry'] : null;
         $this->container['amtToForwardMsat'] = isset($data['amtToForwardMsat']) ? $data['amtToForwardMsat'] : null;
         $this->container['feeMsat'] = isset($data['feeMsat']) ? $data['feeMsat'] : null;
+        $this->container['pubKey'] = isset($data['pubKey']) ? $data['pubKey'] : null;
     }
 
     /**
@@ -405,6 +411,30 @@ class LnrpcHop implements ModelInterface, ArrayAccess
     public function setFeeMsat($feeMsat)
     {
         $this->container['feeMsat'] = $feeMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets pubKey
+     *
+     * @return string
+     */
+    public function getPubKey()
+    {
+        return $this->container['pubKey'];
+    }
+
+    /**
+     * Sets pubKey
+     *
+     * @param string $pubKey * An optional public key of the hop. If the public key is given, the payment can be executed without relying on a copy of the channel graph.
+     *
+     * @return $this
+     */
+    public function setPubKey($pubKey)
+    {
+        $this->container['pubKey'] = $pubKey;
 
         return $this;
     }

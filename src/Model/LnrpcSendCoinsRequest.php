@@ -60,7 +60,8 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => 'string',
         'amount' => 'string',
         'targetConf' => 'int',
-        'satPerByte' => 'string'
+        'satPerByte' => 'string',
+        'sendAll' => 'bool'
     ];
 
     /**
@@ -72,7 +73,8 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => null,
         'amount' => 'int64',
         'targetConf' => 'int32',
-        'satPerByte' => 'int64'
+        'satPerByte' => 'int64',
+        'sendAll' => 'boolean'
     ];
 
     /**
@@ -105,7 +107,8 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => 'addr',
         'amount' => 'amount',
         'targetConf' => 'target_conf',
-        'satPerByte' => 'sat_per_byte'
+        'satPerByte' => 'sat_per_byte',
+        'sendAll' => 'send_all'
     ];
 
     /**
@@ -117,7 +120,8 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => 'setAddr',
         'amount' => 'setAmount',
         'targetConf' => 'setTargetConf',
-        'satPerByte' => 'setSatPerByte'
+        'satPerByte' => 'setSatPerByte',
+        'sendAll' => 'setSendAll'
     ];
 
     /**
@@ -129,7 +133,8 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => 'getAddr',
         'amount' => 'getAmount',
         'targetConf' => 'getTargetConf',
-        'satPerByte' => 'getSatPerByte'
+        'satPerByte' => 'getSatPerByte',
+        'sendAll' => 'getSendAll'
     ];
 
     /**
@@ -196,6 +201,7 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
         $this->container['targetConf'] = isset($data['targetConf']) ? $data['targetConf'] : null;
         $this->container['satPerByte'] = isset($data['satPerByte']) ? $data['satPerByte'] : null;
+        $this->container['sendAll'] = isset($data['sendAll']) ? $data['sendAll'] : null;
     }
 
     /**
@@ -315,6 +321,30 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
     public function setSatPerByte($satPerByte)
     {
         $this->container['satPerByte'] = $satPerByte;
+
+        return $this;
+    }
+
+    /**
+     * Gets sendAll
+     *
+     * @return bool
+     */
+    public function getSendAll()
+    {
+        return $this->container['sendAll'];
+    }
+
+    /**
+     * Sets sendAll
+     *
+     * @param bool $sendAll * If set, then the amount field will be ignored, and lnd will attempt to send all the coins under control of the internal wallet to the specified address.
+     *
+     * @return $this
+     */
+    public function setSendAll($sendAll)
+    {
+        $this->container['sendAll'] = $sendAll;
 
         return $this;
     }

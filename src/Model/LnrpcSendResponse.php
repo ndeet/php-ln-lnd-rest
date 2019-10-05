@@ -59,7 +59,8 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
     protected static $swaggerTypes = [
         'paymentError' => 'string',
         'paymentPreimage' => 'string',
-        'paymentRoute' => '\Lnd\Rest\Model\LnrpcRoute'
+        'paymentRoute' => '\Lnd\Rest\Model\LnrpcRoute',
+        'paymentHash' => 'string'
     ];
 
     /**
@@ -70,7 +71,8 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
     protected static $swaggerFormats = [
         'paymentError' => null,
         'paymentPreimage' => 'byte',
-        'paymentRoute' => null
+        'paymentRoute' => null,
+        'paymentHash' => 'byte'
     ];
 
     /**
@@ -102,7 +104,8 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
     protected static $attributeMap = [
         'paymentError' => 'payment_error',
         'paymentPreimage' => 'payment_preimage',
-        'paymentRoute' => 'payment_route'
+        'paymentRoute' => 'payment_route',
+        'paymentHash' => 'payment_hash'
     ];
 
     /**
@@ -113,7 +116,8 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
     protected static $setters = [
         'paymentError' => 'setPaymentError',
         'paymentPreimage' => 'setPaymentPreimage',
-        'paymentRoute' => 'setPaymentRoute'
+        'paymentRoute' => 'setPaymentRoute',
+        'paymentHash' => 'setPaymentHash'
     ];
 
     /**
@@ -124,7 +128,8 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
     protected static $getters = [
         'paymentError' => 'getPaymentError',
         'paymentPreimage' => 'getPaymentPreimage',
-        'paymentRoute' => 'getPaymentRoute'
+        'paymentRoute' => 'getPaymentRoute',
+        'paymentHash' => 'getPaymentHash'
     ];
 
     /**
@@ -190,6 +195,7 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
         $this->container['paymentError'] = isset($data['paymentError']) ? $data['paymentError'] : null;
         $this->container['paymentPreimage'] = isset($data['paymentPreimage']) ? $data['paymentPreimage'] : null;
         $this->container['paymentRoute'] = isset($data['paymentRoute']) ? $data['paymentRoute'] : null;
+        $this->container['paymentHash'] = isset($data['paymentHash']) ? $data['paymentHash'] : null;
     }
 
     /**
@@ -205,6 +211,10 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
             $invalidProperties[] = "invalid value for 'paymentPreimage', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
         }
 
+        if (!is_null($this->container['paymentHash']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['paymentHash'])) {
+            $invalidProperties[] = "invalid value for 'paymentHash', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        }
+
         return $invalidProperties;
     }
 
@@ -218,6 +228,9 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
     {
 
         if (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['paymentPreimage'])) {
+            return false;
+        }
+        if (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['paymentHash'])) {
             return false;
         }
         return true;
@@ -297,6 +310,35 @@ class LnrpcSendResponse implements ModelInterface, ArrayAccess
     public function setPaymentRoute($paymentRoute)
     {
         $this->container['paymentRoute'] = $paymentRoute;
+
+        return $this;
+    }
+
+    /**
+     * Gets paymentHash
+     *
+     * @return string
+     */
+    public function getPaymentHash()
+    {
+        return $this->container['paymentHash'];
+    }
+
+    /**
+     * Sets paymentHash
+     *
+     * @param string $paymentHash paymentHash
+     *
+     * @return $this
+     */
+    public function setPaymentHash($paymentHash)
+    {
+
+        if (!is_null($paymentHash) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $paymentHash))) {
+            throw new \InvalidArgumentException("invalid value for $paymentHash when calling LnrpcSendResponse., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        }
+
+        $this->container['paymentHash'] = $paymentHash;
 
         return $this;
     }

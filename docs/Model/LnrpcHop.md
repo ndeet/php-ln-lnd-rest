@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **expiry** | **int** |  | [optional] 
 **amtToForwardMsat** | **string** |  | [optional] 
 **feeMsat** | **string** |  | [optional] 
+**pubKey** | **string** | * An optional public key of the hop. If the public key is given, the payment can be executed without relying on a copy of the channel graph. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

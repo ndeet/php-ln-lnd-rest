@@ -59,7 +59,8 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     protected static $swaggerTypes = [
         'node' => '\Lnd\Rest\Model\LnrpcLightningNode',
         'numChannels' => 'int',
-        'totalCapacity' => 'string'
+        'totalCapacity' => 'string',
+        'channels' => '\Lnd\Rest\Model\LnrpcChannelEdge[]'
     ];
 
     /**
@@ -70,7 +71,8 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     protected static $swaggerFormats = [
         'node' => null,
         'numChannels' => 'int64',
-        'totalCapacity' => 'int64'
+        'totalCapacity' => 'int64',
+        'channels' => null
     ];
 
     /**
@@ -102,7 +104,8 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     protected static $attributeMap = [
         'node' => 'node',
         'numChannels' => 'num_channels',
-        'totalCapacity' => 'total_capacity'
+        'totalCapacity' => 'total_capacity',
+        'channels' => 'channels'
     ];
 
     /**
@@ -113,7 +116,8 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     protected static $setters = [
         'node' => 'setNode',
         'numChannels' => 'setNumChannels',
-        'totalCapacity' => 'setTotalCapacity'
+        'totalCapacity' => 'setTotalCapacity',
+        'channels' => 'setChannels'
     ];
 
     /**
@@ -124,7 +128,8 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     protected static $getters = [
         'node' => 'getNode',
         'numChannels' => 'getNumChannels',
-        'totalCapacity' => 'getTotalCapacity'
+        'totalCapacity' => 'getTotalCapacity',
+        'channels' => 'getChannels'
     ];
 
     /**
@@ -190,6 +195,7 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
         $this->container['node'] = isset($data['node']) ? $data['node'] : null;
         $this->container['numChannels'] = isset($data['numChannels']) ? $data['numChannels'] : null;
         $this->container['totalCapacity'] = isset($data['totalCapacity']) ? $data['totalCapacity'] : null;
+        $this->container['channels'] = isset($data['channels']) ? $data['channels'] : null;
     }
 
     /**
@@ -254,7 +260,7 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     /**
      * Sets numChannels
      *
-     * @param int $numChannels numChannels
+     * @param int $numChannels / The total number of channels for the node.
      *
      * @return $this
      */
@@ -278,13 +284,37 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     /**
      * Sets totalCapacity
      *
-     * @param string $totalCapacity totalCapacity
+     * @param string $totalCapacity / The sum of all channels capacity for the node, denominated in satoshis.
      *
      * @return $this
      */
     public function setTotalCapacity($totalCapacity)
     {
         $this->container['totalCapacity'] = $totalCapacity;
+
+        return $this;
+    }
+
+    /**
+     * Gets channels
+     *
+     * @return \Lnd\Rest\Model\LnrpcChannelEdge[]
+     */
+    public function getChannels()
+    {
+        return $this->container['channels'];
+    }
+
+    /**
+     * Sets channels
+     *
+     * @param \Lnd\Rest\Model\LnrpcChannelEdge[] $channels / A list of all public channels for the node.
+     *
+     * @return $this
+     */
+    public function setChannels($channels)
+    {
+        $this->container['channels'] = $channels;
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * LnrpcConfirmationUpdate
+ * LnrpcChanBackupSnapshot
  *
  * PHP version 5
  *
@@ -33,14 +33,14 @@ use \ArrayAccess;
 use \Lnd\Rest\ObjectSerializer;
 
 /**
- * LnrpcConfirmationUpdate Class Doc Comment
+ * LnrpcChanBackupSnapshot Class Doc Comment
  *
  * @category Class
  * @package  Lnd\Rest
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
  */
-class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
+class LnrpcChanBackupSnapshot implements ModelInterface, ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'lnrpcConfirmationUpdate';
+    protected static $swaggerModelName = 'lnrpcChanBackupSnapshot';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,9 +57,8 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'blockSha' => 'string',
-        'blockHeight' => 'int',
-        'numConfsLeft' => 'int'
+        'singleChanBackups' => '\Lnd\Rest\Model\LnrpcChannelBackups',
+        'multiChanBackup' => '\Lnd\Rest\Model\LnrpcMultiChanBackup'
     ];
 
     /**
@@ -68,9 +67,8 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'blockSha' => 'byte',
-        'blockHeight' => 'int32',
-        'numConfsLeft' => 'int64'
+        'singleChanBackups' => null,
+        'multiChanBackup' => null
     ];
 
     /**
@@ -100,9 +98,8 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'blockSha' => 'block_sha',
-        'blockHeight' => 'block_height',
-        'numConfsLeft' => 'num_confs_left'
+        'singleChanBackups' => 'single_chan_backups',
+        'multiChanBackup' => 'multi_chan_backup'
     ];
 
     /**
@@ -111,9 +108,8 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'blockSha' => 'setBlockSha',
-        'blockHeight' => 'setBlockHeight',
-        'numConfsLeft' => 'setNumConfsLeft'
+        'singleChanBackups' => 'setSingleChanBackups',
+        'multiChanBackup' => 'setMultiChanBackup'
     ];
 
     /**
@@ -122,9 +118,8 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'blockSha' => 'getBlockSha',
-        'blockHeight' => 'getBlockHeight',
-        'numConfsLeft' => 'getNumConfsLeft'
+        'singleChanBackups' => 'getSingleChanBackups',
+        'multiChanBackup' => 'getMultiChanBackup'
     ];
 
     /**
@@ -187,9 +182,8 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['blockSha'] = isset($data['blockSha']) ? $data['blockSha'] : null;
-        $this->container['blockHeight'] = isset($data['blockHeight']) ? $data['blockHeight'] : null;
-        $this->container['numConfsLeft'] = isset($data['numConfsLeft']) ? $data['numConfsLeft'] : null;
+        $this->container['singleChanBackups'] = isset($data['singleChanBackups']) ? $data['singleChanBackups'] : null;
+        $this->container['multiChanBackup'] = isset($data['multiChanBackup']) ? $data['multiChanBackup'] : null;
     }
 
     /**
@@ -200,10 +194,6 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
     public function listInvalidProperties()
     {
         $invalidProperties = [];
-
-        if (!is_null($this->container['blockSha']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['blockSha'])) {
-            $invalidProperties[] = "invalid value for 'blockSha', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
-        }
 
         return $invalidProperties;
     }
@@ -217,86 +207,54 @@ class LnrpcConfirmationUpdate implements ModelInterface, ArrayAccess
     public function valid()
     {
 
-        if (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['blockSha'])) {
-            return false;
-        }
         return true;
     }
 
 
     /**
-     * Gets blockSha
+     * Gets singleChanBackups
      *
-     * @return string
+     * @return \Lnd\Rest\Model\LnrpcChannelBackups
      */
-    public function getBlockSha()
+    public function getSingleChanBackups()
     {
-        return $this->container['blockSha'];
+        return $this->container['singleChanBackups'];
     }
 
     /**
-     * Sets blockSha
+     * Sets singleChanBackups
      *
-     * @param string $blockSha blockSha
+     * @param \Lnd\Rest\Model\LnrpcChannelBackups $singleChanBackups * The set of new channels that have been added since the last channel backup snapshot was requested.
      *
      * @return $this
      */
-    public function setBlockSha($blockSha)
+    public function setSingleChanBackups($singleChanBackups)
     {
-
-        if (!is_null($blockSha) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $blockSha))) {
-            throw new \InvalidArgumentException("invalid value for $blockSha when calling LnrpcConfirmationUpdate., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
-        }
-
-        $this->container['blockSha'] = $blockSha;
+        $this->container['singleChanBackups'] = $singleChanBackups;
 
         return $this;
     }
 
     /**
-     * Gets blockHeight
+     * Gets multiChanBackup
      *
-     * @return int
+     * @return \Lnd\Rest\Model\LnrpcMultiChanBackup
      */
-    public function getBlockHeight()
+    public function getMultiChanBackup()
     {
-        return $this->container['blockHeight'];
+        return $this->container['multiChanBackup'];
     }
 
     /**
-     * Sets blockHeight
+     * Sets multiChanBackup
      *
-     * @param int $blockHeight blockHeight
+     * @param \Lnd\Rest\Model\LnrpcMultiChanBackup $multiChanBackup * A multi-channel backup that covers all open channels currently known to lnd.
      *
      * @return $this
      */
-    public function setBlockHeight($blockHeight)
+    public function setMultiChanBackup($multiChanBackup)
     {
-        $this->container['blockHeight'] = $blockHeight;
-
-        return $this;
-    }
-
-    /**
-     * Gets numConfsLeft
-     *
-     * @return int
-     */
-    public function getNumConfsLeft()
-    {
-        return $this->container['numConfsLeft'];
-    }
-
-    /**
-     * Sets numConfsLeft
-     *
-     * @param int $numConfsLeft numConfsLeft
-     *
-     * @return $this
-     */
-    public function setNumConfsLeft($numConfsLeft)
-    {
-        $this->container['numConfsLeft'] = $numConfsLeft;
+        $this->container['multiChanBackup'] = $multiChanBackup;
 
         return $this;
     }

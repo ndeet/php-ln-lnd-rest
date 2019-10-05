@@ -64,7 +64,9 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHashString' => 'string',
         'paymentRequest' => 'string',
         'finalCltvDelta' => 'int',
-        'feeLimit' => '\Lnd\Rest\Model\LnrpcFeeLimit'
+        'feeLimit' => '\Lnd\Rest\Model\LnrpcFeeLimit',
+        'outgoingChanId' => 'string',
+        'cltvLimit' => 'int'
     ];
 
     /**
@@ -80,7 +82,9 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHashString' => null,
         'paymentRequest' => null,
         'finalCltvDelta' => 'int32',
-        'feeLimit' => null
+        'feeLimit' => null,
+        'outgoingChanId' => 'uint64',
+        'cltvLimit' => 'int64'
     ];
 
     /**
@@ -117,7 +121,9 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHashString' => 'payment_hash_string',
         'paymentRequest' => 'payment_request',
         'finalCltvDelta' => 'final_cltv_delta',
-        'feeLimit' => 'fee_limit'
+        'feeLimit' => 'fee_limit',
+        'outgoingChanId' => 'outgoing_chan_id',
+        'cltvLimit' => 'cltv_limit'
     ];
 
     /**
@@ -133,7 +139,9 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHashString' => 'setPaymentHashString',
         'paymentRequest' => 'setPaymentRequest',
         'finalCltvDelta' => 'setFinalCltvDelta',
-        'feeLimit' => 'setFeeLimit'
+        'feeLimit' => 'setFeeLimit',
+        'outgoingChanId' => 'setOutgoingChanId',
+        'cltvLimit' => 'setCltvLimit'
     ];
 
     /**
@@ -149,7 +157,9 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'paymentHashString' => 'getPaymentHashString',
         'paymentRequest' => 'getPaymentRequest',
         'finalCltvDelta' => 'getFinalCltvDelta',
-        'feeLimit' => 'getFeeLimit'
+        'feeLimit' => 'getFeeLimit',
+        'outgoingChanId' => 'getOutgoingChanId',
+        'cltvLimit' => 'getCltvLimit'
     ];
 
     /**
@@ -220,6 +230,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         $this->container['paymentRequest'] = isset($data['paymentRequest']) ? $data['paymentRequest'] : null;
         $this->container['finalCltvDelta'] = isset($data['finalCltvDelta']) ? $data['finalCltvDelta'] : null;
         $this->container['feeLimit'] = isset($data['feeLimit']) ? $data['feeLimit'] : null;
+        $this->container['outgoingChanId'] = isset($data['outgoingChanId']) ? $data['outgoingChanId'] : null;
+        $this->container['cltvLimit'] = isset($data['cltvLimit']) ? $data['cltvLimit'] : null;
     }
 
     /**
@@ -459,6 +471,54 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     public function setFeeLimit($feeLimit)
     {
         $this->container['feeLimit'] = $feeLimit;
+
+        return $this;
+    }
+
+    /**
+     * Gets outgoingChanId
+     *
+     * @return string
+     */
+    public function getOutgoingChanId()
+    {
+        return $this->container['outgoingChanId'];
+    }
+
+    /**
+     * Sets outgoingChanId
+     *
+     * @param string $outgoingChanId * The channel id of the channel that must be taken to the first hop. If zero, any channel may be used.
+     *
+     * @return $this
+     */
+    public function setOutgoingChanId($outgoingChanId)
+    {
+        $this->container['outgoingChanId'] = $outgoingChanId;
+
+        return $this;
+    }
+
+    /**
+     * Gets cltvLimit
+     *
+     * @return int
+     */
+    public function getCltvLimit()
+    {
+        return $this->container['cltvLimit'];
+    }
+
+    /**
+     * Sets cltvLimit
+     *
+     * @param int $cltvLimit *  An optional maximum total time lock for the route. If zero, there is no maximum enforced.
+     *
+     * @return $this
+     */
+    public function setCltvLimit($cltvLimit)
+    {
+        $this->container['cltvLimit'] = $cltvLimit;
 
         return $this;
     }
