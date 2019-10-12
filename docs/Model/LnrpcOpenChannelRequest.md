@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **minHtlcMsat** | **string** | / The minimum value in millisatoshi we will require for incoming HTLCs on the channel. | [optional] 
 **remoteCsvDelay** | **int** | / The delay we require on the remote&#39;s commitment transaction. If this is not set, it will be scaled automatically with the channel size. | [optional] 
 **minConfs** | **int** | / The minimum number of confirmations each one of your outputs used for the funding transaction must satisfy. | [optional] 
+**spendUnconfirmed** | **bool** | / Whether unconfirmed outputs should be used as inputs for the funding transaction. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

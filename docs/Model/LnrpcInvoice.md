@@ -4,7 +4,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **memo** | **string** | * An optional memo to attach along with the invoice. Used for record keeping purposes for the invoice&#39;s creator, and will also be set in the description field of the encoded payment request if the description_hash field is not being used. | [optional] 
-**receipt** | **string** |  | [optional] 
+**receipt** | **string** | * Deprecated. An optional cryptographic receipt of payment which is not implemented. | [optional] 
 **rPreimage** | **string** |  | [optional] 
 **rHash** | **string** |  | [optional] 
 **value** | **string** |  | [optional] 
@@ -23,6 +23,7 @@ Name | Type | Description | Notes
 **amtPaid** | **string** | / Deprecated, use amt_paid_sat or amt_paid_msat. | [optional] 
 **amtPaidSat** | **string** | * The amount that was accepted for this invoice, in satoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it&#39;s possible that the sender paid MORE that was specified in the original invoice. So we&#39;ll record that here as well. | [optional] 
 **amtPaidMsat** | **string** | * The amount that was accepted for this invoice, in millisatoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it&#39;s possible that the sender paid MORE that was specified in the original invoice. So we&#39;ll record that here as well. | [optional] 
+**state** | [**\Lnd\Rest\Model\InvoiceInvoiceState**](InvoiceInvoiceState.md) | * The state the invoice is in. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

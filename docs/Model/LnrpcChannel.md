@@ -18,8 +18,12 @@ Name | Type | Description | Notes
 **totalSatoshisReceived** | **string** | * The total number of satoshis we&#39;ve received within this channel. | [optional] 
 **numUpdates** | **string** | * The total number of updates conducted within this channel. | [optional] 
 **pendingHtlcs** | [**\Lnd\Rest\Model\LnrpcHTLC[]**](LnrpcHTLC.md) | * The list of active, uncleared HTLCs currently pending within the channel. | [optional] 
-**csvDelay** | **int** | * The CSV delay expressed in relative blocks. If the channel is force closed, we&#39;ll need to wait for this many blocks before we can regain our funds. | [optional] 
-**private** | **bool** |  | [optional] 
+**csvDelay** | **int** | * The CSV delay expressed in relative blocks. If the channel is force closed, we will need to wait for this many blocks before we can regain our funds. | [optional] 
+**private** | **bool** | / Whether this channel is advertised to the network or not. | [optional] 
+**initiator** | **bool** | / True if we were the ones that created the channel. | [optional] 
+**chanStatusFlags** | **string** | / A set of flags showing the current state of the channel. | [optional] 
+**localChanReserveSat** | **string** | / The minimum satoshis this node is required to reserve in its balance. | [optional] 
+**remoteChanReserveSat** | **string** | * The minimum satoshis the other node is required to reserve in its balance. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
