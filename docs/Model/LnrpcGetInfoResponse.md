@@ -18,6 +18,7 @@ Name | Type | Description | Notes
 **numInactiveChannels** | **int** |  | [optional] 
 **chains** | [**\Lnd\Rest\Model\LnrpcChain[]**](LnrpcChain.md) |  | [optional] 
 **color** | **string** |  | [optional] 
+**syncedToGraph** | **bool** | Whether we consider ourselves synced with the public channel graph. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

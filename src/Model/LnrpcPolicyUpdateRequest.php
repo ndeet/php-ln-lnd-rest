@@ -61,7 +61,8 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'chanPoint' => '\Lnd\Rest\Model\LnrpcChannelPoint',
         'baseFeeMsat' => 'string',
         'feeRate' => 'double',
-        'timeLockDelta' => 'int'
+        'timeLockDelta' => 'int',
+        'maxHtlcMsat' => 'string'
     ];
 
     /**
@@ -74,7 +75,8 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'chanPoint' => null,
         'baseFeeMsat' => 'int64',
         'feeRate' => 'double',
-        'timeLockDelta' => 'int64'
+        'timeLockDelta' => 'int64',
+        'maxHtlcMsat' => 'uint64'
     ];
 
     /**
@@ -108,7 +110,8 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'chanPoint' => 'chan_point',
         'baseFeeMsat' => 'base_fee_msat',
         'feeRate' => 'fee_rate',
-        'timeLockDelta' => 'time_lock_delta'
+        'timeLockDelta' => 'time_lock_delta',
+        'maxHtlcMsat' => 'max_htlc_msat'
     ];
 
     /**
@@ -121,7 +124,8 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'chanPoint' => 'setChanPoint',
         'baseFeeMsat' => 'setBaseFeeMsat',
         'feeRate' => 'setFeeRate',
-        'timeLockDelta' => 'setTimeLockDelta'
+        'timeLockDelta' => 'setTimeLockDelta',
+        'maxHtlcMsat' => 'setMaxHtlcMsat'
     ];
 
     /**
@@ -134,7 +138,8 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'chanPoint' => 'getChanPoint',
         'baseFeeMsat' => 'getBaseFeeMsat',
         'feeRate' => 'getFeeRate',
-        'timeLockDelta' => 'getTimeLockDelta'
+        'timeLockDelta' => 'getTimeLockDelta',
+        'maxHtlcMsat' => 'getMaxHtlcMsat'
     ];
 
     /**
@@ -202,6 +207,7 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         $this->container['baseFeeMsat'] = isset($data['baseFeeMsat']) ? $data['baseFeeMsat'] : null;
         $this->container['feeRate'] = isset($data['feeRate']) ? $data['feeRate'] : null;
         $this->container['timeLockDelta'] = isset($data['timeLockDelta']) ? $data['timeLockDelta'] : null;
+        $this->container['maxHtlcMsat'] = isset($data['maxHtlcMsat']) ? $data['maxHtlcMsat'] : null;
     }
 
     /**
@@ -344,6 +350,30 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
     public function setTimeLockDelta($timeLockDelta)
     {
         $this->container['timeLockDelta'] = $timeLockDelta;
+
+        return $this;
+    }
+
+    /**
+     * Gets maxHtlcMsat
+     *
+     * @return string
+     */
+    public function getMaxHtlcMsat()
+    {
+        return $this->container['maxHtlcMsat'];
+    }
+
+    /**
+     * Sets maxHtlcMsat
+     *
+     * @param string $maxHtlcMsat / If set, the maximum HTLC size in milli-satoshis. If unset, the maximum HTLC will be unchanged.
+     *
+     * @return $this
+     */
+    public function setMaxHtlcMsat($maxHtlcMsat)
+    {
+        $this->container['maxHtlcMsat'] = $maxHtlcMsat;
 
         return $this;
     }

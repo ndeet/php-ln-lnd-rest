@@ -1,6 +1,6 @@
 {
     "name": "ndeet/ln-lnd-rest",
-    "version": "0.7.1",
+    "version": "0.8.0",
     "description": "",
     "keywords": [
         "swagger",
@@ -11,6 +11,10 @@
     "homepage": "http://swagger.io",
     "license": "proprietary",
     "authors": [
+        {
+            "name": "Andreas Tasch",
+            "homepage": "http://www.attec.at"
+        },
         {
             "name": "Swagger and contributors",
             "homepage": "https://github.com/swagger-api/swagger-codegen"

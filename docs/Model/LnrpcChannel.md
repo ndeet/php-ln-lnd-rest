@@ -24,6 +24,7 @@ Name | Type | Description | Notes
 **chanStatusFlags** | **string** | / A set of flags showing the current state of the channel. | [optional] 
 **localChanReserveSat** | **string** | / The minimum satoshis this node is required to reserve in its balance. | [optional] 
 **remoteChanReserveSat** | **string** | * The minimum satoshis the other node is required to reserve in its balance. | [optional] 
+**staticRemoteKey** | **bool** | * If true, then this channel uses the modern commitment format where the key in the output of the remote party does not change each state. This makes back up and recovery easier as when the channel is closed, the funds go directly to that key. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -57,7 +57,8 @@ class LnrpcQueryRoutesResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'routes' => '\Lnd\Rest\Model\LnrpcRoute[]'
+        'routes' => '\Lnd\Rest\Model\LnrpcRoute[]',
+        'successProb' => 'double'
     ];
 
     /**
@@ -66,7 +67,8 @@ class LnrpcQueryRoutesResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'routes' => null
+        'routes' => null,
+        'successProb' => 'double'
     ];
 
     /**
@@ -96,7 +98,8 @@ class LnrpcQueryRoutesResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'routes' => 'routes'
+        'routes' => 'routes',
+        'successProb' => 'success_prob'
     ];
 
     /**
@@ -105,7 +108,8 @@ class LnrpcQueryRoutesResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'routes' => 'setRoutes'
+        'routes' => 'setRoutes',
+        'successProb' => 'setSuccessProb'
     ];
 
     /**
@@ -114,7 +118,8 @@ class LnrpcQueryRoutesResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'routes' => 'getRoutes'
+        'routes' => 'getRoutes',
+        'successProb' => 'getSuccessProb'
     ];
 
     /**
@@ -178,6 +183,7 @@ class LnrpcQueryRoutesResponse implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['routes'] = isset($data['routes']) ? $data['routes'] : null;
+        $this->container['successProb'] = isset($data['successProb']) ? $data['successProb'] : null;
     }
 
     /**
@@ -217,13 +223,37 @@ class LnrpcQueryRoutesResponse implements ModelInterface, ArrayAccess
     /**
      * Sets routes
      *
-     * @param \Lnd\Rest\Model\LnrpcRoute[] $routes routes
+     * @param \Lnd\Rest\Model\LnrpcRoute[] $routes * The route that results from the path finding operation. This is still a repeated field to retain backwards compatibility.
      *
      * @return $this
      */
     public function setRoutes($routes)
     {
         $this->container['routes'] = $routes;
+
+        return $this;
+    }
+
+    /**
+     * Gets successProb
+     *
+     * @return double
+     */
+    public function getSuccessProb()
+    {
+        return $this->container['successProb'];
+    }
+
+    /**
+     * Sets successProb
+     *
+     * @param double $successProb successProb
+     *
+     * @return $this
+     */
+    public function setSuccessProb($successProb)
+    {
+        $this->container['successProb'] = $successProb;
 
         return $this;
     }

@@ -77,7 +77,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'string',
         'amtPaidSat' => 'string',
         'amtPaidMsat' => 'string',
-        'state' => '\Lnd\Rest\Model\InvoiceInvoiceState'
+        'state' => '\Lnd\Rest\Model\InvoiceInvoiceState',
+        'htlcs' => '\Lnd\Rest\Model\LnrpcInvoiceHTLC[]'
     ];
 
     /**
@@ -106,7 +107,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'int64',
         'amtPaidSat' => 'int64',
         'amtPaidMsat' => 'int64',
-        'state' => null
+        'state' => null,
+        'htlcs' => null
     ];
 
     /**
@@ -156,7 +158,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'amt_paid',
         'amtPaidSat' => 'amt_paid_sat',
         'amtPaidMsat' => 'amt_paid_msat',
-        'state' => 'state'
+        'state' => 'state',
+        'htlcs' => 'htlcs'
     ];
 
     /**
@@ -185,7 +188,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'setAmtPaid',
         'amtPaidSat' => 'setAmtPaidSat',
         'amtPaidMsat' => 'setAmtPaidMsat',
-        'state' => 'setState'
+        'state' => 'setState',
+        'htlcs' => 'setHtlcs'
     ];
 
     /**
@@ -214,7 +218,8 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'getAmtPaid',
         'amtPaidSat' => 'getAmtPaidSat',
         'amtPaidMsat' => 'getAmtPaidMsat',
-        'state' => 'getState'
+        'state' => 'getState',
+        'htlcs' => 'getHtlcs'
     ];
 
     /**
@@ -298,6 +303,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         $this->container['amtPaidSat'] = isset($data['amtPaidSat']) ? $data['amtPaidSat'] : null;
         $this->container['amtPaidMsat'] = isset($data['amtPaidMsat']) ? $data['amtPaidMsat'] : null;
         $this->container['state'] = isset($data['state']) ? $data['state'] : null;
+        $this->container['htlcs'] = isset($data['htlcs']) ? $data['htlcs'] : null;
     }
 
     /**
@@ -860,6 +866,30 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     public function setState($state)
     {
         $this->container['state'] = $state;
+
+        return $this;
+    }
+
+    /**
+     * Gets htlcs
+     *
+     * @return \Lnd\Rest\Model\LnrpcInvoiceHTLC[]
+     */
+    public function getHtlcs()
+    {
+        return $this->container['htlcs'];
+    }
+
+    /**
+     * Sets htlcs
+     *
+     * @param \Lnd\Rest\Model\LnrpcInvoiceHTLC[] $htlcs / List of HTLCs paying to this invoice [EXPERIMENTAL].
+     *
+     * @return $this
+     */
+    public function setHtlcs($htlcs)
+    {
+        $this->container['htlcs'] = $htlcs;
 
         return $this;
     }

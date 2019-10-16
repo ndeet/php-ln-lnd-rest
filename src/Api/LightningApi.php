@@ -7619,14 +7619,15 @@ class LightningApi
      * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
      * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
      * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcQueryRoutesResponse
      */
-    public function queryRoutes($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null)
+    public function queryRoutes($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
     {
-        list($response) = $this->queryRoutesWithHttpInfo($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl);
+        list($response) = $this->queryRoutesWithHttpInfo($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit);
         return $response;
     }
 
@@ -7643,15 +7644,16 @@ class LightningApi
      * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
      * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
      * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcQueryRoutesResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function queryRoutesWithHttpInfo($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null)
+    public function queryRoutesWithHttpInfo($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcQueryRoutesResponse';
-        $request = $this->queryRoutesRequest($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl);
+        $request = $this->queryRoutesRequest($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit);
 
         try {
             $options = $this->createHttpClientOption();
@@ -7725,13 +7727,14 @@ class LightningApi
      * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
      * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
      * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function queryRoutesAsync($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null)
+    public function queryRoutesAsync($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
     {
-        return $this->queryRoutesAsyncWithHttpInfo($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl)
+        return $this->queryRoutesAsyncWithHttpInfo($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -7752,14 +7755,15 @@ class LightningApi
      * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
      * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
      * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function queryRoutesAsyncWithHttpInfo($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null)
+    public function queryRoutesAsyncWithHttpInfo($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcQueryRoutesResponse';
-        $request = $this->queryRoutesRequest($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl);
+        $request = $this->queryRoutesRequest($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -7809,11 +7813,12 @@ class LightningApi
      * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
      * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
      * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function queryRoutesRequest($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null)
+    protected function queryRoutesRequest($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
     {
         // verify the required parameter 'pubKey' is set
         if ($pubKey === null || (is_array($pubKey) && count($pubKey) === 0)) {
@@ -7861,6 +7866,10 @@ class LightningApi
         // query params
         if ($useMissionControl !== null) {
             $queryParams['use_mission_control'] = ObjectSerializer::toQueryValue($useMissionControl);
+        }
+        // query params
+        if ($cltvLimit !== null) {
+            $queryParams['cltv_limit'] = ObjectSerializer::toQueryValue($cltvLimit);
         }
 
         // path params

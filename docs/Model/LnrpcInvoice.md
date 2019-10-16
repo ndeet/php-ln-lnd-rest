@@ -24,6 +24,7 @@ Name | Type | Description | Notes
 **amtPaidSat** | **string** | * The amount that was accepted for this invoice, in satoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it&#39;s possible that the sender paid MORE that was specified in the original invoice. So we&#39;ll record that here as well. | [optional] 
 **amtPaidMsat** | **string** | * The amount that was accepted for this invoice, in millisatoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it&#39;s possible that the sender paid MORE that was specified in the original invoice. So we&#39;ll record that here as well. | [optional] 
 **state** | [**\Lnd\Rest\Model\InvoiceInvoiceState**](InvoiceInvoiceState.md) | * The state the invoice is in. | [optional] 
+**htlcs** | [**\Lnd\Rest\Model\LnrpcInvoiceHTLC[]**](LnrpcInvoiceHTLC.md) | / List of HTLCs paying to this invoice [EXPERIMENTAL]. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

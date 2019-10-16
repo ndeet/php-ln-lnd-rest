@@ -77,7 +77,8 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'bool',
         'chanStatusFlags' => 'string',
         'localChanReserveSat' => 'string',
-        'remoteChanReserveSat' => 'string'
+        'remoteChanReserveSat' => 'string',
+        'staticRemoteKey' => 'bool'
     ];
 
     /**
@@ -106,7 +107,8 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'boolean',
         'chanStatusFlags' => null,
         'localChanReserveSat' => 'int64',
-        'remoteChanReserveSat' => 'int64'
+        'remoteChanReserveSat' => 'int64',
+        'staticRemoteKey' => 'boolean'
     ];
 
     /**
@@ -156,7 +158,8 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'initiator',
         'chanStatusFlags' => 'chan_status_flags',
         'localChanReserveSat' => 'local_chan_reserve_sat',
-        'remoteChanReserveSat' => 'remote_chan_reserve_sat'
+        'remoteChanReserveSat' => 'remote_chan_reserve_sat',
+        'staticRemoteKey' => 'static_remote_key'
     ];
 
     /**
@@ -185,7 +188,8 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'setInitiator',
         'chanStatusFlags' => 'setChanStatusFlags',
         'localChanReserveSat' => 'setLocalChanReserveSat',
-        'remoteChanReserveSat' => 'setRemoteChanReserveSat'
+        'remoteChanReserveSat' => 'setRemoteChanReserveSat',
+        'staticRemoteKey' => 'setStaticRemoteKey'
     ];
 
     /**
@@ -214,7 +218,8 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'getInitiator',
         'chanStatusFlags' => 'getChanStatusFlags',
         'localChanReserveSat' => 'getLocalChanReserveSat',
-        'remoteChanReserveSat' => 'getRemoteChanReserveSat'
+        'remoteChanReserveSat' => 'getRemoteChanReserveSat',
+        'staticRemoteKey' => 'getStaticRemoteKey'
     ];
 
     /**
@@ -298,6 +303,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         $this->container['chanStatusFlags'] = isset($data['chanStatusFlags']) ? $data['chanStatusFlags'] : null;
         $this->container['localChanReserveSat'] = isset($data['localChanReserveSat']) ? $data['localChanReserveSat'] : null;
         $this->container['remoteChanReserveSat'] = isset($data['remoteChanReserveSat']) ? $data['remoteChanReserveSat'] : null;
+        $this->container['staticRemoteKey'] = isset($data['staticRemoteKey']) ? $data['staticRemoteKey'] : null;
     }
 
     /**
@@ -824,6 +830,30 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     public function setRemoteChanReserveSat($remoteChanReserveSat)
     {
         $this->container['remoteChanReserveSat'] = $remoteChanReserveSat;
+
+        return $this;
+    }
+
+    /**
+     * Gets staticRemoteKey
+     *
+     * @return bool
+     */
+    public function getStaticRemoteKey()
+    {
+        return $this->container['staticRemoteKey'];
+    }
+
+    /**
+     * Sets staticRemoteKey
+     *
+     * @param bool $staticRemoteKey * If true, then this channel uses the modern commitment format where the key in the output of the remote party does not change each state. This makes back up and recovery easier as when the channel is closed, the funds go directly to that key.
+     *
+     * @return $this
+     */
+    public function setStaticRemoteKey($staticRemoteKey)
+    {
+        $this->container['staticRemoteKey'] = $staticRemoteKey;
 
         return $this;
     }

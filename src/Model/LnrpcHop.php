@@ -64,7 +64,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'int',
         'amtToForwardMsat' => 'string',
         'feeMsat' => 'string',
-        'pubKey' => 'string'
+        'pubKey' => 'string',
+        'tlvPayload' => 'bool'
     ];
 
     /**
@@ -80,7 +81,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'int64',
         'amtToForwardMsat' => 'int64',
         'feeMsat' => 'int64',
-        'pubKey' => null
+        'pubKey' => null,
+        'tlvPayload' => 'boolean'
     ];
 
     /**
@@ -117,7 +119,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'expiry',
         'amtToForwardMsat' => 'amt_to_forward_msat',
         'feeMsat' => 'fee_msat',
-        'pubKey' => 'pub_key'
+        'pubKey' => 'pub_key',
+        'tlvPayload' => 'tlv_payload'
     ];
 
     /**
@@ -133,7 +136,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'setExpiry',
         'amtToForwardMsat' => 'setAmtToForwardMsat',
         'feeMsat' => 'setFeeMsat',
-        'pubKey' => 'setPubKey'
+        'pubKey' => 'setPubKey',
+        'tlvPayload' => 'setTlvPayload'
     ];
 
     /**
@@ -149,7 +153,8 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'getExpiry',
         'amtToForwardMsat' => 'getAmtToForwardMsat',
         'feeMsat' => 'getFeeMsat',
-        'pubKey' => 'getPubKey'
+        'pubKey' => 'getPubKey',
+        'tlvPayload' => 'getTlvPayload'
     ];
 
     /**
@@ -220,6 +225,7 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         $this->container['amtToForwardMsat'] = isset($data['amtToForwardMsat']) ? $data['amtToForwardMsat'] : null;
         $this->container['feeMsat'] = isset($data['feeMsat']) ? $data['feeMsat'] : null;
         $this->container['pubKey'] = isset($data['pubKey']) ? $data['pubKey'] : null;
+        $this->container['tlvPayload'] = isset($data['tlvPayload']) ? $data['tlvPayload'] : null;
     }
 
     /**
@@ -434,6 +440,30 @@ class LnrpcHop implements ModelInterface, ArrayAccess
     public function setPubKey($pubKey)
     {
         $this->container['pubKey'] = $pubKey;
+
+        return $this;
+    }
+
+    /**
+     * Gets tlvPayload
+     *
+     * @return bool
+     */
+    public function getTlvPayload()
+    {
+        return $this->container['tlvPayload'];
+    }
+
+    /**
+     * Sets tlvPayload
+     *
+     * @param bool $tlvPayload *  If set to true, then this hop will be encoded using the new variable length TLV format.
+     *
+     * @return $this
+     */
+    public function setTlvPayload($tlvPayload)
+    {
+        $this->container['tlvPayload'] = $tlvPayload;
 
         return $this;
     }

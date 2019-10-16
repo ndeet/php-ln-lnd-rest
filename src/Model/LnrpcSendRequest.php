@@ -66,7 +66,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'finalCltvDelta' => 'int',
         'feeLimit' => '\Lnd\Rest\Model\LnrpcFeeLimit',
         'outgoingChanId' => 'string',
-        'cltvLimit' => 'int'
+        'cltvLimit' => 'int',
+        'destTlv' => 'map[string,string]'
     ];
 
     /**
@@ -84,7 +85,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'finalCltvDelta' => 'int32',
         'feeLimit' => null,
         'outgoingChanId' => 'uint64',
-        'cltvLimit' => 'int64'
+        'cltvLimit' => 'int64',
+        'destTlv' => 'byte'
     ];
 
     /**
@@ -123,7 +125,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'finalCltvDelta' => 'final_cltv_delta',
         'feeLimit' => 'fee_limit',
         'outgoingChanId' => 'outgoing_chan_id',
-        'cltvLimit' => 'cltv_limit'
+        'cltvLimit' => 'cltv_limit',
+        'destTlv' => 'dest_tlv'
     ];
 
     /**
@@ -141,7 +144,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'finalCltvDelta' => 'setFinalCltvDelta',
         'feeLimit' => 'setFeeLimit',
         'outgoingChanId' => 'setOutgoingChanId',
-        'cltvLimit' => 'setCltvLimit'
+        'cltvLimit' => 'setCltvLimit',
+        'destTlv' => 'setDestTlv'
     ];
 
     /**
@@ -159,7 +163,8 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'finalCltvDelta' => 'getFinalCltvDelta',
         'feeLimit' => 'getFeeLimit',
         'outgoingChanId' => 'getOutgoingChanId',
-        'cltvLimit' => 'getCltvLimit'
+        'cltvLimit' => 'getCltvLimit',
+        'destTlv' => 'getDestTlv'
     ];
 
     /**
@@ -232,6 +237,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         $this->container['feeLimit'] = isset($data['feeLimit']) ? $data['feeLimit'] : null;
         $this->container['outgoingChanId'] = isset($data['outgoingChanId']) ? $data['outgoingChanId'] : null;
         $this->container['cltvLimit'] = isset($data['cltvLimit']) ? $data['cltvLimit'] : null;
+        $this->container['destTlv'] = isset($data['destTlv']) ? $data['destTlv'] : null;
     }
 
     /**
@@ -505,13 +511,37 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets cltvLimit
      *
-     * @param int $cltvLimit *  An optional maximum total time lock for the route. If zero, there is no maximum enforced.
+     * @param int $cltvLimit *  An optional maximum total time lock for the route. This should not exceed lnd's `--max-cltv-expiry` setting. If zero, then the value of `--max-cltv-expiry` is enforced.
      *
      * @return $this
      */
     public function setCltvLimit($cltvLimit)
     {
         $this->container['cltvLimit'] = $cltvLimit;
+
+        return $this;
+    }
+
+    /**
+     * Gets destTlv
+     *
+     * @return map[string,string]
+     */
+    public function getDestTlv()
+    {
+        return $this->container['destTlv'];
+    }
+
+    /**
+     * Sets destTlv
+     *
+     * @param map[string,string] $destTlv *  An optional field that can be used to pass an arbitrary set of TLV records to a peer which understands the new records. This can be used to pass application specific data during the payment attempt.
+     *
+     * @return $this
+     */
+    public function setDestTlv($destTlv)
+    {
+        $this->container['destTlv'] = $destTlv;
 
         return $this;
     }

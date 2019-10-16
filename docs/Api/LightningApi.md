@@ -1412,7 +1412,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **queryRoutes**
-> \Lnd\Rest\Model\LnrpcQueryRoutesResponse queryRoutes($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl)
+> \Lnd\Rest\Model\LnrpcQueryRoutesResponse queryRoutes($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit)
 
 * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
 
@@ -1434,9 +1434,10 @@ $feeLimitPercent = "feeLimitPercent_example"; // string | / The fee limit expres
 $ignoredNodes = array("ignoredNodes_example"); // string[] | * A list of nodes to ignore during path finding.
 $sourcePubKey = "sourcePubKey_example"; // string | * The source node where the request route should originated from. If empty, self is assumed.
 $useMissionControl = true; // bool | * If set to true, edge probabilities from mission control will be used to get the optimal route.
+$cltvLimit = 789; // int | *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd's `--max-cltv-expiry` setting. If zero, then the value of `--max-cltv-expiry` is used as the limit.
 
 try {
-    $result = $apiInstance->queryRoutes($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl);
+    $result = $apiInstance->queryRoutes($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling LightningApi->queryRoutes: ', $e->getMessage(), PHP_EOL;
@@ -1456,6 +1457,7 @@ Name | Type | Description  | Notes
  **ignoredNodes** | [**string[]**](../Model/string.md)| * A list of nodes to ignore during path finding. | [optional]
  **sourcePubKey** | **string**| * The source node where the request route should originated from. If empty, self is assumed. | [optional]
  **useMissionControl** | **bool**| * If set to true, edge probabilities from mission control will be used to get the optimal route. | [optional]
+ **cltvLimit** | **int**| *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. | [optional]
 
 ### Return type
 

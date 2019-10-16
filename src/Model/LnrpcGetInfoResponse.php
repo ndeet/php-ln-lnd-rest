@@ -71,7 +71,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'version' => 'string',
         'numInactiveChannels' => 'int',
         'chains' => '\Lnd\Rest\Model\LnrpcChain[]',
-        'color' => 'string'
+        'color' => 'string',
+        'syncedToGraph' => 'bool'
     ];
 
     /**
@@ -94,7 +95,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'version' => null,
         'numInactiveChannels' => 'int64',
         'chains' => null,
-        'color' => null
+        'color' => null,
+        'syncedToGraph' => 'boolean'
     ];
 
     /**
@@ -138,7 +140,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'version' => 'version',
         'numInactiveChannels' => 'num_inactive_channels',
         'chains' => 'chains',
-        'color' => 'color'
+        'color' => 'color',
+        'syncedToGraph' => 'synced_to_graph'
     ];
 
     /**
@@ -161,7 +164,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'version' => 'setVersion',
         'numInactiveChannels' => 'setNumInactiveChannels',
         'chains' => 'setChains',
-        'color' => 'setColor'
+        'color' => 'setColor',
+        'syncedToGraph' => 'setSyncedToGraph'
     ];
 
     /**
@@ -184,7 +188,8 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         'version' => 'getVersion',
         'numInactiveChannels' => 'getNumInactiveChannels',
         'chains' => 'getChains',
-        'color' => 'getColor'
+        'color' => 'getColor',
+        'syncedToGraph' => 'getSyncedToGraph'
     ];
 
     /**
@@ -262,6 +267,7 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
         $this->container['numInactiveChannels'] = isset($data['numInactiveChannels']) ? $data['numInactiveChannels'] : null;
         $this->container['chains'] = isset($data['chains']) ? $data['chains'] : null;
         $this->container['color'] = isset($data['color']) ? $data['color'] : null;
+        $this->container['syncedToGraph'] = isset($data['syncedToGraph']) ? $data['syncedToGraph'] : null;
     }
 
     /**
@@ -644,6 +650,30 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     public function setColor($color)
     {
         $this->container['color'] = $color;
+
+        return $this;
+    }
+
+    /**
+     * Gets syncedToGraph
+     *
+     * @return bool
+     */
+    public function getSyncedToGraph()
+    {
+        return $this->container['syncedToGraph'];
+    }
+
+    /**
+     * Sets syncedToGraph
+     *
+     * @param bool $syncedToGraph Whether we consider ourselves synced with the public channel graph.
+     *
+     * @return $this
+     */
+    public function setSyncedToGraph($syncedToGraph)
+    {
+        $this->container['syncedToGraph'] = $syncedToGraph;
 
         return $this;
     }
