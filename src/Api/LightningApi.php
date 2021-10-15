@@ -90,37 +90,43 @@ class LightningApi
     /**
      * Operation abandonChannel
      *
-     * * lncli: `abandonchannel` AbandonChannel removes all channel state from the database except for a close summary. This method can be used to get rid of permanently unusable channels due to bugs fixed in newer versions of lnd. Only available when in debug builds of lnd.
+     * lncli: `abandonchannel` AbandonChannel removes all channel state from the database except for a close summary. This method can be used to get rid of permanently unusable channels due to bugs fixed in newer versions of lnd. This method can also be used to remove externally funded channels where the funding transaction was never broadcast. Only available for non-externally funded channels in dev build.
      *
-     * @param  string $channelPointFundingTxidStr channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $pendingFundingShimOnly pendingFundingShimOnly (optional)
+     * @param  bool $iKnowWhatIAmDoing Override the requirement for being in dev mode by setting this to true and confirming the user knows what they are doing and this is a potential foot gun to lose funds if used on active channels. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcAbandonChannelResponse
      */
-    public function abandonChannel($channelPointFundingTxidStr, $channelPointOutputIndex)
+    public function abandonChannel($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $pendingFundingShimOnly = null, $iKnowWhatIAmDoing = null)
     {
-        list($response) = $this->abandonChannelWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex);
+        list($response) = $this->abandonChannelWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes, $pendingFundingShimOnly, $iKnowWhatIAmDoing);
         return $response;
     }
 
     /**
      * Operation abandonChannelWithHttpInfo
      *
-     * * lncli: `abandonchannel` AbandonChannel removes all channel state from the database except for a close summary. This method can be used to get rid of permanently unusable channels due to bugs fixed in newer versions of lnd. Only available when in debug builds of lnd.
+     * lncli: `abandonchannel` AbandonChannel removes all channel state from the database except for a close summary. This method can be used to get rid of permanently unusable channels due to bugs fixed in newer versions of lnd. This method can also be used to remove externally funded channels where the funding transaction was never broadcast. Only available for non-externally funded channels in dev build.
      *
-     * @param  string $channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $pendingFundingShimOnly (optional)
+     * @param  bool $iKnowWhatIAmDoing Override the requirement for being in dev mode by setting this to true and confirming the user knows what they are doing and this is a potential foot gun to lose funds if used on active channels. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcAbandonChannelResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function abandonChannelWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex)
+    public function abandonChannelWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $pendingFundingShimOnly = null, $iKnowWhatIAmDoing = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcAbandonChannelResponse';
-        $request = $this->abandonChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex);
+        $request = $this->abandonChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes, $pendingFundingShimOnly, $iKnowWhatIAmDoing);
 
         try {
             $options = $this->createHttpClientOption();
@@ -176,6 +182,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -184,17 +198,20 @@ class LightningApi
     /**
      * Operation abandonChannelAsync
      *
-     * * lncli: `abandonchannel` AbandonChannel removes all channel state from the database except for a close summary. This method can be used to get rid of permanently unusable channels due to bugs fixed in newer versions of lnd. Only available when in debug builds of lnd.
+     * lncli: `abandonchannel` AbandonChannel removes all channel state from the database except for a close summary. This method can be used to get rid of permanently unusable channels due to bugs fixed in newer versions of lnd. This method can also be used to remove externally funded channels where the funding transaction was never broadcast. Only available for non-externally funded channels in dev build.
      *
-     * @param  string $channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $pendingFundingShimOnly (optional)
+     * @param  bool $iKnowWhatIAmDoing Override the requirement for being in dev mode by setting this to true and confirming the user knows what they are doing and this is a potential foot gun to lose funds if used on active channels. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function abandonChannelAsync($channelPointFundingTxidStr, $channelPointOutputIndex)
+    public function abandonChannelAsync($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $pendingFundingShimOnly = null, $iKnowWhatIAmDoing = null)
     {
-        return $this->abandonChannelAsyncWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex)
+        return $this->abandonChannelAsyncWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes, $pendingFundingShimOnly, $iKnowWhatIAmDoing)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -205,18 +222,21 @@ class LightningApi
     /**
      * Operation abandonChannelAsyncWithHttpInfo
      *
-     * * lncli: `abandonchannel` AbandonChannel removes all channel state from the database except for a close summary. This method can be used to get rid of permanently unusable channels due to bugs fixed in newer versions of lnd. Only available when in debug builds of lnd.
+     * lncli: `abandonchannel` AbandonChannel removes all channel state from the database except for a close summary. This method can be used to get rid of permanently unusable channels due to bugs fixed in newer versions of lnd. This method can also be used to remove externally funded channels where the funding transaction was never broadcast. Only available for non-externally funded channels in dev build.
      *
-     * @param  string $channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $pendingFundingShimOnly (optional)
+     * @param  bool $iKnowWhatIAmDoing Override the requirement for being in dev mode by setting this to true and confirming the user knows what they are doing and this is a potential foot gun to lose funds if used on active channels. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function abandonChannelAsyncWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex)
+    public function abandonChannelAsyncWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $pendingFundingShimOnly = null, $iKnowWhatIAmDoing = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcAbandonChannelResponse';
-        $request = $this->abandonChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex);
+        $request = $this->abandonChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes, $pendingFundingShimOnly, $iKnowWhatIAmDoing);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -258,13 +278,16 @@ class LightningApi
     /**
      * Create request for operation 'abandonChannel'
      *
-     * @param  string $channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $pendingFundingShimOnly (optional)
+     * @param  bool $iKnowWhatIAmDoing Override the requirement for being in dev mode by setting this to true and confirming the user knows what they are doing and this is a potential foot gun to lose funds if used on active channels. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function abandonChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex)
+    protected function abandonChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $pendingFundingShimOnly = null, $iKnowWhatIAmDoing = null)
     {
         // verify the required parameter 'channelPointFundingTxidStr' is set
         if ($channelPointFundingTxidStr === null || (is_array($channelPointFundingTxidStr) && count($channelPointFundingTxidStr) === 0)) {
@@ -286,6 +309,18 @@ class LightningApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        if ($channelPointFundingTxidBytes !== null) {
+            $queryParams['channel_point.funding_txid_bytes'] = ObjectSerializer::toQueryValue($channelPointFundingTxidBytes);
+        }
+        // query params
+        if ($pendingFundingShimOnly !== null) {
+            $queryParams['pending_funding_shim_only'] = ObjectSerializer::toQueryValue($pendingFundingShimOnly);
+        }
+        // query params
+        if ($iKnowWhatIAmDoing !== null) {
+            $queryParams['i_know_what_i_am_doing'] = ObjectSerializer::toQueryValue($iKnowWhatIAmDoing);
+        }
 
         // path params
         if ($channelPointFundingTxidStr !== null) {
@@ -371,7 +406,7 @@ class LightningApi
     /**
      * Operation addInvoice
      *
-     * * lncli: `addinvoice` AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
+     * lncli: `addinvoice` AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
      *
      * @param  \Lnd\Rest\Model\LnrpcInvoice $body body (required)
      *
@@ -388,7 +423,7 @@ class LightningApi
     /**
      * Operation addInvoiceWithHttpInfo
      *
-     * * lncli: `addinvoice` AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
+     * lncli: `addinvoice` AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
      *
      * @param  \Lnd\Rest\Model\LnrpcInvoice $body (required)
      *
@@ -455,6 +490,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -463,7 +506,7 @@ class LightningApi
     /**
      * Operation addInvoiceAsync
      *
-     * * lncli: `addinvoice` AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
+     * lncli: `addinvoice` AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
      *
      * @param  \Lnd\Rest\Model\LnrpcInvoice $body (required)
      *
@@ -483,7 +526,7 @@ class LightningApi
     /**
      * Operation addInvoiceAsyncWithHttpInfo
      *
-     * * lncli: `addinvoice` AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
+     * lncli: `addinvoice` AddInvoice attempts to add a new invoice to the invoice database. Any duplicated invoices are rejected, therefore all invoices *must* have a unique payment preimage.
      *
      * @param  \Lnd\Rest\Model\LnrpcInvoice $body (required)
      *
@@ -626,9 +669,539 @@ class LightningApi
     }
 
     /**
+     * Operation bakeMacaroon
+     *
+     * lncli: `bakemacaroon` BakeMacaroon allows the creation of a new macaroon with custom read and write permissions. No first-party caveats are added since this can be done offline.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcBakeMacaroonRequest $body body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcBakeMacaroonResponse
+     */
+    public function bakeMacaroon($body)
+    {
+        list($response) = $this->bakeMacaroonWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation bakeMacaroonWithHttpInfo
+     *
+     * lncli: `bakemacaroon` BakeMacaroon allows the creation of a new macaroon with custom read and write permissions. No first-party caveats are added since this can be done offline.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcBakeMacaroonRequest $body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcBakeMacaroonResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function bakeMacaroonWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcBakeMacaroonResponse';
+        $request = $this->bakeMacaroonRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcBakeMacaroonResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation bakeMacaroonAsync
+     *
+     * lncli: `bakemacaroon` BakeMacaroon allows the creation of a new macaroon with custom read and write permissions. No first-party caveats are added since this can be done offline.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcBakeMacaroonRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function bakeMacaroonAsync($body)
+    {
+        return $this->bakeMacaroonAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation bakeMacaroonAsyncWithHttpInfo
+     *
+     * lncli: `bakemacaroon` BakeMacaroon allows the creation of a new macaroon with custom read and write permissions. No first-party caveats are added since this can be done offline.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcBakeMacaroonRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function bakeMacaroonAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcBakeMacaroonResponse';
+        $request = $this->bakeMacaroonRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'bakeMacaroon'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcBakeMacaroonRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function bakeMacaroonRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null || (is_array($body) && count($body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling bakeMacaroon'
+            );
+        }
+
+        $resourcePath = '/v1/macaroon';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation channelAcceptor
+     *
+     * ChannelAcceptor dispatches a bi-directional streaming RPC in which OpenChannel requests are sent to the client and the client responds with a boolean that tells LND whether or not to accept the channel. This allows node operators to specify their own criteria for accepting inbound channels through a single persistent connection.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcChannelAcceptResponse $body (streaming inputs) (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcChannelAcceptRequest
+     */
+    public function channelAcceptor($body)
+    {
+        list($response) = $this->channelAcceptorWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation channelAcceptorWithHttpInfo
+     *
+     * ChannelAcceptor dispatches a bi-directional streaming RPC in which OpenChannel requests are sent to the client and the client responds with a boolean that tells LND whether or not to accept the channel. This allows node operators to specify their own criteria for accepting inbound channels through a single persistent connection.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcChannelAcceptResponse $body (streaming inputs) (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcChannelAcceptRequest, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function channelAcceptorWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcChannelAcceptRequest';
+        $request = $this->channelAcceptorRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcChannelAcceptRequest',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation channelAcceptorAsync
+     *
+     * ChannelAcceptor dispatches a bi-directional streaming RPC in which OpenChannel requests are sent to the client and the client responds with a boolean that tells LND whether or not to accept the channel. This allows node operators to specify their own criteria for accepting inbound channels through a single persistent connection.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcChannelAcceptResponse $body (streaming inputs) (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function channelAcceptorAsync($body)
+    {
+        return $this->channelAcceptorAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation channelAcceptorAsyncWithHttpInfo
+     *
+     * ChannelAcceptor dispatches a bi-directional streaming RPC in which OpenChannel requests are sent to the client and the client responds with a boolean that tells LND whether or not to accept the channel. This allows node operators to specify their own criteria for accepting inbound channels through a single persistent connection.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcChannelAcceptResponse $body (streaming inputs) (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function channelAcceptorAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcChannelAcceptRequest';
+        $request = $this->channelAcceptorRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'channelAcceptor'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcChannelAcceptResponse $body (streaming inputs) (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function channelAcceptorRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null || (is_array($body) && count($body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling channelAcceptor'
+            );
+        }
+
+        $resourcePath = '/v1/channels/acceptor';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation channelBalance
      *
-     * * lncli: `channelbalance` ChannelBalance returns the total funds available across all open channels in satoshis.
+     * lncli: `channelbalance` ChannelBalance returns a report on the total funds across all open channels, categorized in local/remote, pending local/remote and unsettled local/remote balances.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -644,7 +1217,7 @@ class LightningApi
     /**
      * Operation channelBalanceWithHttpInfo
      *
-     * * lncli: `channelbalance` ChannelBalance returns the total funds available across all open channels in satoshis.
+     * lncli: `channelbalance` ChannelBalance returns a report on the total funds across all open channels, categorized in local/remote, pending local/remote and unsettled local/remote balances.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -710,6 +1283,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -718,7 +1299,7 @@ class LightningApi
     /**
      * Operation channelBalanceAsync
      *
-     * * lncli: `channelbalance` ChannelBalance returns the total funds available across all open channels in satoshis.
+     * lncli: `channelbalance` ChannelBalance returns a report on the total funds across all open channels, categorized in local/remote, pending local/remote and unsettled local/remote balances.
      *
      *
      * @throws \InvalidArgumentException
@@ -737,7 +1318,7 @@ class LightningApi
     /**
      * Operation channelBalanceAsyncWithHttpInfo
      *
-     * * lncli: `channelbalance` ChannelBalance returns the total funds available across all open channels in satoshis.
+     * lncli: `channelbalance` ChannelBalance returns a report on the total funds across all open channels, categorized in local/remote, pending local/remote and unsettled local/remote balances.
      *
      *
      * @throws \InvalidArgumentException
@@ -871,37 +1452,49 @@ class LightningApi
     /**
      * Operation closeChannel
      *
-     * * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
+     * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
      *
-     * @param  string $channelPointFundingTxidStr channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $force If true, then the channel will be closed forcibly. This means the current commitment transaction will be signed and broadcast. (optional)
+     * @param  int $targetConf The target number of blocks that the closure transaction should be confirmed by. (optional)
+     * @param  string $satPerByte Deprecated, use sat_per_vbyte. A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
+     * @param  string $deliveryAddress An optional address to send funds to in the case of a cooperative close. If the channel was opened with an upfront shutdown script and this field is set, the request to close will fail because the channel must pay out to the upfront shutdown addresss. (optional)
+     * @param  string $satPerVbyte A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Lnd\Rest\Model\LnrpcCloseStatusUpdate
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcCloseStatusUpdate
      */
-    public function closeChannel($channelPointFundingTxidStr, $channelPointOutputIndex)
+    public function closeChannel($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $force = null, $targetConf = null, $satPerByte = null, $deliveryAddress = null, $satPerVbyte = null)
     {
-        list($response) = $this->closeChannelWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex);
+        list($response) = $this->closeChannelWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes, $force, $targetConf, $satPerByte, $deliveryAddress, $satPerVbyte);
         return $response;
     }
 
     /**
      * Operation closeChannelWithHttpInfo
      *
-     * * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
+     * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
      *
-     * @param  string $channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $force If true, then the channel will be closed forcibly. This means the current commitment transaction will be signed and broadcast. (optional)
+     * @param  int $targetConf The target number of blocks that the closure transaction should be confirmed by. (optional)
+     * @param  string $satPerByte Deprecated, use sat_per_vbyte. A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
+     * @param  string $deliveryAddress An optional address to send funds to in the case of a cooperative close. If the channel was opened with an upfront shutdown script and this field is set, the request to close will fail because the channel must pay out to the upfront shutdown addresss. (optional)
+     * @param  string $satPerVbyte A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return array of \Lnd\Rest\Model\LnrpcCloseStatusUpdate, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcCloseStatusUpdate, HTTP status code, HTTP response headers (array of strings)
      */
-    public function closeChannelWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex)
+    public function closeChannelWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $force = null, $targetConf = null, $satPerByte = null, $deliveryAddress = null, $satPerVbyte = null)
     {
-        $returnType = '\Lnd\Rest\Model\LnrpcCloseStatusUpdate';
-        $request = $this->closeChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex);
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcCloseStatusUpdate';
+        $request = $this->closeChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes, $force, $targetConf, $satPerByte, $deliveryAddress, $satPerVbyte);
 
         try {
             $options = $this->createHttpClientOption();
@@ -952,7 +1545,15 @@ class LightningApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\Lnd\Rest\Model\LnrpcCloseStatusUpdate',
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcCloseStatusUpdate',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -965,17 +1566,23 @@ class LightningApi
     /**
      * Operation closeChannelAsync
      *
-     * * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
+     * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
      *
-     * @param  string $channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $force If true, then the channel will be closed forcibly. This means the current commitment transaction will be signed and broadcast. (optional)
+     * @param  int $targetConf The target number of blocks that the closure transaction should be confirmed by. (optional)
+     * @param  string $satPerByte Deprecated, use sat_per_vbyte. A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
+     * @param  string $deliveryAddress An optional address to send funds to in the case of a cooperative close. If the channel was opened with an upfront shutdown script and this field is set, the request to close will fail because the channel must pay out to the upfront shutdown addresss. (optional)
+     * @param  string $satPerVbyte A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function closeChannelAsync($channelPointFundingTxidStr, $channelPointOutputIndex)
+    public function closeChannelAsync($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $force = null, $targetConf = null, $satPerByte = null, $deliveryAddress = null, $satPerVbyte = null)
     {
-        return $this->closeChannelAsyncWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex)
+        return $this->closeChannelAsyncWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes, $force, $targetConf, $satPerByte, $deliveryAddress, $satPerVbyte)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -986,18 +1593,24 @@ class LightningApi
     /**
      * Operation closeChannelAsyncWithHttpInfo
      *
-     * * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
+     * lncli: `closechannel` CloseChannel attempts to close an active channel identified by its channel outpoint (ChannelPoint). The actions of this method can additionally be augmented to attempt a force close after a timeout period in the case of an inactive peer. If a non-force close (cooperative closure) is requested, then the user can specify either a target number of blocks until the closure transaction is confirmed, or a manual fee rate. If neither are specified, then a default lax, block confirmation target is used.
      *
-     * @param  string $channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $force If true, then the channel will be closed forcibly. This means the current commitment transaction will be signed and broadcast. (optional)
+     * @param  int $targetConf The target number of blocks that the closure transaction should be confirmed by. (optional)
+     * @param  string $satPerByte Deprecated, use sat_per_vbyte. A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
+     * @param  string $deliveryAddress An optional address to send funds to in the case of a cooperative close. If the channel was opened with an upfront shutdown script and this field is set, the request to close will fail because the channel must pay out to the upfront shutdown addresss. (optional)
+     * @param  string $satPerVbyte A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function closeChannelAsyncWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex)
+    public function closeChannelAsyncWithHttpInfo($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $force = null, $targetConf = null, $satPerByte = null, $deliveryAddress = null, $satPerVbyte = null)
     {
-        $returnType = '\Lnd\Rest\Model\LnrpcCloseStatusUpdate';
-        $request = $this->closeChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex);
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcCloseStatusUpdate';
+        $request = $this->closeChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes, $force, $targetConf, $satPerByte, $deliveryAddress, $satPerVbyte);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1039,13 +1652,19 @@ class LightningApi
     /**
      * Create request for operation 'closeChannel'
      *
-     * @param  string $channelPointFundingTxidStr (required)
-     * @param  int $channelPointOutputIndex (required)
+     * @param  string $channelPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $channelPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $channelPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
+     * @param  bool $force If true, then the channel will be closed forcibly. This means the current commitment transaction will be signed and broadcast. (optional)
+     * @param  int $targetConf The target number of blocks that the closure transaction should be confirmed by. (optional)
+     * @param  string $satPerByte Deprecated, use sat_per_vbyte. A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
+     * @param  string $deliveryAddress An optional address to send funds to in the case of a cooperative close. If the channel was opened with an upfront shutdown script and this field is set, the request to close will fail because the channel must pay out to the upfront shutdown addresss. (optional)
+     * @param  string $satPerVbyte A manual fee rate set in sat/vbyte that should be used when crafting the closure transaction. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function closeChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex)
+    protected function closeChannelRequest($channelPointFundingTxidStr, $channelPointOutputIndex, $channelPointFundingTxidBytes = null, $force = null, $targetConf = null, $satPerByte = null, $deliveryAddress = null, $satPerVbyte = null)
     {
         // verify the required parameter 'channelPointFundingTxidStr' is set
         if ($channelPointFundingTxidStr === null || (is_array($channelPointFundingTxidStr) && count($channelPointFundingTxidStr) === 0)) {
@@ -1067,6 +1686,30 @@ class LightningApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        if ($channelPointFundingTxidBytes !== null) {
+            $queryParams['channel_point.funding_txid_bytes'] = ObjectSerializer::toQueryValue($channelPointFundingTxidBytes);
+        }
+        // query params
+        if ($force !== null) {
+            $queryParams['force'] = ObjectSerializer::toQueryValue($force);
+        }
+        // query params
+        if ($targetConf !== null) {
+            $queryParams['target_conf'] = ObjectSerializer::toQueryValue($targetConf);
+        }
+        // query params
+        if ($satPerByte !== null) {
+            $queryParams['sat_per_byte'] = ObjectSerializer::toQueryValue($satPerByte);
+        }
+        // query params
+        if ($deliveryAddress !== null) {
+            $queryParams['delivery_address'] = ObjectSerializer::toQueryValue($deliveryAddress);
+        }
+        // query params
+        if ($satPerVbyte !== null) {
+            $queryParams['sat_per_vbyte'] = ObjectSerializer::toQueryValue($satPerVbyte);
+        }
 
         // path params
         if ($channelPointFundingTxidStr !== null) {
@@ -1152,7 +1795,7 @@ class LightningApi
     /**
      * Operation closedChannels
      *
-     * * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that this node was a participant in.
+     * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that this node was a participant in.
      *
      * @param  bool $cooperative cooperative (optional)
      * @param  bool $localForce localForce (optional)
@@ -1174,7 +1817,7 @@ class LightningApi
     /**
      * Operation closedChannelsWithHttpInfo
      *
-     * * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that this node was a participant in.
+     * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that this node was a participant in.
      *
      * @param  bool $cooperative (optional)
      * @param  bool $localForce (optional)
@@ -1246,6 +1889,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1254,7 +1905,7 @@ class LightningApi
     /**
      * Operation closedChannelsAsync
      *
-     * * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that this node was a participant in.
+     * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that this node was a participant in.
      *
      * @param  bool $cooperative (optional)
      * @param  bool $localForce (optional)
@@ -1279,7 +1930,7 @@ class LightningApi
     /**
      * Operation closedChannelsAsyncWithHttpInfo
      *
-     * * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that this node was a participant in.
+     * lncli: `closedchannels` ClosedChannels returns a description of all the closed channels that this node was a participant in.
      *
      * @param  bool $cooperative (optional)
      * @param  bool $localForce (optional)
@@ -1449,7 +2100,7 @@ class LightningApi
     /**
      * Operation connectPeer
      *
-     * * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
+     * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
      *
      * @param  \Lnd\Rest\Model\LnrpcConnectPeerRequest $body body (required)
      *
@@ -1466,7 +2117,7 @@ class LightningApi
     /**
      * Operation connectPeerWithHttpInfo
      *
-     * * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
+     * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
      *
      * @param  \Lnd\Rest\Model\LnrpcConnectPeerRequest $body (required)
      *
@@ -1533,6 +2184,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1541,7 +2200,7 @@ class LightningApi
     /**
      * Operation connectPeerAsync
      *
-     * * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
+     * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
      *
      * @param  \Lnd\Rest\Model\LnrpcConnectPeerRequest $body (required)
      *
@@ -1561,7 +2220,7 @@ class LightningApi
     /**
      * Operation connectPeerAsyncWithHttpInfo
      *
-     * * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
+     * lncli: `connect` ConnectPeer attempts to establish a connection to a remote peer. This is at the networking level, and is used for communication between nodes. This is distinct from establishing a channel with a peer.
      *
      * @param  \Lnd\Rest\Model\LnrpcConnectPeerRequest $body (required)
      *
@@ -1704,11 +2363,276 @@ class LightningApi
     }
 
     /**
+     * Operation debugLevel
+     *
+     * lncli: `debuglevel` DebugLevel allows a caller to programmatically set the logging verbosity of lnd. The logging can be targeted according to a coarse daemon-wide logging level, or in a granular fashion to specify the logging for a target sub-system.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcDebugLevelRequest $body body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcDebugLevelResponse
+     */
+    public function debugLevel($body)
+    {
+        list($response) = $this->debugLevelWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation debugLevelWithHttpInfo
+     *
+     * lncli: `debuglevel` DebugLevel allows a caller to programmatically set the logging verbosity of lnd. The logging can be targeted according to a coarse daemon-wide logging level, or in a granular fashion to specify the logging for a target sub-system.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcDebugLevelRequest $body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcDebugLevelResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function debugLevelWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcDebugLevelResponse';
+        $request = $this->debugLevelRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcDebugLevelResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation debugLevelAsync
+     *
+     * lncli: `debuglevel` DebugLevel allows a caller to programmatically set the logging verbosity of lnd. The logging can be targeted according to a coarse daemon-wide logging level, or in a granular fashion to specify the logging for a target sub-system.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcDebugLevelRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function debugLevelAsync($body)
+    {
+        return $this->debugLevelAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation debugLevelAsyncWithHttpInfo
+     *
+     * lncli: `debuglevel` DebugLevel allows a caller to programmatically set the logging verbosity of lnd. The logging can be targeted according to a coarse daemon-wide logging level, or in a granular fashion to specify the logging for a target sub-system.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcDebugLevelRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function debugLevelAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcDebugLevelResponse';
+        $request = $this->debugLevelRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'debugLevel'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcDebugLevelRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function debugLevelRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null || (is_array($body) && count($body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling debugLevel'
+            );
+        }
+
+        $resourcePath = '/v1/debuglevel';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation decodePayReq
      *
-     * * lncli: `decodepayreq` DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
+     * lncli: `decodepayreq` DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
      *
-     * @param  string $payReq payReq (required)
+     * @param  string $payReq The payment request string to be decoded (required)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -1723,9 +2647,9 @@ class LightningApi
     /**
      * Operation decodePayReqWithHttpInfo
      *
-     * * lncli: `decodepayreq` DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
+     * lncli: `decodepayreq` DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
      *
-     * @param  string $payReq (required)
+     * @param  string $payReq The payment request string to be decoded (required)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -1790,6 +2714,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -1798,9 +2730,9 @@ class LightningApi
     /**
      * Operation decodePayReqAsync
      *
-     * * lncli: `decodepayreq` DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
+     * lncli: `decodepayreq` DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
      *
-     * @param  string $payReq (required)
+     * @param  string $payReq The payment request string to be decoded (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -1818,9 +2750,9 @@ class LightningApi
     /**
      * Operation decodePayReqAsyncWithHttpInfo
      *
-     * * lncli: `decodepayreq` DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
+     * lncli: `decodepayreq` DecodePayReq takes an encoded payment request string and attempts to decode it, returning a full description of the conditions encoded within the payment request.
      *
-     * @param  string $payReq (required)
+     * @param  string $payReq The payment request string to be decoded (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -1870,7 +2802,7 @@ class LightningApi
     /**
      * Create request for operation 'decodePayReq'
      *
-     * @param  string $payReq (required)
+     * @param  string $payReq The payment request string to be decoded (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -1968,33 +2900,37 @@ class LightningApi
     /**
      * Operation deleteAllPayments
      *
-     * * DeleteAllPayments deletes all outgoing payments from DB.
+     * DeleteAllPayments deletes all outgoing payments from DB.
      *
+     * @param  bool $failedPaymentsOnly Only delete failed payments. (optional)
+     * @param  bool $failedHtlcsOnly Only delete failed HTLCs from payments, not the payment itself. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcDeleteAllPaymentsResponse
      */
-    public function deleteAllPayments()
+    public function deleteAllPayments($failedPaymentsOnly = null, $failedHtlcsOnly = null)
     {
-        list($response) = $this->deleteAllPaymentsWithHttpInfo();
+        list($response) = $this->deleteAllPaymentsWithHttpInfo($failedPaymentsOnly, $failedHtlcsOnly);
         return $response;
     }
 
     /**
      * Operation deleteAllPaymentsWithHttpInfo
      *
-     * * DeleteAllPayments deletes all outgoing payments from DB.
+     * DeleteAllPayments deletes all outgoing payments from DB.
      *
+     * @param  bool $failedPaymentsOnly Only delete failed payments. (optional)
+     * @param  bool $failedHtlcsOnly Only delete failed HTLCs from payments, not the payment itself. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcDeleteAllPaymentsResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteAllPaymentsWithHttpInfo()
+    public function deleteAllPaymentsWithHttpInfo($failedPaymentsOnly = null, $failedHtlcsOnly = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcDeleteAllPaymentsResponse';
-        $request = $this->deleteAllPaymentsRequest();
+        $request = $this->deleteAllPaymentsRequest($failedPaymentsOnly, $failedHtlcsOnly);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2050,6 +2986,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2058,15 +3002,17 @@ class LightningApi
     /**
      * Operation deleteAllPaymentsAsync
      *
-     * * DeleteAllPayments deletes all outgoing payments from DB.
+     * DeleteAllPayments deletes all outgoing payments from DB.
      *
+     * @param  bool $failedPaymentsOnly Only delete failed payments. (optional)
+     * @param  bool $failedHtlcsOnly Only delete failed HTLCs from payments, not the payment itself. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteAllPaymentsAsync()
+    public function deleteAllPaymentsAsync($failedPaymentsOnly = null, $failedHtlcsOnly = null)
     {
-        return $this->deleteAllPaymentsAsyncWithHttpInfo()
+        return $this->deleteAllPaymentsAsyncWithHttpInfo($failedPaymentsOnly, $failedHtlcsOnly)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2077,16 +3023,18 @@ class LightningApi
     /**
      * Operation deleteAllPaymentsAsyncWithHttpInfo
      *
-     * * DeleteAllPayments deletes all outgoing payments from DB.
+     * DeleteAllPayments deletes all outgoing payments from DB.
      *
+     * @param  bool $failedPaymentsOnly Only delete failed payments. (optional)
+     * @param  bool $failedHtlcsOnly Only delete failed HTLCs from payments, not the payment itself. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteAllPaymentsAsyncWithHttpInfo()
+    public function deleteAllPaymentsAsyncWithHttpInfo($failedPaymentsOnly = null, $failedHtlcsOnly = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcDeleteAllPaymentsResponse';
-        $request = $this->deleteAllPaymentsRequest();
+        $request = $this->deleteAllPaymentsRequest($failedPaymentsOnly, $failedHtlcsOnly);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2128,11 +3076,13 @@ class LightningApi
     /**
      * Create request for operation 'deleteAllPayments'
      *
+     * @param  bool $failedPaymentsOnly Only delete failed payments. (optional)
+     * @param  bool $failedHtlcsOnly Only delete failed HTLCs from payments, not the payment itself. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function deleteAllPaymentsRequest()
+    protected function deleteAllPaymentsRequest($failedPaymentsOnly = null, $failedHtlcsOnly = null)
     {
 
         $resourcePath = '/v1/payments';
@@ -2142,7 +3092,285 @@ class LightningApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        if ($failedPaymentsOnly !== null) {
+            $queryParams['failed_payments_only'] = ObjectSerializer::toQueryValue($failedPaymentsOnly);
+        }
+        // query params
+        if ($failedHtlcsOnly !== null) {
+            $queryParams['failed_htlcs_only'] = ObjectSerializer::toQueryValue($failedHtlcsOnly);
+        }
 
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'DELETE',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation deleteMacaroonID
+     *
+     * lncli: `deletemacaroonid` DeleteMacaroonID deletes the specified macaroon ID and invalidates all macaroons derived from that ID.
+     *
+     * @param  string $rootKeyId The root key ID to be removed. (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcDeleteMacaroonIDResponse
+     */
+    public function deleteMacaroonID($rootKeyId)
+    {
+        list($response) = $this->deleteMacaroonIDWithHttpInfo($rootKeyId);
+        return $response;
+    }
+
+    /**
+     * Operation deleteMacaroonIDWithHttpInfo
+     *
+     * lncli: `deletemacaroonid` DeleteMacaroonID deletes the specified macaroon ID and invalidates all macaroons derived from that ID.
+     *
+     * @param  string $rootKeyId The root key ID to be removed. (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcDeleteMacaroonIDResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function deleteMacaroonIDWithHttpInfo($rootKeyId)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcDeleteMacaroonIDResponse';
+        $request = $this->deleteMacaroonIDRequest($rootKeyId);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcDeleteMacaroonIDResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation deleteMacaroonIDAsync
+     *
+     * lncli: `deletemacaroonid` DeleteMacaroonID deletes the specified macaroon ID and invalidates all macaroons derived from that ID.
+     *
+     * @param  string $rootKeyId The root key ID to be removed. (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function deleteMacaroonIDAsync($rootKeyId)
+    {
+        return $this->deleteMacaroonIDAsyncWithHttpInfo($rootKeyId)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation deleteMacaroonIDAsyncWithHttpInfo
+     *
+     * lncli: `deletemacaroonid` DeleteMacaroonID deletes the specified macaroon ID and invalidates all macaroons derived from that ID.
+     *
+     * @param  string $rootKeyId The root key ID to be removed. (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function deleteMacaroonIDAsyncWithHttpInfo($rootKeyId)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcDeleteMacaroonIDResponse';
+        $request = $this->deleteMacaroonIDRequest($rootKeyId);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'deleteMacaroonID'
+     *
+     * @param  string $rootKeyId The root key ID to be removed. (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function deleteMacaroonIDRequest($rootKeyId)
+    {
+        // verify the required parameter 'rootKeyId' is set
+        if ($rootKeyId === null || (is_array($rootKeyId) && count($rootKeyId) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $rootKeyId when calling deleteMacaroonID'
+            );
+        }
+
+        $resourcePath = '/v1/macaroon/{root_key_id}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+        // path params
+        if ($rootKeyId !== null) {
+            $resourcePath = str_replace(
+                '{' . 'root_key_id' . '}',
+                ObjectSerializer::toPathValue($rootKeyId),
+                $resourcePath
+            );
+        }
 
         // body params
         $_tempBody = null;
@@ -2211,9 +3439,9 @@ class LightningApi
     /**
      * Operation describeGraph
      *
-     * * lncli: `describegraph` DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves.  As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
+     * lncli: `describegraph` DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves. As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
      *
-     * @param  bool $includeUnannounced * Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
+     * @param  bool $includeUnannounced Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -2228,9 +3456,9 @@ class LightningApi
     /**
      * Operation describeGraphWithHttpInfo
      *
-     * * lncli: `describegraph` DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves.  As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
+     * lncli: `describegraph` DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves. As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
      *
-     * @param  bool $includeUnannounced * Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
+     * @param  bool $includeUnannounced Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -2295,6 +3523,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2303,9 +3539,9 @@ class LightningApi
     /**
      * Operation describeGraphAsync
      *
-     * * lncli: `describegraph` DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves.  As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
+     * lncli: `describegraph` DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves. As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
      *
-     * @param  bool $includeUnannounced * Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
+     * @param  bool $includeUnannounced Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -2323,9 +3559,9 @@ class LightningApi
     /**
      * Operation describeGraphAsyncWithHttpInfo
      *
-     * * lncli: `describegraph` DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves.  As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
+     * lncli: `describegraph` DescribeGraph returns a description of the latest graph state from the point of view of the node. The graph information is partitioned into two components: all the nodes/vertexes, and all the edges that connect the vertexes themselves. As this is a directed graph, the edges also contain the node directional specific routing policy which includes: the time lock delta, fee information, etc.
      *
-     * @param  bool $includeUnannounced * Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
+     * @param  bool $includeUnannounced Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -2375,7 +3611,7 @@ class LightningApi
     /**
      * Create request for operation 'describeGraph'
      *
-     * @param  bool $includeUnannounced * Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
+     * @param  bool $includeUnannounced Whether unannounced channels are included in the response or not. If set, unannounced channels are included. Unannounced channels are both private channels, and public channels that are not yet announced to the network. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -2463,9 +3699,9 @@ class LightningApi
     /**
      * Operation disconnectPeer
      *
-     * * lncli: `disconnect` DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
+     * lncli: `disconnect` DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
      *
-     * @param  string $pubKey pubKey (required)
+     * @param  string $pubKey The pubkey of the node to disconnect from (required)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -2480,9 +3716,9 @@ class LightningApi
     /**
      * Operation disconnectPeerWithHttpInfo
      *
-     * * lncli: `disconnect` DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
+     * lncli: `disconnect` DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
      *
-     * @param  string $pubKey (required)
+     * @param  string $pubKey The pubkey of the node to disconnect from (required)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -2547,6 +3783,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2555,9 +3799,9 @@ class LightningApi
     /**
      * Operation disconnectPeerAsync
      *
-     * * lncli: `disconnect` DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
+     * lncli: `disconnect` DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
      *
-     * @param  string $pubKey (required)
+     * @param  string $pubKey The pubkey of the node to disconnect from (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -2575,9 +3819,9 @@ class LightningApi
     /**
      * Operation disconnectPeerAsyncWithHttpInfo
      *
-     * * lncli: `disconnect` DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
+     * lncli: `disconnect` DisconnectPeer attempts to disconnect one peer from another identified by a given pubKey. In the case that we currently have a pending or active channel with the target peer, then this action will be not be allowed.
      *
-     * @param  string $pubKey (required)
+     * @param  string $pubKey The pubkey of the node to disconnect from (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -2627,7 +3871,7 @@ class LightningApi
     /**
      * Create request for operation 'disconnectPeer'
      *
-     * @param  string $pubKey (required)
+     * @param  string $pubKey The pubkey of the node to disconnect from (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -2725,35 +3969,39 @@ class LightningApi
     /**
      * Operation estimateFee
      *
-     * * lncli: `estimatefee` EstimateFee asks the chain backend to estimate the fee rate and total fees for a transaction that pays to multiple specified outputs.
+     * lncli: `estimatefee` EstimateFee asks the chain backend to estimate the fee rate and total fees for a transaction that pays to multiple specified outputs.
      *
-     * @param  int $targetConf / The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $targetConf The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $minConfs The minimum number of confirmations each one of your outputs used for the transaction must satisfy. (optional)
+     * @param  bool $spendUnconfirmed Whether unconfirmed outputs should be used as inputs for the transaction. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcEstimateFeeResponse
      */
-    public function estimateFee($targetConf = null)
+    public function estimateFee($targetConf = null, $minConfs = null, $spendUnconfirmed = null)
     {
-        list($response) = $this->estimateFeeWithHttpInfo($targetConf);
+        list($response) = $this->estimateFeeWithHttpInfo($targetConf, $minConfs, $spendUnconfirmed);
         return $response;
     }
 
     /**
      * Operation estimateFeeWithHttpInfo
      *
-     * * lncli: `estimatefee` EstimateFee asks the chain backend to estimate the fee rate and total fees for a transaction that pays to multiple specified outputs.
+     * lncli: `estimatefee` EstimateFee asks the chain backend to estimate the fee rate and total fees for a transaction that pays to multiple specified outputs.
      *
-     * @param  int $targetConf / The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $targetConf The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $minConfs The minimum number of confirmations each one of your outputs used for the transaction must satisfy. (optional)
+     * @param  bool $spendUnconfirmed Whether unconfirmed outputs should be used as inputs for the transaction. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcEstimateFeeResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function estimateFeeWithHttpInfo($targetConf = null)
+    public function estimateFeeWithHttpInfo($targetConf = null, $minConfs = null, $spendUnconfirmed = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcEstimateFeeResponse';
-        $request = $this->estimateFeeRequest($targetConf);
+        $request = $this->estimateFeeRequest($targetConf, $minConfs, $spendUnconfirmed);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2809,6 +4057,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -2817,16 +4073,18 @@ class LightningApi
     /**
      * Operation estimateFeeAsync
      *
-     * * lncli: `estimatefee` EstimateFee asks the chain backend to estimate the fee rate and total fees for a transaction that pays to multiple specified outputs.
+     * lncli: `estimatefee` EstimateFee asks the chain backend to estimate the fee rate and total fees for a transaction that pays to multiple specified outputs.
      *
-     * @param  int $targetConf / The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $targetConf The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $minConfs The minimum number of confirmations each one of your outputs used for the transaction must satisfy. (optional)
+     * @param  bool $spendUnconfirmed Whether unconfirmed outputs should be used as inputs for the transaction. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function estimateFeeAsync($targetConf = null)
+    public function estimateFeeAsync($targetConf = null, $minConfs = null, $spendUnconfirmed = null)
     {
-        return $this->estimateFeeAsyncWithHttpInfo($targetConf)
+        return $this->estimateFeeAsyncWithHttpInfo($targetConf, $minConfs, $spendUnconfirmed)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2837,17 +4095,19 @@ class LightningApi
     /**
      * Operation estimateFeeAsyncWithHttpInfo
      *
-     * * lncli: `estimatefee` EstimateFee asks the chain backend to estimate the fee rate and total fees for a transaction that pays to multiple specified outputs.
+     * lncli: `estimatefee` EstimateFee asks the chain backend to estimate the fee rate and total fees for a transaction that pays to multiple specified outputs.
      *
-     * @param  int $targetConf / The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $targetConf The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $minConfs The minimum number of confirmations each one of your outputs used for the transaction must satisfy. (optional)
+     * @param  bool $spendUnconfirmed Whether unconfirmed outputs should be used as inputs for the transaction. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function estimateFeeAsyncWithHttpInfo($targetConf = null)
+    public function estimateFeeAsyncWithHttpInfo($targetConf = null, $minConfs = null, $spendUnconfirmed = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcEstimateFeeResponse';
-        $request = $this->estimateFeeRequest($targetConf);
+        $request = $this->estimateFeeRequest($targetConf, $minConfs, $spendUnconfirmed);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2889,12 +4149,14 @@ class LightningApi
     /**
      * Create request for operation 'estimateFee'
      *
-     * @param  int $targetConf / The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $targetConf The target number of blocks that this transaction should be confirmed by. (optional)
+     * @param  int $minConfs The minimum number of confirmations each one of your outputs used for the transaction must satisfy. (optional)
+     * @param  bool $spendUnconfirmed Whether unconfirmed outputs should be used as inputs for the transaction. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function estimateFeeRequest($targetConf = null)
+    protected function estimateFeeRequest($targetConf = null, $minConfs = null, $spendUnconfirmed = null)
     {
 
         $resourcePath = '/v1/transactions/fee';
@@ -2907,6 +4169,14 @@ class LightningApi
         // query params
         if ($targetConf !== null) {
             $queryParams['target_conf'] = ObjectSerializer::toQueryValue($targetConf);
+        }
+        // query params
+        if ($minConfs !== null) {
+            $queryParams['min_confs'] = ObjectSerializer::toQueryValue($minConfs);
+        }
+        // query params
+        if ($spendUnconfirmed !== null) {
+            $queryParams['spend_unconfirmed'] = ObjectSerializer::toQueryValue($spendUnconfirmed);
         }
 
 
@@ -2977,7 +4247,7 @@ class LightningApi
     /**
      * Operation exportAllChannelBackups
      *
-     * * ExportAllChannelBackups returns static channel backups for all existing channels known to lnd. A set of regular singular static channel backups for each channel are returned. Additionally, a multi-channel backup is returned as well, which contains a single encrypted blob containing the backups of each channel.
+     * ExportAllChannelBackups returns static channel backups for all existing channels known to lnd. A set of regular singular static channel backups for each channel are returned. Additionally, a multi-channel backup is returned as well, which contains a single encrypted blob containing the backups of each channel.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -2993,7 +4263,7 @@ class LightningApi
     /**
      * Operation exportAllChannelBackupsWithHttpInfo
      *
-     * * ExportAllChannelBackups returns static channel backups for all existing channels known to lnd. A set of regular singular static channel backups for each channel are returned. Additionally, a multi-channel backup is returned as well, which contains a single encrypted blob containing the backups of each channel.
+     * ExportAllChannelBackups returns static channel backups for all existing channels known to lnd. A set of regular singular static channel backups for each channel are returned. Additionally, a multi-channel backup is returned as well, which contains a single encrypted blob containing the backups of each channel.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -3059,6 +4329,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3067,7 +4345,7 @@ class LightningApi
     /**
      * Operation exportAllChannelBackupsAsync
      *
-     * * ExportAllChannelBackups returns static channel backups for all existing channels known to lnd. A set of regular singular static channel backups for each channel are returned. Additionally, a multi-channel backup is returned as well, which contains a single encrypted blob containing the backups of each channel.
+     * ExportAllChannelBackups returns static channel backups for all existing channels known to lnd. A set of regular singular static channel backups for each channel are returned. Additionally, a multi-channel backup is returned as well, which contains a single encrypted blob containing the backups of each channel.
      *
      *
      * @throws \InvalidArgumentException
@@ -3086,7 +4364,7 @@ class LightningApi
     /**
      * Operation exportAllChannelBackupsAsyncWithHttpInfo
      *
-     * * ExportAllChannelBackups returns static channel backups for all existing channels known to lnd. A set of regular singular static channel backups for each channel are returned. Additionally, a multi-channel backup is returned as well, which contains a single encrypted blob containing the backups of each channel.
+     * ExportAllChannelBackups returns static channel backups for all existing channels known to lnd. A set of regular singular static channel backups for each channel are returned. Additionally, a multi-channel backup is returned as well, which contains a single encrypted blob containing the backups of each channel.
      *
      *
      * @throws \InvalidArgumentException
@@ -3220,11 +4498,11 @@ class LightningApi
     /**
      * Operation exportChannelBackup
      *
-     * * lncli: `exportchanbackup` ExportChannelBackup attempts to return an encrypted static channel backup for the target channel identified by it channel point. The backup is encrypted with a key generated from the aezeed seed of the user. The returned backup can either be restored using the RestoreChannelBackup method once lnd is running, or via the InitWallet and UnlockWallet methods from the WalletUnlocker service.
+     * lncli: `exportchanbackup` ExportChannelBackup attempts to return an encrypted static channel backup for the target channel identified by it channel point. The backup is encrypted with a key generated from the aezeed seed of the user. The returned backup can either be restored using the RestoreChannelBackup method once lnd is running, or via the InitWallet and UnlockWallet methods from the WalletUnlocker service.
      *
-     * @param  string $chanPointFundingTxidStr chanPointFundingTxidStr (required)
-     * @param  int $chanPointOutputIndex chanPointOutputIndex (required)
-     * @param  string $chanPointFundingTxidBytes / Txid of the funding transaction. (optional)
+     * @param  string $chanPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $chanPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $chanPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -3239,11 +4517,11 @@ class LightningApi
     /**
      * Operation exportChannelBackupWithHttpInfo
      *
-     * * lncli: `exportchanbackup` ExportChannelBackup attempts to return an encrypted static channel backup for the target channel identified by it channel point. The backup is encrypted with a key generated from the aezeed seed of the user. The returned backup can either be restored using the RestoreChannelBackup method once lnd is running, or via the InitWallet and UnlockWallet methods from the WalletUnlocker service.
+     * lncli: `exportchanbackup` ExportChannelBackup attempts to return an encrypted static channel backup for the target channel identified by it channel point. The backup is encrypted with a key generated from the aezeed seed of the user. The returned backup can either be restored using the RestoreChannelBackup method once lnd is running, or via the InitWallet and UnlockWallet methods from the WalletUnlocker service.
      *
-     * @param  string $chanPointFundingTxidStr (required)
-     * @param  int $chanPointOutputIndex (required)
-     * @param  string $chanPointFundingTxidBytes / Txid of the funding transaction. (optional)
+     * @param  string $chanPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $chanPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $chanPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -3308,6 +4586,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3316,11 +4602,11 @@ class LightningApi
     /**
      * Operation exportChannelBackupAsync
      *
-     * * lncli: `exportchanbackup` ExportChannelBackup attempts to return an encrypted static channel backup for the target channel identified by it channel point. The backup is encrypted with a key generated from the aezeed seed of the user. The returned backup can either be restored using the RestoreChannelBackup method once lnd is running, or via the InitWallet and UnlockWallet methods from the WalletUnlocker service.
+     * lncli: `exportchanbackup` ExportChannelBackup attempts to return an encrypted static channel backup for the target channel identified by it channel point. The backup is encrypted with a key generated from the aezeed seed of the user. The returned backup can either be restored using the RestoreChannelBackup method once lnd is running, or via the InitWallet and UnlockWallet methods from the WalletUnlocker service.
      *
-     * @param  string $chanPointFundingTxidStr (required)
-     * @param  int $chanPointOutputIndex (required)
-     * @param  string $chanPointFundingTxidBytes / Txid of the funding transaction. (optional)
+     * @param  string $chanPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $chanPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $chanPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -3338,11 +4624,11 @@ class LightningApi
     /**
      * Operation exportChannelBackupAsyncWithHttpInfo
      *
-     * * lncli: `exportchanbackup` ExportChannelBackup attempts to return an encrypted static channel backup for the target channel identified by it channel point. The backup is encrypted with a key generated from the aezeed seed of the user. The returned backup can either be restored using the RestoreChannelBackup method once lnd is running, or via the InitWallet and UnlockWallet methods from the WalletUnlocker service.
+     * lncli: `exportchanbackup` ExportChannelBackup attempts to return an encrypted static channel backup for the target channel identified by it channel point. The backup is encrypted with a key generated from the aezeed seed of the user. The returned backup can either be restored using the RestoreChannelBackup method once lnd is running, or via the InitWallet and UnlockWallet methods from the WalletUnlocker service.
      *
-     * @param  string $chanPointFundingTxidStr (required)
-     * @param  int $chanPointOutputIndex (required)
-     * @param  string $chanPointFundingTxidBytes / Txid of the funding transaction. (optional)
+     * @param  string $chanPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $chanPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $chanPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -3392,9 +4678,9 @@ class LightningApi
     /**
      * Create request for operation 'exportChannelBackup'
      *
-     * @param  string $chanPointFundingTxidStr (required)
-     * @param  int $chanPointOutputIndex (required)
-     * @param  string $chanPointFundingTxidBytes / Txid of the funding transaction. (optional)
+     * @param  string $chanPointFundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction. (required)
+     * @param  int $chanPointOutputIndex The index of the output of the funding transaction (required)
+     * @param  string $chanPointFundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -3510,7 +4796,7 @@ class LightningApi
     /**
      * Operation feeReport
      *
-     * * lncli: `feereport` FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
+     * lncli: `feereport` FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -3526,7 +4812,7 @@ class LightningApi
     /**
      * Operation feeReportWithHttpInfo
      *
-     * * lncli: `feereport` FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
+     * lncli: `feereport` FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -3592,6 +4878,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3600,7 +4894,7 @@ class LightningApi
     /**
      * Operation feeReportAsync
      *
-     * * lncli: `feereport` FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
+     * lncli: `feereport` FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
      *
      *
      * @throws \InvalidArgumentException
@@ -3619,7 +4913,7 @@ class LightningApi
     /**
      * Operation feeReportAsyncWithHttpInfo
      *
-     * * lncli: `feereport` FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
+     * lncli: `feereport` FeeReport allows the caller to obtain a report detailing the current fee schedule enforced by the node globally for each channel.
      *
      *
      * @throws \InvalidArgumentException
@@ -3753,7 +5047,7 @@ class LightningApi
     /**
      * Operation forwardingHistory
      *
-     * * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLCs forwarded within the target time range, and integer offset within that time range. If no time-range is specified, then the first chunk of the past 24 hrs of forwarding history are returned.
+     * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLCs forwarded within the target time range, and integer offset within that time range, for a maximum number of events. If no maximum number of events is specified, up to 100 events will be returned. If no time-range is specified, then events will be returned in the order that they occured.
      *
      * @param  \Lnd\Rest\Model\LnrpcForwardingHistoryRequest $body body (required)
      *
@@ -3770,7 +5064,7 @@ class LightningApi
     /**
      * Operation forwardingHistoryWithHttpInfo
      *
-     * * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLCs forwarded within the target time range, and integer offset within that time range. If no time-range is specified, then the first chunk of the past 24 hrs of forwarding history are returned.
+     * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLCs forwarded within the target time range, and integer offset within that time range, for a maximum number of events. If no maximum number of events is specified, up to 100 events will be returned. If no time-range is specified, then events will be returned in the order that they occured.
      *
      * @param  \Lnd\Rest\Model\LnrpcForwardingHistoryRequest $body (required)
      *
@@ -3837,6 +5131,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -3845,7 +5147,7 @@ class LightningApi
     /**
      * Operation forwardingHistoryAsync
      *
-     * * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLCs forwarded within the target time range, and integer offset within that time range. If no time-range is specified, then the first chunk of the past 24 hrs of forwarding history are returned.
+     * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLCs forwarded within the target time range, and integer offset within that time range, for a maximum number of events. If no maximum number of events is specified, up to 100 events will be returned. If no time-range is specified, then events will be returned in the order that they occured.
      *
      * @param  \Lnd\Rest\Model\LnrpcForwardingHistoryRequest $body (required)
      *
@@ -3865,7 +5167,7 @@ class LightningApi
     /**
      * Operation forwardingHistoryAsyncWithHttpInfo
      *
-     * * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLCs forwarded within the target time range, and integer offset within that time range. If no time-range is specified, then the first chunk of the past 24 hrs of forwarding history are returned.
+     * lncli: `fwdinghistory` ForwardingHistory allows the caller to query the htlcswitch for a record of all HTLCs forwarded within the target time range, and integer offset within that time range, for a maximum number of events. If no maximum number of events is specified, up to 100 events will be returned. If no time-range is specified, then events will be returned in the order that they occured.
      *
      * @param  \Lnd\Rest\Model\LnrpcForwardingHistoryRequest $body (required)
      *
@@ -4008,11 +5310,276 @@ class LightningApi
     }
 
     /**
+     * Operation fundingStateStep
+     *
+     * FundingStateStep is an advanced funding related call that allows the caller to either execute some preparatory steps for a funding workflow, or manually progress a funding workflow. The primary way a funding flow is identified is via its pending channel ID. As an example, this method can be used to specify that we're expecting a funding flow for a particular pending channel ID, for which we need to use specific parameters. Alternatively, this can be used to interactively drive PSBT signing for funding for partially complete funding transactions.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcFundingTransitionMsg $body body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcFundingStateStepResp
+     */
+    public function fundingStateStep($body)
+    {
+        list($response) = $this->fundingStateStepWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation fundingStateStepWithHttpInfo
+     *
+     * FundingStateStep is an advanced funding related call that allows the caller to either execute some preparatory steps for a funding workflow, or manually progress a funding workflow. The primary way a funding flow is identified is via its pending channel ID. As an example, this method can be used to specify that we're expecting a funding flow for a particular pending channel ID, for which we need to use specific parameters. Alternatively, this can be used to interactively drive PSBT signing for funding for partially complete funding transactions.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcFundingTransitionMsg $body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcFundingStateStepResp, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function fundingStateStepWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcFundingStateStepResp';
+        $request = $this->fundingStateStepRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcFundingStateStepResp',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation fundingStateStepAsync
+     *
+     * FundingStateStep is an advanced funding related call that allows the caller to either execute some preparatory steps for a funding workflow, or manually progress a funding workflow. The primary way a funding flow is identified is via its pending channel ID. As an example, this method can be used to specify that we're expecting a funding flow for a particular pending channel ID, for which we need to use specific parameters. Alternatively, this can be used to interactively drive PSBT signing for funding for partially complete funding transactions.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcFundingTransitionMsg $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function fundingStateStepAsync($body)
+    {
+        return $this->fundingStateStepAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation fundingStateStepAsyncWithHttpInfo
+     *
+     * FundingStateStep is an advanced funding related call that allows the caller to either execute some preparatory steps for a funding workflow, or manually progress a funding workflow. The primary way a funding flow is identified is via its pending channel ID. As an example, this method can be used to specify that we're expecting a funding flow for a particular pending channel ID, for which we need to use specific parameters. Alternatively, this can be used to interactively drive PSBT signing for funding for partially complete funding transactions.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcFundingTransitionMsg $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function fundingStateStepAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcFundingStateStepResp';
+        $request = $this->fundingStateStepRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'fundingStateStep'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcFundingTransitionMsg $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function fundingStateStepRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null || (is_array($body) && count($body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling fundingStateStep'
+            );
+        }
+
+        $resourcePath = '/v1/funding/step';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation getChanInfo
      *
-     * * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain.
+     * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain.
      *
-     * @param  string $chanId chanId (required)
+     * @param  string $chanId The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel. (required)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -4027,9 +5594,9 @@ class LightningApi
     /**
      * Operation getChanInfoWithHttpInfo
      *
-     * * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain.
+     * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain.
      *
-     * @param  string $chanId (required)
+     * @param  string $chanId The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel. (required)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -4094,6 +5661,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4102,9 +5677,9 @@ class LightningApi
     /**
      * Operation getChanInfoAsync
      *
-     * * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain.
+     * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain.
      *
-     * @param  string $chanId (required)
+     * @param  string $chanId The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -4122,9 +5697,9 @@ class LightningApi
     /**
      * Operation getChanInfoAsyncWithHttpInfo
      *
-     * * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain.
+     * lncli: `getchaninfo` GetChanInfo returns the latest authenticated network announcement for the given channel identified by its channel ID: an 8-byte integer which uniquely identifies the location of transaction's funding output within the blockchain.
      *
-     * @param  string $chanId (required)
+     * @param  string $chanId The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -4174,7 +5749,7 @@ class LightningApi
     /**
      * Create request for operation 'getChanInfo'
      *
-     * @param  string $chanId (required)
+     * @param  string $chanId The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -4272,7 +5847,7 @@ class LightningApi
     /**
      * Operation getInfo
      *
-     * * lncli: `getinfo` GetInfo returns general information concerning the lightning node including it's identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
+     * lncli: `getinfo` GetInfo returns general information concerning the lightning node including it's identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -4288,7 +5863,7 @@ class LightningApi
     /**
      * Operation getInfoWithHttpInfo
      *
-     * * lncli: `getinfo` GetInfo returns general information concerning the lightning node including it's identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
+     * lncli: `getinfo` GetInfo returns general information concerning the lightning node including it's identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -4354,6 +5929,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4362,7 +5945,7 @@ class LightningApi
     /**
      * Operation getInfoAsync
      *
-     * * lncli: `getinfo` GetInfo returns general information concerning the lightning node including it's identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
+     * lncli: `getinfo` GetInfo returns general information concerning the lightning node including it's identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
      *
      *
      * @throws \InvalidArgumentException
@@ -4381,7 +5964,7 @@ class LightningApi
     /**
      * Operation getInfoAsyncWithHttpInfo
      *
-     * * lncli: `getinfo` GetInfo returns general information concerning the lightning node including it's identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
+     * lncli: `getinfo` GetInfo returns general information concerning the lightning node including it's identity pubkey, alias, the chains it is connected to, and information concerning the number of open+pending channels.
      *
      *
      * @throws \InvalidArgumentException
@@ -4515,7 +6098,7 @@ class LightningApi
     /**
      * Operation getNetworkInfo
      *
-     * * lncli: `getnetworkinfo` GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
+     * lncli: `getnetworkinfo` GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -4531,7 +6114,7 @@ class LightningApi
     /**
      * Operation getNetworkInfoWithHttpInfo
      *
-     * * lncli: `getnetworkinfo` GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
+     * lncli: `getnetworkinfo` GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -4597,6 +6180,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4605,7 +6196,7 @@ class LightningApi
     /**
      * Operation getNetworkInfoAsync
      *
-     * * lncli: `getnetworkinfo` GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
+     * lncli: `getnetworkinfo` GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
      *
      *
      * @throws \InvalidArgumentException
@@ -4624,7 +6215,7 @@ class LightningApi
     /**
      * Operation getNetworkInfoAsyncWithHttpInfo
      *
-     * * lncli: `getnetworkinfo` GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
+     * lncli: `getnetworkinfo` GetNetworkInfo returns some basic stats about the known channel graph from the point of view of the node.
      *
      *
      * @throws \InvalidArgumentException
@@ -4758,10 +6349,10 @@ class LightningApi
     /**
      * Operation getNodeInfo
      *
-     * * lncli: `getnodeinfo` GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
+     * lncli: `getnodeinfo` GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
      *
-     * @param  string $pubKey pubKey (required)
-     * @param  bool $includeChannels / If true, will include all known channels associated with the node. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded compressed public of the target node (required)
+     * @param  bool $includeChannels If true, will include all known channels associated with the node. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -4776,10 +6367,10 @@ class LightningApi
     /**
      * Operation getNodeInfoWithHttpInfo
      *
-     * * lncli: `getnodeinfo` GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
+     * lncli: `getnodeinfo` GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
      *
-     * @param  string $pubKey (required)
-     * @param  bool $includeChannels / If true, will include all known channels associated with the node. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded compressed public of the target node (required)
+     * @param  bool $includeChannels If true, will include all known channels associated with the node. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -4844,6 +6435,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -4852,10 +6451,10 @@ class LightningApi
     /**
      * Operation getNodeInfoAsync
      *
-     * * lncli: `getnodeinfo` GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
+     * lncli: `getnodeinfo` GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
      *
-     * @param  string $pubKey (required)
-     * @param  bool $includeChannels / If true, will include all known channels associated with the node. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded compressed public of the target node (required)
+     * @param  bool $includeChannels If true, will include all known channels associated with the node. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -4873,10 +6472,10 @@ class LightningApi
     /**
      * Operation getNodeInfoAsyncWithHttpInfo
      *
-     * * lncli: `getnodeinfo` GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
+     * lncli: `getnodeinfo` GetNodeInfo returns the latest advertised, aggregated, and authenticated channel information for the specified node identified by its public key.
      *
-     * @param  string $pubKey (required)
-     * @param  bool $includeChannels / If true, will include all known channels associated with the node. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded compressed public of the target node (required)
+     * @param  bool $includeChannels If true, will include all known channels associated with the node. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -4926,8 +6525,8 @@ class LightningApi
     /**
      * Create request for operation 'getNodeInfo'
      *
-     * @param  string $pubKey (required)
-     * @param  bool $includeChannels / If true, will include all known channels associated with the node. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded compressed public of the target node (required)
+     * @param  bool $includeChannels If true, will include all known channels associated with the node. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -5027,35 +6626,37 @@ class LightningApi
     }
 
     /**
-     * Operation getTransactions
+     * Operation getNodeMetrics
      *
-     * * lncli: `listchaintxns` GetTransactions returns a list describing all the known transactions relevant to the wallet.
+     * lncli: `getnodemetrics` GetNodeMetrics returns node metrics calculated from the graph. Currently the only supported metric is betweenness centrality of individual nodes.
      *
+     * @param  string[] $types The requested node metrics. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Lnd\Rest\Model\LnrpcTransactionDetails
+     * @return \Lnd\Rest\Model\LnrpcNodeMetricsResponse
      */
-    public function getTransactions()
+    public function getNodeMetrics($types = null)
     {
-        list($response) = $this->getTransactionsWithHttpInfo();
+        list($response) = $this->getNodeMetricsWithHttpInfo($types);
         return $response;
     }
 
     /**
-     * Operation getTransactionsWithHttpInfo
+     * Operation getNodeMetricsWithHttpInfo
      *
-     * * lncli: `listchaintxns` GetTransactions returns a list describing all the known transactions relevant to the wallet.
+     * lncli: `getnodemetrics` GetNodeMetrics returns node metrics calculated from the graph. Currently the only supported metric is betweenness centrality of individual nodes.
      *
+     * @param  string[] $types The requested node metrics. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return array of \Lnd\Rest\Model\LnrpcTransactionDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Lnd\Rest\Model\LnrpcNodeMetricsResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getTransactionsWithHttpInfo()
+    public function getNodeMetricsWithHttpInfo($types = null)
     {
-        $returnType = '\Lnd\Rest\Model\LnrpcTransactionDetails';
-        $request = $this->getTransactionsRequest();
+        $returnType = '\Lnd\Rest\Model\LnrpcNodeMetricsResponse';
+        $request = $this->getNodeMetricsRequest($types);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5106,7 +6707,15 @@ class LightningApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\Lnd\Rest\Model\LnrpcTransactionDetails',
+                        '\Lnd\Rest\Model\LnrpcNodeMetricsResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -5117,17 +6726,18 @@ class LightningApi
     }
 
     /**
-     * Operation getTransactionsAsync
+     * Operation getNodeMetricsAsync
      *
-     * * lncli: `listchaintxns` GetTransactions returns a list describing all the known transactions relevant to the wallet.
+     * lncli: `getnodemetrics` GetNodeMetrics returns node metrics calculated from the graph. Currently the only supported metric is betweenness centrality of individual nodes.
      *
+     * @param  string[] $types The requested node metrics. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getTransactionsAsync()
+    public function getNodeMetricsAsync($types = null)
     {
-        return $this->getTransactionsAsyncWithHttpInfo()
+        return $this->getNodeMetricsAsyncWithHttpInfo($types)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5136,18 +6746,19 @@ class LightningApi
     }
 
     /**
-     * Operation getTransactionsAsyncWithHttpInfo
+     * Operation getNodeMetricsAsyncWithHttpInfo
      *
-     * * lncli: `listchaintxns` GetTransactions returns a list describing all the known transactions relevant to the wallet.
+     * lncli: `getnodemetrics` GetNodeMetrics returns node metrics calculated from the graph. Currently the only supported metric is betweenness centrality of individual nodes.
      *
+     * @param  string[] $types The requested node metrics. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getTransactionsAsyncWithHttpInfo()
+    public function getNodeMetricsAsyncWithHttpInfo($types = null)
     {
-        $returnType = '\Lnd\Rest\Model\LnrpcTransactionDetails';
-        $request = $this->getTransactionsRequest();
+        $returnType = '\Lnd\Rest\Model\LnrpcNodeMetricsResponse';
+        $request = $this->getNodeMetricsRequest($types);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5187,16 +6798,275 @@ class LightningApi
     }
 
     /**
-     * Create request for operation 'getTransactions'
+     * Create request for operation 'getNodeMetrics'
+     *
+     * @param  string[] $types The requested node metrics. (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function getNodeMetricsRequest($types = null)
+    {
+
+        $resourcePath = '/v1/graph/nodemetrics';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        if (is_array($types)) {
+            $types = ObjectSerializer::serializeCollection($types, 'multi', true);
+        }
+        if ($types !== null) {
+            $queryParams['types'] = ObjectSerializer::toQueryValue($types);
+        }
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation getRecoveryInfo
+     *
+     * * lncli: `getrecoveryinfo` GetRecoveryInfo returns information concerning the recovery mode including whether it's in a recovery mode, whether the recovery is finished, and the progress made so far.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcGetRecoveryInfoResponse
+     */
+    public function getRecoveryInfo()
+    {
+        list($response) = $this->getRecoveryInfoWithHttpInfo();
+        return $response;
+    }
+
+    /**
+     * Operation getRecoveryInfoWithHttpInfo
+     *
+     * * lncli: `getrecoveryinfo` GetRecoveryInfo returns information concerning the recovery mode including whether it's in a recovery mode, whether the recovery is finished, and the progress made so far.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcGetRecoveryInfoResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getRecoveryInfoWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcGetRecoveryInfoResponse';
+        $request = $this->getRecoveryInfoRequest();
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcGetRecoveryInfoResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getRecoveryInfoAsync
+     *
+     * * lncli: `getrecoveryinfo` GetRecoveryInfo returns information concerning the recovery mode including whether it's in a recovery mode, whether the recovery is finished, and the progress made so far.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getRecoveryInfoAsync()
+    {
+        return $this->getRecoveryInfoAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getRecoveryInfoAsyncWithHttpInfo
+     *
+     * * lncli: `getrecoveryinfo` GetRecoveryInfo returns information concerning the recovery mode including whether it's in a recovery mode, whether the recovery is finished, and the progress made so far.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getRecoveryInfoAsyncWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcGetRecoveryInfoResponse';
+        $request = $this->getRecoveryInfoRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getRecoveryInfo'
      *
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function getTransactionsRequest()
+    protected function getRecoveryInfoRequest()
     {
 
-        $resourcePath = '/v1/transactions';
+        $resourcePath = '/v1/getrecoveryinfo';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -5270,43 +7140,323 @@ class LightningApi
     }
 
     /**
+     * Operation getTransactions
+     *
+     * lncli: `listchaintxns` GetTransactions returns a list describing all the known transactions relevant to the wallet.
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcTransactionDetails
+     */
+    public function getTransactions($startHeight = null, $endHeight = null, $account = null)
+    {
+        list($response) = $this->getTransactionsWithHttpInfo($startHeight, $endHeight, $account);
+        return $response;
+    }
+
+    /**
+     * Operation getTransactionsWithHttpInfo
+     *
+     * lncli: `listchaintxns` GetTransactions returns a list describing all the known transactions relevant to the wallet.
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcTransactionDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getTransactionsWithHttpInfo($startHeight = null, $endHeight = null, $account = null)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcTransactionDetails';
+        $request = $this->getTransactionsRequest($startHeight, $endHeight, $account);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcTransactionDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getTransactionsAsync
+     *
+     * lncli: `listchaintxns` GetTransactions returns a list describing all the known transactions relevant to the wallet.
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getTransactionsAsync($startHeight = null, $endHeight = null, $account = null)
+    {
+        return $this->getTransactionsAsyncWithHttpInfo($startHeight, $endHeight, $account)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getTransactionsAsyncWithHttpInfo
+     *
+     * lncli: `listchaintxns` GetTransactions returns a list describing all the known transactions relevant to the wallet.
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getTransactionsAsyncWithHttpInfo($startHeight = null, $endHeight = null, $account = null)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcTransactionDetails';
+        $request = $this->getTransactionsRequest($startHeight, $endHeight, $account);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getTransactions'
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function getTransactionsRequest($startHeight = null, $endHeight = null, $account = null)
+    {
+
+        $resourcePath = '/v1/transactions';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        if ($startHeight !== null) {
+            $queryParams['start_height'] = ObjectSerializer::toQueryValue($startHeight);
+        }
+        // query params
+        if ($endHeight !== null) {
+            $queryParams['end_height'] = ObjectSerializer::toQueryValue($endHeight);
+        }
+        // query params
+        if ($account !== null) {
+            $queryParams['account'] = ObjectSerializer::toQueryValue($account);
+        }
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation listChannels
      *
-     * * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
+     * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
      *
      * @param  bool $activeOnly activeOnly (optional)
      * @param  bool $inactiveOnly inactiveOnly (optional)
      * @param  bool $publicOnly publicOnly (optional)
      * @param  bool $privateOnly privateOnly (optional)
+     * @param  string $peer Filters the response for channels with a target peer&#39;s pubkey. If peer is empty, all channels will be returned. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcListChannelsResponse
      */
-    public function listChannels($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
+    public function listChannels($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null, $peer = null)
     {
-        list($response) = $this->listChannelsWithHttpInfo($activeOnly, $inactiveOnly, $publicOnly, $privateOnly);
+        list($response) = $this->listChannelsWithHttpInfo($activeOnly, $inactiveOnly, $publicOnly, $privateOnly, $peer);
         return $response;
     }
 
     /**
      * Operation listChannelsWithHttpInfo
      *
-     * * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
+     * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
      *
      * @param  bool $activeOnly (optional)
      * @param  bool $inactiveOnly (optional)
      * @param  bool $publicOnly (optional)
      * @param  bool $privateOnly (optional)
+     * @param  string $peer Filters the response for channels with a target peer&#39;s pubkey. If peer is empty, all channels will be returned. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcListChannelsResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listChannelsWithHttpInfo($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
+    public function listChannelsWithHttpInfo($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null, $peer = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListChannelsResponse';
-        $request = $this->listChannelsRequest($activeOnly, $inactiveOnly, $publicOnly, $privateOnly);
+        $request = $this->listChannelsRequest($activeOnly, $inactiveOnly, $publicOnly, $privateOnly, $peer);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5362,6 +7512,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -5370,19 +7528,20 @@ class LightningApi
     /**
      * Operation listChannelsAsync
      *
-     * * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
+     * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
      *
      * @param  bool $activeOnly (optional)
      * @param  bool $inactiveOnly (optional)
      * @param  bool $publicOnly (optional)
      * @param  bool $privateOnly (optional)
+     * @param  string $peer Filters the response for channels with a target peer&#39;s pubkey. If peer is empty, all channels will be returned. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listChannelsAsync($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
+    public function listChannelsAsync($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null, $peer = null)
     {
-        return $this->listChannelsAsyncWithHttpInfo($activeOnly, $inactiveOnly, $publicOnly, $privateOnly)
+        return $this->listChannelsAsyncWithHttpInfo($activeOnly, $inactiveOnly, $publicOnly, $privateOnly, $peer)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5393,20 +7552,21 @@ class LightningApi
     /**
      * Operation listChannelsAsyncWithHttpInfo
      *
-     * * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
+     * lncli: `listchannels` ListChannels returns a description of all the open channels that this node is a participant in.
      *
      * @param  bool $activeOnly (optional)
      * @param  bool $inactiveOnly (optional)
      * @param  bool $publicOnly (optional)
      * @param  bool $privateOnly (optional)
+     * @param  string $peer Filters the response for channels with a target peer&#39;s pubkey. If peer is empty, all channels will be returned. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listChannelsAsyncWithHttpInfo($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
+    public function listChannelsAsyncWithHttpInfo($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null, $peer = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListChannelsResponse';
-        $request = $this->listChannelsRequest($activeOnly, $inactiveOnly, $publicOnly, $privateOnly);
+        $request = $this->listChannelsRequest($activeOnly, $inactiveOnly, $publicOnly, $privateOnly, $peer);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5452,11 +7612,12 @@ class LightningApi
      * @param  bool $inactiveOnly (optional)
      * @param  bool $publicOnly (optional)
      * @param  bool $privateOnly (optional)
+     * @param  string $peer Filters the response for channels with a target peer&#39;s pubkey. If peer is empty, all channels will be returned. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function listChannelsRequest($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null)
+    protected function listChannelsRequest($activeOnly = null, $inactiveOnly = null, $publicOnly = null, $privateOnly = null, $peer = null)
     {
 
         $resourcePath = '/v1/channels';
@@ -5481,6 +7642,10 @@ class LightningApi
         // query params
         if ($privateOnly !== null) {
             $queryParams['private_only'] = ObjectSerializer::toQueryValue($privateOnly);
+        }
+        // query params
+        if ($peer !== null) {
+            $queryParams['peer'] = ObjectSerializer::toQueryValue($peer);
         }
 
 
@@ -5551,12 +7716,12 @@ class LightningApi
     /**
      * Operation listInvoices
      *
-     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. By default, the first 100 invoices created will be returned. Backwards pagination is also supported through the Reversed flag.
+     * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. By default, the first 100 invoices created will be returned. Backwards pagination is also supported through the Reversed flag.
      *
-     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
-     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
-     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
-     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
+     * @param  bool $pendingOnly If set, only invoices that are not settled and not canceled will be returned in the response. (optional)
+     * @param  string $indexOffset The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -5571,12 +7736,12 @@ class LightningApi
     /**
      * Operation listInvoicesWithHttpInfo
      *
-     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. By default, the first 100 invoices created will be returned. Backwards pagination is also supported through the Reversed flag.
+     * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. By default, the first 100 invoices created will be returned. Backwards pagination is also supported through the Reversed flag.
      *
-     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
-     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
-     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
-     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
+     * @param  bool $pendingOnly If set, only invoices that are not settled and not canceled will be returned in the response. (optional)
+     * @param  string $indexOffset The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -5641,6 +7806,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -5649,12 +7822,12 @@ class LightningApi
     /**
      * Operation listInvoicesAsync
      *
-     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. By default, the first 100 invoices created will be returned. Backwards pagination is also supported through the Reversed flag.
+     * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. By default, the first 100 invoices created will be returned. Backwards pagination is also supported through the Reversed flag.
      *
-     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
-     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
-     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
-     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
+     * @param  bool $pendingOnly If set, only invoices that are not settled and not canceled will be returned in the response. (optional)
+     * @param  string $indexOffset The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -5672,12 +7845,12 @@ class LightningApi
     /**
      * Operation listInvoicesAsyncWithHttpInfo
      *
-     * * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. By default, the first 100 invoices created will be returned. Backwards pagination is also supported through the Reversed flag.
+     * lncli: `listinvoices` ListInvoices returns a list of all the invoices currently stored within the database. Any active debug invoices are ignored. It has full support for paginated responses, allowing users to query for specific invoices through their add_index. This can be done by using either the first_index_offset or last_index_offset fields included in the response as the index_offset of the next request. By default, the first 100 invoices created will be returned. Backwards pagination is also supported through the Reversed flag.
      *
-     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
-     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
-     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
-     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
+     * @param  bool $pendingOnly If set, only invoices that are not settled and not canceled will be returned in the response. (optional)
+     * @param  string $indexOffset The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -5727,10 +7900,10 @@ class LightningApi
     /**
      * Create request for operation 'listInvoices'
      *
-     * @param  bool $pendingOnly / If set, only unsettled invoices will be returned in the response. (optional)
-     * @param  string $indexOffset * The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
-     * @param  string $numMaxInvoices / The max number of invoices to return in the response to this query. (optional)
-     * @param  bool $reversed * If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
+     * @param  bool $pendingOnly If set, only invoices that are not settled and not canceled will be returned in the response. (optional)
+     * @param  string $indexOffset The index of an invoice that will be used as either the start or end of a query to determine which invoices should be returned in the response. (optional)
+     * @param  string $numMaxInvoices The max number of invoices to return in the response to this query. (optional)
+     * @param  bool $reversed If set, the invoices returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -5828,37 +8001,294 @@ class LightningApi
     }
 
     /**
+     * Operation listMacaroonIDs
+     *
+     * lncli: `listmacaroonids` ListMacaroonIDs returns all root key IDs that are in use.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcListMacaroonIDsResponse
+     */
+    public function listMacaroonIDs()
+    {
+        list($response) = $this->listMacaroonIDsWithHttpInfo();
+        return $response;
+    }
+
+    /**
+     * Operation listMacaroonIDsWithHttpInfo
+     *
+     * lncli: `listmacaroonids` ListMacaroonIDs returns all root key IDs that are in use.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcListMacaroonIDsResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function listMacaroonIDsWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcListMacaroonIDsResponse';
+        $request = $this->listMacaroonIDsRequest();
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcListMacaroonIDsResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation listMacaroonIDsAsync
+     *
+     * lncli: `listmacaroonids` ListMacaroonIDs returns all root key IDs that are in use.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function listMacaroonIDsAsync()
+    {
+        return $this->listMacaroonIDsAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation listMacaroonIDsAsyncWithHttpInfo
+     *
+     * lncli: `listmacaroonids` ListMacaroonIDs returns all root key IDs that are in use.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function listMacaroonIDsAsyncWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcListMacaroonIDsResponse';
+        $request = $this->listMacaroonIDsRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'listMacaroonIDs'
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function listMacaroonIDsRequest()
+    {
+
+        $resourcePath = '/v1/macaroon/ids';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation listPayments
      *
-     * * lncli: `listpayments` ListPayments returns a list of all outgoing payments.
+     * lncli: `listpayments` ListPayments returns a list of all outgoing payments.
      *
-     * @param  bool $includeIncomplete * If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to True. (optional)
+     * @param  bool $includeIncomplete If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to true. This flag doesn&#39;t change the meaning of the indices, which are tied to individual payments. (optional)
+     * @param  string $indexOffset The index of a payment that will be used as either the start or end of a query to determine which payments should be returned in the response. The index_offset is exclusive. In the case of a zero index_offset, the query will start with the oldest payment when paginating forwards, or will end with the most recent payment when paginating backwards. (optional)
+     * @param  string $maxPayments The maximal number of payments returned in the response to this query. (optional)
+     * @param  bool $reversed If set, the payments returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. The order of the returned payments is always oldest first (ascending index order). (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcListPaymentsResponse
      */
-    public function listPayments($includeIncomplete = null)
+    public function listPayments($includeIncomplete = null, $indexOffset = null, $maxPayments = null, $reversed = null)
     {
-        list($response) = $this->listPaymentsWithHttpInfo($includeIncomplete);
+        list($response) = $this->listPaymentsWithHttpInfo($includeIncomplete, $indexOffset, $maxPayments, $reversed);
         return $response;
     }
 
     /**
      * Operation listPaymentsWithHttpInfo
      *
-     * * lncli: `listpayments` ListPayments returns a list of all outgoing payments.
+     * lncli: `listpayments` ListPayments returns a list of all outgoing payments.
      *
-     * @param  bool $includeIncomplete * If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to True. (optional)
+     * @param  bool $includeIncomplete If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to true. This flag doesn&#39;t change the meaning of the indices, which are tied to individual payments. (optional)
+     * @param  string $indexOffset The index of a payment that will be used as either the start or end of a query to determine which payments should be returned in the response. The index_offset is exclusive. In the case of a zero index_offset, the query will start with the oldest payment when paginating forwards, or will end with the most recent payment when paginating backwards. (optional)
+     * @param  string $maxPayments The maximal number of payments returned in the response to this query. (optional)
+     * @param  bool $reversed If set, the payments returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. The order of the returned payments is always oldest first (ascending index order). (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcListPaymentsResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listPaymentsWithHttpInfo($includeIncomplete = null)
+    public function listPaymentsWithHttpInfo($includeIncomplete = null, $indexOffset = null, $maxPayments = null, $reversed = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListPaymentsResponse';
-        $request = $this->listPaymentsRequest($includeIncomplete);
+        $request = $this->listPaymentsRequest($includeIncomplete, $indexOffset, $maxPayments, $reversed);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5914,6 +8344,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -5922,16 +8360,19 @@ class LightningApi
     /**
      * Operation listPaymentsAsync
      *
-     * * lncli: `listpayments` ListPayments returns a list of all outgoing payments.
+     * lncli: `listpayments` ListPayments returns a list of all outgoing payments.
      *
-     * @param  bool $includeIncomplete * If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to True. (optional)
+     * @param  bool $includeIncomplete If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to true. This flag doesn&#39;t change the meaning of the indices, which are tied to individual payments. (optional)
+     * @param  string $indexOffset The index of a payment that will be used as either the start or end of a query to determine which payments should be returned in the response. The index_offset is exclusive. In the case of a zero index_offset, the query will start with the oldest payment when paginating forwards, or will end with the most recent payment when paginating backwards. (optional)
+     * @param  string $maxPayments The maximal number of payments returned in the response to this query. (optional)
+     * @param  bool $reversed If set, the payments returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. The order of the returned payments is always oldest first (ascending index order). (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listPaymentsAsync($includeIncomplete = null)
+    public function listPaymentsAsync($includeIncomplete = null, $indexOffset = null, $maxPayments = null, $reversed = null)
     {
-        return $this->listPaymentsAsyncWithHttpInfo($includeIncomplete)
+        return $this->listPaymentsAsyncWithHttpInfo($includeIncomplete, $indexOffset, $maxPayments, $reversed)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5942,17 +8383,20 @@ class LightningApi
     /**
      * Operation listPaymentsAsyncWithHttpInfo
      *
-     * * lncli: `listpayments` ListPayments returns a list of all outgoing payments.
+     * lncli: `listpayments` ListPayments returns a list of all outgoing payments.
      *
-     * @param  bool $includeIncomplete * If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to True. (optional)
+     * @param  bool $includeIncomplete If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to true. This flag doesn&#39;t change the meaning of the indices, which are tied to individual payments. (optional)
+     * @param  string $indexOffset The index of a payment that will be used as either the start or end of a query to determine which payments should be returned in the response. The index_offset is exclusive. In the case of a zero index_offset, the query will start with the oldest payment when paginating forwards, or will end with the most recent payment when paginating backwards. (optional)
+     * @param  string $maxPayments The maximal number of payments returned in the response to this query. (optional)
+     * @param  bool $reversed If set, the payments returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. The order of the returned payments is always oldest first (ascending index order). (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listPaymentsAsyncWithHttpInfo($includeIncomplete = null)
+    public function listPaymentsAsyncWithHttpInfo($includeIncomplete = null, $indexOffset = null, $maxPayments = null, $reversed = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListPaymentsResponse';
-        $request = $this->listPaymentsRequest($includeIncomplete);
+        $request = $this->listPaymentsRequest($includeIncomplete, $indexOffset, $maxPayments, $reversed);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5994,12 +8438,15 @@ class LightningApi
     /**
      * Create request for operation 'listPayments'
      *
-     * @param  bool $includeIncomplete * If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to True. (optional)
+     * @param  bool $includeIncomplete If true, then return payments that have not yet fully completed. This means that pending payments, as well as failed payments will show up if this field is set to true. This flag doesn&#39;t change the meaning of the indices, which are tied to individual payments. (optional)
+     * @param  string $indexOffset The index of a payment that will be used as either the start or end of a query to determine which payments should be returned in the response. The index_offset is exclusive. In the case of a zero index_offset, the query will start with the oldest payment when paginating forwards, or will end with the most recent payment when paginating backwards. (optional)
+     * @param  string $maxPayments The maximal number of payments returned in the response to this query. (optional)
+     * @param  bool $reversed If set, the payments returned will result from seeking backwards from the specified index offset. This can be used to paginate backwards. The order of the returned payments is always oldest first (ascending index order). (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function listPaymentsRequest($includeIncomplete = null)
+    protected function listPaymentsRequest($includeIncomplete = null, $indexOffset = null, $maxPayments = null, $reversed = null)
     {
 
         $resourcePath = '/v1/payments';
@@ -6012,6 +8459,18 @@ class LightningApi
         // query params
         if ($includeIncomplete !== null) {
             $queryParams['include_incomplete'] = ObjectSerializer::toQueryValue($includeIncomplete);
+        }
+        // query params
+        if ($indexOffset !== null) {
+            $queryParams['index_offset'] = ObjectSerializer::toQueryValue($indexOffset);
+        }
+        // query params
+        if ($maxPayments !== null) {
+            $queryParams['max_payments'] = ObjectSerializer::toQueryValue($maxPayments);
+        }
+        // query params
+        if ($reversed !== null) {
+            $queryParams['reversed'] = ObjectSerializer::toQueryValue($reversed);
         }
 
 
@@ -6082,33 +8541,35 @@ class LightningApi
     /**
      * Operation listPeers
      *
-     * * lncli: `listpeers` ListPeers returns a verbose listing of all currently active peers.
+     * lncli: `listpeers` ListPeers returns a verbose listing of all currently active peers.
      *
+     * @param  bool $latestError If true, only the last error that our peer sent us will be returned with the peer&#39;s information, rather than the full set of historic errors we have stored. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcListPeersResponse
      */
-    public function listPeers()
+    public function listPeers($latestError = null)
     {
-        list($response) = $this->listPeersWithHttpInfo();
+        list($response) = $this->listPeersWithHttpInfo($latestError);
         return $response;
     }
 
     /**
      * Operation listPeersWithHttpInfo
      *
-     * * lncli: `listpeers` ListPeers returns a verbose listing of all currently active peers.
+     * lncli: `listpeers` ListPeers returns a verbose listing of all currently active peers.
      *
+     * @param  bool $latestError If true, only the last error that our peer sent us will be returned with the peer&#39;s information, rather than the full set of historic errors we have stored. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcListPeersResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listPeersWithHttpInfo()
+    public function listPeersWithHttpInfo($latestError = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListPeersResponse';
-        $request = $this->listPeersRequest();
+        $request = $this->listPeersRequest($latestError);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6164,6 +8625,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -6172,15 +8641,16 @@ class LightningApi
     /**
      * Operation listPeersAsync
      *
-     * * lncli: `listpeers` ListPeers returns a verbose listing of all currently active peers.
+     * lncli: `listpeers` ListPeers returns a verbose listing of all currently active peers.
      *
+     * @param  bool $latestError If true, only the last error that our peer sent us will be returned with the peer&#39;s information, rather than the full set of historic errors we have stored. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listPeersAsync()
+    public function listPeersAsync($latestError = null)
     {
-        return $this->listPeersAsyncWithHttpInfo()
+        return $this->listPeersAsyncWithHttpInfo($latestError)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6191,16 +8661,17 @@ class LightningApi
     /**
      * Operation listPeersAsyncWithHttpInfo
      *
-     * * lncli: `listpeers` ListPeers returns a verbose listing of all currently active peers.
+     * lncli: `listpeers` ListPeers returns a verbose listing of all currently active peers.
      *
+     * @param  bool $latestError If true, only the last error that our peer sent us will be returned with the peer&#39;s information, rather than the full set of historic errors we have stored. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listPeersAsyncWithHttpInfo()
+    public function listPeersAsyncWithHttpInfo($latestError = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListPeersResponse';
-        $request = $this->listPeersRequest();
+        $request = $this->listPeersRequest($latestError);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -6242,14 +8713,270 @@ class LightningApi
     /**
      * Create request for operation 'listPeers'
      *
+     * @param  bool $latestError If true, only the last error that our peer sent us will be returned with the peer&#39;s information, rather than the full set of historic errors we have stored. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function listPeersRequest()
+    protected function listPeersRequest($latestError = null)
     {
 
         $resourcePath = '/v1/peers';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        if ($latestError !== null) {
+            $queryParams['latest_error'] = ObjectSerializer::toQueryValue($latestError);
+        }
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation listPermissions
+     *
+     * lncli: `listpermissions` ListPermissions lists all RPC method URIs and their required macaroon permissions to access them.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcListPermissionsResponse
+     */
+    public function listPermissions()
+    {
+        list($response) = $this->listPermissionsWithHttpInfo();
+        return $response;
+    }
+
+    /**
+     * Operation listPermissionsWithHttpInfo
+     *
+     * lncli: `listpermissions` ListPermissions lists all RPC method URIs and their required macaroon permissions to access them.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcListPermissionsResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function listPermissionsWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcListPermissionsResponse';
+        $request = $this->listPermissionsRequest();
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcListPermissionsResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation listPermissionsAsync
+     *
+     * lncli: `listpermissions` ListPermissions lists all RPC method URIs and their required macaroon permissions to access them.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function listPermissionsAsync()
+    {
+        return $this->listPermissionsAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation listPermissionsAsyncWithHttpInfo
+     *
+     * lncli: `listpermissions` ListPermissions lists all RPC method URIs and their required macaroon permissions to access them.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function listPermissionsAsyncWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcListPermissionsResponse';
+        $request = $this->listPermissionsRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'listPermissions'
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function listPermissionsRequest()
+    {
+
+        $resourcePath = '/v1/macaroon/permissions';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -6325,37 +9052,39 @@ class LightningApi
     /**
      * Operation listUnspent
      *
-     * * lncli: `listunspent` ListUnspent returns a list of all utxos spendable by the wallet with a number of confirmations between the specified minimum and maximum.
+     * lncli: `listunspent` Deprecated, use walletrpc.ListUnspent instead.
      *
-     * @param  int $minConfs / The minimum number of confirmations to be included. (optional)
-     * @param  int $maxConfs / The maximum number of confirmations to be included. (optional)
+     * @param  int $minConfs The minimum number of confirmations to be included. (optional)
+     * @param  int $maxConfs The maximum number of confirmations to be included. (optional)
+     * @param  string $account An optional filter to only include outputs belonging to an account. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcListUnspentResponse
      */
-    public function listUnspent($minConfs = null, $maxConfs = null)
+    public function listUnspent($minConfs = null, $maxConfs = null, $account = null)
     {
-        list($response) = $this->listUnspentWithHttpInfo($minConfs, $maxConfs);
+        list($response) = $this->listUnspentWithHttpInfo($minConfs, $maxConfs, $account);
         return $response;
     }
 
     /**
      * Operation listUnspentWithHttpInfo
      *
-     * * lncli: `listunspent` ListUnspent returns a list of all utxos spendable by the wallet with a number of confirmations between the specified minimum and maximum.
+     * lncli: `listunspent` Deprecated, use walletrpc.ListUnspent instead.
      *
-     * @param  int $minConfs / The minimum number of confirmations to be included. (optional)
-     * @param  int $maxConfs / The maximum number of confirmations to be included. (optional)
+     * @param  int $minConfs The minimum number of confirmations to be included. (optional)
+     * @param  int $maxConfs The maximum number of confirmations to be included. (optional)
+     * @param  string $account An optional filter to only include outputs belonging to an account. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcListUnspentResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listUnspentWithHttpInfo($minConfs = null, $maxConfs = null)
+    public function listUnspentWithHttpInfo($minConfs = null, $maxConfs = null, $account = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListUnspentResponse';
-        $request = $this->listUnspentRequest($minConfs, $maxConfs);
+        $request = $this->listUnspentRequest($minConfs, $maxConfs, $account);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6411,6 +9140,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -6419,17 +9156,18 @@ class LightningApi
     /**
      * Operation listUnspentAsync
      *
-     * * lncli: `listunspent` ListUnspent returns a list of all utxos spendable by the wallet with a number of confirmations between the specified minimum and maximum.
+     * lncli: `listunspent` Deprecated, use walletrpc.ListUnspent instead.
      *
-     * @param  int $minConfs / The minimum number of confirmations to be included. (optional)
-     * @param  int $maxConfs / The maximum number of confirmations to be included. (optional)
+     * @param  int $minConfs The minimum number of confirmations to be included. (optional)
+     * @param  int $maxConfs The maximum number of confirmations to be included. (optional)
+     * @param  string $account An optional filter to only include outputs belonging to an account. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listUnspentAsync($minConfs = null, $maxConfs = null)
+    public function listUnspentAsync($minConfs = null, $maxConfs = null, $account = null)
     {
-        return $this->listUnspentAsyncWithHttpInfo($minConfs, $maxConfs)
+        return $this->listUnspentAsyncWithHttpInfo($minConfs, $maxConfs, $account)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6440,18 +9178,19 @@ class LightningApi
     /**
      * Operation listUnspentAsyncWithHttpInfo
      *
-     * * lncli: `listunspent` ListUnspent returns a list of all utxos spendable by the wallet with a number of confirmations between the specified minimum and maximum.
+     * lncli: `listunspent` Deprecated, use walletrpc.ListUnspent instead.
      *
-     * @param  int $minConfs / The minimum number of confirmations to be included. (optional)
-     * @param  int $maxConfs / The maximum number of confirmations to be included. (optional)
+     * @param  int $minConfs The minimum number of confirmations to be included. (optional)
+     * @param  int $maxConfs The maximum number of confirmations to be included. (optional)
+     * @param  string $account An optional filter to only include outputs belonging to an account. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listUnspentAsyncWithHttpInfo($minConfs = null, $maxConfs = null)
+    public function listUnspentAsyncWithHttpInfo($minConfs = null, $maxConfs = null, $account = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcListUnspentResponse';
-        $request = $this->listUnspentRequest($minConfs, $maxConfs);
+        $request = $this->listUnspentRequest($minConfs, $maxConfs, $account);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -6493,13 +9232,14 @@ class LightningApi
     /**
      * Create request for operation 'listUnspent'
      *
-     * @param  int $minConfs / The minimum number of confirmations to be included. (optional)
-     * @param  int $maxConfs / The maximum number of confirmations to be included. (optional)
+     * @param  int $minConfs The minimum number of confirmations to be included. (optional)
+     * @param  int $maxConfs The maximum number of confirmations to be included. (optional)
+     * @param  string $account An optional filter to only include outputs belonging to an account. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function listUnspentRequest($minConfs = null, $maxConfs = null)
+    protected function listUnspentRequest($minConfs = null, $maxConfs = null, $account = null)
     {
 
         $resourcePath = '/v1/utxos';
@@ -6516,6 +9256,10 @@ class LightningApi
         // query params
         if ($maxConfs !== null) {
             $queryParams['max_confs'] = ObjectSerializer::toQueryValue($maxConfs);
+        }
+        // query params
+        if ($account !== null) {
+            $queryParams['account'] = ObjectSerializer::toQueryValue($account);
         }
 
 
@@ -6586,10 +9330,10 @@ class LightningApi
     /**
      * Operation lookupInvoice
      *
-     * * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
+     * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
      *
-     * @param  string $rHashStr rHashStr (required)
-     * @param  string $rHash / The payment hash of the invoice to be looked up. (optional)
+     * @param  string $rHashStr The hex-encoded payment hash of the invoice to be looked up. The passed payment hash must be exactly 32 bytes, otherwise an error is returned. Deprecated now that the REST gateway supports base64 encoding of bytes fields. (required)
+     * @param  string $rHash The payment hash of the invoice to be looked up. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -6604,10 +9348,10 @@ class LightningApi
     /**
      * Operation lookupInvoiceWithHttpInfo
      *
-     * * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
+     * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
      *
-     * @param  string $rHashStr (required)
-     * @param  string $rHash / The payment hash of the invoice to be looked up. (optional)
+     * @param  string $rHashStr The hex-encoded payment hash of the invoice to be looked up. The passed payment hash must be exactly 32 bytes, otherwise an error is returned. Deprecated now that the REST gateway supports base64 encoding of bytes fields. (required)
+     * @param  string $rHash The payment hash of the invoice to be looked up. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -6672,6 +9416,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -6680,10 +9432,10 @@ class LightningApi
     /**
      * Operation lookupInvoiceAsync
      *
-     * * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
+     * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
      *
-     * @param  string $rHashStr (required)
-     * @param  string $rHash / The payment hash of the invoice to be looked up. (optional)
+     * @param  string $rHashStr The hex-encoded payment hash of the invoice to be looked up. The passed payment hash must be exactly 32 bytes, otherwise an error is returned. Deprecated now that the REST gateway supports base64 encoding of bytes fields. (required)
+     * @param  string $rHash The payment hash of the invoice to be looked up. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -6701,10 +9453,10 @@ class LightningApi
     /**
      * Operation lookupInvoiceAsyncWithHttpInfo
      *
-     * * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
+     * lncli: `lookupinvoice` LookupInvoice attempts to look up an invoice according to its payment hash. The passed payment hash *must* be exactly 32 bytes, if not, an error is returned.
      *
-     * @param  string $rHashStr (required)
-     * @param  string $rHash / The payment hash of the invoice to be looked up. (optional)
+     * @param  string $rHashStr The hex-encoded payment hash of the invoice to be looked up. The passed payment hash must be exactly 32 bytes, otherwise an error is returned. Deprecated now that the REST gateway supports base64 encoding of bytes fields. (required)
+     * @param  string $rHash The payment hash of the invoice to be looked up. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -6754,8 +9506,8 @@ class LightningApi
     /**
      * Create request for operation 'lookupInvoice'
      *
-     * @param  string $rHashStr (required)
-     * @param  string $rHash / The payment hash of the invoice to be looked up. (optional)
+     * @param  string $rHashStr The hex-encoded payment hash of the invoice to be looked up. The passed payment hash must be exactly 32 bytes, otherwise an error is returned. Deprecated now that the REST gateway supports base64 encoding of bytes fields. (required)
+     * @param  string $rHash The payment hash of the invoice to be looked up. When using REST, this field must be encoded as base64. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -6857,35 +9609,37 @@ class LightningApi
     /**
      * Operation newAddress
      *
-     * * lncli: `newaddress` NewAddress creates a new address under control of the local wallet.
+     * lncli: `newaddress` NewAddress creates a new address under control of the local wallet.
      *
-     * @param  string $type / The address type. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $type The type of address to generate. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $account The name of the account to generate a new address for. If empty, the default wallet account is used. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcNewAddressResponse
      */
-    public function newAddress($type = 'WITNESS_PUBKEY_HASH')
+    public function newAddress($type = 'WITNESS_PUBKEY_HASH', $account = null)
     {
-        list($response) = $this->newAddressWithHttpInfo($type);
+        list($response) = $this->newAddressWithHttpInfo($type, $account);
         return $response;
     }
 
     /**
      * Operation newAddressWithHttpInfo
      *
-     * * lncli: `newaddress` NewAddress creates a new address under control of the local wallet.
+     * lncli: `newaddress` NewAddress creates a new address under control of the local wallet.
      *
-     * @param  string $type / The address type. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $type The type of address to generate. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $account The name of the account to generate a new address for. If empty, the default wallet account is used. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcNewAddressResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function newAddressWithHttpInfo($type = 'WITNESS_PUBKEY_HASH')
+    public function newAddressWithHttpInfo($type = 'WITNESS_PUBKEY_HASH', $account = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcNewAddressResponse';
-        $request = $this->newAddressRequest($type);
+        $request = $this->newAddressRequest($type, $account);
 
         try {
             $options = $this->createHttpClientOption();
@@ -6941,6 +9695,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -6949,16 +9711,17 @@ class LightningApi
     /**
      * Operation newAddressAsync
      *
-     * * lncli: `newaddress` NewAddress creates a new address under control of the local wallet.
+     * lncli: `newaddress` NewAddress creates a new address under control of the local wallet.
      *
-     * @param  string $type / The address type. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $type The type of address to generate. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $account The name of the account to generate a new address for. If empty, the default wallet account is used. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function newAddressAsync($type = 'WITNESS_PUBKEY_HASH')
+    public function newAddressAsync($type = 'WITNESS_PUBKEY_HASH', $account = null)
     {
-        return $this->newAddressAsyncWithHttpInfo($type)
+        return $this->newAddressAsyncWithHttpInfo($type, $account)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -6969,17 +9732,18 @@ class LightningApi
     /**
      * Operation newAddressAsyncWithHttpInfo
      *
-     * * lncli: `newaddress` NewAddress creates a new address under control of the local wallet.
+     * lncli: `newaddress` NewAddress creates a new address under control of the local wallet.
      *
-     * @param  string $type / The address type. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $type The type of address to generate. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $account The name of the account to generate a new address for. If empty, the default wallet account is used. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function newAddressAsyncWithHttpInfo($type = 'WITNESS_PUBKEY_HASH')
+    public function newAddressAsyncWithHttpInfo($type = 'WITNESS_PUBKEY_HASH', $account = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcNewAddressResponse';
-        $request = $this->newAddressRequest($type);
+        $request = $this->newAddressRequest($type, $account);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -7021,12 +9785,13 @@ class LightningApi
     /**
      * Create request for operation 'newAddress'
      *
-     * @param  string $type / The address type. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $type The type of address to generate. (optional, default to WITNESS_PUBKEY_HASH)
+     * @param  string $account The name of the account to generate a new address for. If empty, the default wallet account is used. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function newAddressRequest($type = 'WITNESS_PUBKEY_HASH')
+    protected function newAddressRequest($type = 'WITNESS_PUBKEY_HASH', $account = null)
     {
 
         $resourcePath = '/v1/newaddress';
@@ -7039,6 +9804,10 @@ class LightningApi
         // query params
         if ($type !== null) {
             $queryParams['type'] = ObjectSerializer::toQueryValue($type);
+        }
+        // query params
+        if ($account !== null) {
+            $queryParams['account'] = ObjectSerializer::toQueryValue($account);
         }
 
 
@@ -7107,9 +9876,274 @@ class LightningApi
     }
 
     /**
+     * Operation openChannel
+     *
+     * lncli: `openchannel` OpenChannel attempts to open a singly funded channel specified in the request to a remote peer. Users are able to specify a target number of blocks that the funding transaction should be confirmed in, or a manual fee rate to us for the funding transaction. If neither are specified, then a lax block confirmation target is used. Each OpenStatusUpdate will return the pending channel ID of the in-progress channel. Depending on the arguments specified in the OpenChannelRequest, this pending channel ID can then be used to manually progress the channel funding flow.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcOpenStatusUpdate
+     */
+    public function openChannel($body)
+    {
+        list($response) = $this->openChannelWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation openChannelWithHttpInfo
+     *
+     * lncli: `openchannel` OpenChannel attempts to open a singly funded channel specified in the request to a remote peer. Users are able to specify a target number of blocks that the funding transaction should be confirmed in, or a manual fee rate to us for the funding transaction. If neither are specified, then a lax block confirmation target is used. Each OpenStatusUpdate will return the pending channel ID of the in-progress channel. Depending on the arguments specified in the OpenChannelRequest, this pending channel ID can then be used to manually progress the channel funding flow.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcOpenStatusUpdate, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function openChannelWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcOpenStatusUpdate';
+        $request = $this->openChannelRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcOpenStatusUpdate',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation openChannelAsync
+     *
+     * lncli: `openchannel` OpenChannel attempts to open a singly funded channel specified in the request to a remote peer. Users are able to specify a target number of blocks that the funding transaction should be confirmed in, or a manual fee rate to us for the funding transaction. If neither are specified, then a lax block confirmation target is used. Each OpenStatusUpdate will return the pending channel ID of the in-progress channel. Depending on the arguments specified in the OpenChannelRequest, this pending channel ID can then be used to manually progress the channel funding flow.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function openChannelAsync($body)
+    {
+        return $this->openChannelAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation openChannelAsyncWithHttpInfo
+     *
+     * lncli: `openchannel` OpenChannel attempts to open a singly funded channel specified in the request to a remote peer. Users are able to specify a target number of blocks that the funding transaction should be confirmed in, or a manual fee rate to us for the funding transaction. If neither are specified, then a lax block confirmation target is used. Each OpenStatusUpdate will return the pending channel ID of the in-progress channel. Depending on the arguments specified in the OpenChannelRequest, this pending channel ID can then be used to manually progress the channel funding flow.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function openChannelAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcOpenStatusUpdate';
+        $request = $this->openChannelRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'openChannel'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function openChannelRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null || (is_array($body) && count($body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling openChannel'
+            );
+        }
+
+        $resourcePath = '/v1/channels/stream';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation openChannelSync
      *
-     * * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
+     * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
      *
      * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body body (required)
      *
@@ -7126,7 +10160,7 @@ class LightningApi
     /**
      * Operation openChannelSyncWithHttpInfo
      *
-     * * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
+     * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
      *
      * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body (required)
      *
@@ -7193,6 +10227,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -7201,7 +10243,7 @@ class LightningApi
     /**
      * Operation openChannelSyncAsync
      *
-     * * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
+     * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
      *
      * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body (required)
      *
@@ -7221,7 +10263,7 @@ class LightningApi
     /**
      * Operation openChannelSyncAsyncWithHttpInfo
      *
-     * * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
+     * OpenChannelSync is a synchronous version of the OpenChannel RPC call. This call is meant to be consumed by clients to the REST proxy. As with all other sync calls, all byte slices are intended to be populated as hex encoded strings.
      *
      * @param  \Lnd\Rest\Model\LnrpcOpenChannelRequest $body (required)
      *
@@ -7366,7 +10408,7 @@ class LightningApi
     /**
      * Operation pendingChannels
      *
-     * * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
+     * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -7382,7 +10424,7 @@ class LightningApi
     /**
      * Operation pendingChannelsWithHttpInfo
      *
-     * * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
+     * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -7448,6 +10490,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -7456,7 +10506,7 @@ class LightningApi
     /**
      * Operation pendingChannelsAsync
      *
-     * * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
+     * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
      *
      *
      * @throws \InvalidArgumentException
@@ -7475,7 +10525,7 @@ class LightningApi
     /**
      * Operation pendingChannelsAsyncWithHttpInfo
      *
-     * * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
+     * lncli: `pendingchannels` PendingChannels returns a list of all the channels that are currently considered \"pending\". A channel is pending if it has finished the funding workflow and is waiting for confirmations for the funding txn, or is in the process of closure, either initiated cooperatively or non-cooperatively.
      *
      *
      * @throws \InvalidArgumentException
@@ -7609,51 +10659,61 @@ class LightningApi
     /**
      * Operation queryRoutes
      *
-     * * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
+     * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
      *
-     * @param  string $pubKey pubKey (required)
-     * @param  string $amt amt (required)
-     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
-     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
-     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
-     * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
-     * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
-     * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
-     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded public key for the payment destination (required)
+     * @param  string $amt The amount to send expressed in satoshis.  The fields amt and amt_msat are mutually exclusive. (required)
+     * @param  string $amtMsat The amount to send expressed in millisatoshis.  The fields amt and amt_msat are mutually exclusive. (optional)
+     * @param  int $finalCltvDelta An optional CLTV delta from the current height that should be used for the timelock of the final hop. Note that unlike SendPayment, QueryRoutes does not add any additional block padding on top of final_ctlv_delta. This padding of a few blocks needs to be added manually or otherwise failures may happen when a block comes in while the payment is in flight. (optional)
+     * @param  string $feeLimitFixed The fee limit expressed as a fixed amount of satoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitFixedMsat The fee limit expressed as a fixed amount of millisatoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitPercent The fee limit expressed as a percentage of the payment amount. (optional)
+     * @param  string[] $ignoredNodes A list of nodes to ignore during path finding. When using REST, these fields must be encoded as base64. (optional)
+     * @param  string $sourcePubKey The source node where the request route should originated from. If empty, self is assumed. (optional)
+     * @param  bool $useMissionControl If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $outgoingChanId The channel id of the channel that must be taken to the first hop. If zero, any channel may be used. (optional)
+     * @param  string $lastHopPubkey The pubkey of the last hop of the route. If empty, any hop may be used. (optional)
+     * @param  string[] $destFeatures Features assumed to be supported by the final node. All transitive feature dependencies must also be set properly. For a given feature bit pair, either optional or remote may be set, but not both. If this field is nil or empty, the router will try to load destination features from the graph as a fallback. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \Lnd\Rest\Model\LnrpcQueryRoutesResponse
      */
-    public function queryRoutes($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
+    public function queryRoutes($pubKey, $amt, $amtMsat = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitFixedMsat = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null, $outgoingChanId = null, $lastHopPubkey = null, $destFeatures = null)
     {
-        list($response) = $this->queryRoutesWithHttpInfo($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit);
+        list($response) = $this->queryRoutesWithHttpInfo($pubKey, $amt, $amtMsat, $finalCltvDelta, $feeLimitFixed, $feeLimitFixedMsat, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit, $outgoingChanId, $lastHopPubkey, $destFeatures);
         return $response;
     }
 
     /**
      * Operation queryRoutesWithHttpInfo
      *
-     * * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
+     * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
      *
-     * @param  string $pubKey (required)
-     * @param  string $amt (required)
-     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
-     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
-     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
-     * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
-     * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
-     * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
-     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded public key for the payment destination (required)
+     * @param  string $amt The amount to send expressed in satoshis.  The fields amt and amt_msat are mutually exclusive. (required)
+     * @param  string $amtMsat The amount to send expressed in millisatoshis.  The fields amt and amt_msat are mutually exclusive. (optional)
+     * @param  int $finalCltvDelta An optional CLTV delta from the current height that should be used for the timelock of the final hop. Note that unlike SendPayment, QueryRoutes does not add any additional block padding on top of final_ctlv_delta. This padding of a few blocks needs to be added manually or otherwise failures may happen when a block comes in while the payment is in flight. (optional)
+     * @param  string $feeLimitFixed The fee limit expressed as a fixed amount of satoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitFixedMsat The fee limit expressed as a fixed amount of millisatoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitPercent The fee limit expressed as a percentage of the payment amount. (optional)
+     * @param  string[] $ignoredNodes A list of nodes to ignore during path finding. When using REST, these fields must be encoded as base64. (optional)
+     * @param  string $sourcePubKey The source node where the request route should originated from. If empty, self is assumed. (optional)
+     * @param  bool $useMissionControl If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $outgoingChanId The channel id of the channel that must be taken to the first hop. If zero, any channel may be used. (optional)
+     * @param  string $lastHopPubkey The pubkey of the last hop of the route. If empty, any hop may be used. (optional)
+     * @param  string[] $destFeatures Features assumed to be supported by the final node. All transitive feature dependencies must also be set properly. For a given feature bit pair, either optional or remote may be set, but not both. If this field is nil or empty, the router will try to load destination features from the graph as a fallback. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \Lnd\Rest\Model\LnrpcQueryRoutesResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function queryRoutesWithHttpInfo($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
+    public function queryRoutesWithHttpInfo($pubKey, $amt, $amtMsat = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitFixedMsat = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null, $outgoingChanId = null, $lastHopPubkey = null, $destFeatures = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcQueryRoutesResponse';
-        $request = $this->queryRoutesRequest($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit);
+        $request = $this->queryRoutesRequest($pubKey, $amt, $amtMsat, $finalCltvDelta, $feeLimitFixed, $feeLimitFixedMsat, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit, $outgoingChanId, $lastHopPubkey, $destFeatures);
 
         try {
             $options = $this->createHttpClientOption();
@@ -7709,6 +10769,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -7717,24 +10785,29 @@ class LightningApi
     /**
      * Operation queryRoutesAsync
      *
-     * * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
+     * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
      *
-     * @param  string $pubKey (required)
-     * @param  string $amt (required)
-     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
-     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
-     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
-     * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
-     * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
-     * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
-     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded public key for the payment destination (required)
+     * @param  string $amt The amount to send expressed in satoshis.  The fields amt and amt_msat are mutually exclusive. (required)
+     * @param  string $amtMsat The amount to send expressed in millisatoshis.  The fields amt and amt_msat are mutually exclusive. (optional)
+     * @param  int $finalCltvDelta An optional CLTV delta from the current height that should be used for the timelock of the final hop. Note that unlike SendPayment, QueryRoutes does not add any additional block padding on top of final_ctlv_delta. This padding of a few blocks needs to be added manually or otherwise failures may happen when a block comes in while the payment is in flight. (optional)
+     * @param  string $feeLimitFixed The fee limit expressed as a fixed amount of satoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitFixedMsat The fee limit expressed as a fixed amount of millisatoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitPercent The fee limit expressed as a percentage of the payment amount. (optional)
+     * @param  string[] $ignoredNodes A list of nodes to ignore during path finding. When using REST, these fields must be encoded as base64. (optional)
+     * @param  string $sourcePubKey The source node where the request route should originated from. If empty, self is assumed. (optional)
+     * @param  bool $useMissionControl If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $outgoingChanId The channel id of the channel that must be taken to the first hop. If zero, any channel may be used. (optional)
+     * @param  string $lastHopPubkey The pubkey of the last hop of the route. If empty, any hop may be used. (optional)
+     * @param  string[] $destFeatures Features assumed to be supported by the final node. All transitive feature dependencies must also be set properly. For a given feature bit pair, either optional or remote may be set, but not both. If this field is nil or empty, the router will try to load destination features from the graph as a fallback. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function queryRoutesAsync($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
+    public function queryRoutesAsync($pubKey, $amt, $amtMsat = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitFixedMsat = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null, $outgoingChanId = null, $lastHopPubkey = null, $destFeatures = null)
     {
-        return $this->queryRoutesAsyncWithHttpInfo($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit)
+        return $this->queryRoutesAsyncWithHttpInfo($pubKey, $amt, $amtMsat, $finalCltvDelta, $feeLimitFixed, $feeLimitFixedMsat, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit, $outgoingChanId, $lastHopPubkey, $destFeatures)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -7745,25 +10818,30 @@ class LightningApi
     /**
      * Operation queryRoutesAsyncWithHttpInfo
      *
-     * * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
+     * lncli: `queryroutes` QueryRoutes attempts to query the daemon's Channel Router for a possible route to a target destination capable of carrying a specific amount of satoshis. The returned route contains the full details required to craft and send an HTLC, also including the necessary information that should be present within the Sphinx packet encapsulated within the HTLC.
      *
-     * @param  string $pubKey (required)
-     * @param  string $amt (required)
-     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
-     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
-     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
-     * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
-     * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
-     * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
-     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded public key for the payment destination (required)
+     * @param  string $amt The amount to send expressed in satoshis.  The fields amt and amt_msat are mutually exclusive. (required)
+     * @param  string $amtMsat The amount to send expressed in millisatoshis.  The fields amt and amt_msat are mutually exclusive. (optional)
+     * @param  int $finalCltvDelta An optional CLTV delta from the current height that should be used for the timelock of the final hop. Note that unlike SendPayment, QueryRoutes does not add any additional block padding on top of final_ctlv_delta. This padding of a few blocks needs to be added manually or otherwise failures may happen when a block comes in while the payment is in flight. (optional)
+     * @param  string $feeLimitFixed The fee limit expressed as a fixed amount of satoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitFixedMsat The fee limit expressed as a fixed amount of millisatoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitPercent The fee limit expressed as a percentage of the payment amount. (optional)
+     * @param  string[] $ignoredNodes A list of nodes to ignore during path finding. When using REST, these fields must be encoded as base64. (optional)
+     * @param  string $sourcePubKey The source node where the request route should originated from. If empty, self is assumed. (optional)
+     * @param  bool $useMissionControl If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $outgoingChanId The channel id of the channel that must be taken to the first hop. If zero, any channel may be used. (optional)
+     * @param  string $lastHopPubkey The pubkey of the last hop of the route. If empty, any hop may be used. (optional)
+     * @param  string[] $destFeatures Features assumed to be supported by the final node. All transitive feature dependencies must also be set properly. For a given feature bit pair, either optional or remote may be set, but not both. If this field is nil or empty, the router will try to load destination features from the graph as a fallback. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function queryRoutesAsyncWithHttpInfo($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
+    public function queryRoutesAsyncWithHttpInfo($pubKey, $amt, $amtMsat = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitFixedMsat = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null, $outgoingChanId = null, $lastHopPubkey = null, $destFeatures = null)
     {
         $returnType = '\Lnd\Rest\Model\LnrpcQueryRoutesResponse';
-        $request = $this->queryRoutesRequest($pubKey, $amt, $finalCltvDelta, $feeLimitFixed, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit);
+        $request = $this->queryRoutesRequest($pubKey, $amt, $amtMsat, $finalCltvDelta, $feeLimitFixed, $feeLimitFixedMsat, $feeLimitPercent, $ignoredNodes, $sourcePubKey, $useMissionControl, $cltvLimit, $outgoingChanId, $lastHopPubkey, $destFeatures);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -7805,20 +10883,25 @@ class LightningApi
     /**
      * Create request for operation 'queryRoutes'
      *
-     * @param  string $pubKey (required)
-     * @param  string $amt (required)
-     * @param  int $finalCltvDelta / An optional CLTV delta from the current height that should be used for the timelock of the final hop. (optional)
-     * @param  string $feeLimitFixed / The fee limit expressed as a fixed amount of satoshis. (optional)
-     * @param  string $feeLimitPercent / The fee limit expressed as a percentage of the payment amount. (optional)
-     * @param  string[] $ignoredNodes * A list of nodes to ignore during path finding. (optional)
-     * @param  string $sourcePubKey * The source node where the request route should originated from. If empty, self is assumed. (optional)
-     * @param  bool $useMissionControl * If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
-     * @param  int $cltvLimit *  An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $pubKey The 33-byte hex-encoded public key for the payment destination (required)
+     * @param  string $amt The amount to send expressed in satoshis.  The fields amt and amt_msat are mutually exclusive. (required)
+     * @param  string $amtMsat The amount to send expressed in millisatoshis.  The fields amt and amt_msat are mutually exclusive. (optional)
+     * @param  int $finalCltvDelta An optional CLTV delta from the current height that should be used for the timelock of the final hop. Note that unlike SendPayment, QueryRoutes does not add any additional block padding on top of final_ctlv_delta. This padding of a few blocks needs to be added manually or otherwise failures may happen when a block comes in while the payment is in flight. (optional)
+     * @param  string $feeLimitFixed The fee limit expressed as a fixed amount of satoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitFixedMsat The fee limit expressed as a fixed amount of millisatoshis.  The fields fixed and fixed_msat are mutually exclusive. (optional)
+     * @param  string $feeLimitPercent The fee limit expressed as a percentage of the payment amount. (optional)
+     * @param  string[] $ignoredNodes A list of nodes to ignore during path finding. When using REST, these fields must be encoded as base64. (optional)
+     * @param  string $sourcePubKey The source node where the request route should originated from. If empty, self is assumed. (optional)
+     * @param  bool $useMissionControl If set to true, edge probabilities from mission control will be used to get the optimal route. (optional)
+     * @param  int $cltvLimit An optional maximum total time lock for the route. If the source is empty or ourselves, this should not exceed lnd&#39;s &#x60;--max-cltv-expiry&#x60; setting. If zero, then the value of &#x60;--max-cltv-expiry&#x60; is used as the limit. (optional)
+     * @param  string $outgoingChanId The channel id of the channel that must be taken to the first hop. If zero, any channel may be used. (optional)
+     * @param  string $lastHopPubkey The pubkey of the last hop of the route. If empty, any hop may be used. (optional)
+     * @param  string[] $destFeatures Features assumed to be supported by the final node. All transitive feature dependencies must also be set properly. For a given feature bit pair, either optional or remote may be set, but not both. If this field is nil or empty, the router will try to load destination features from the graph as a fallback. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function queryRoutesRequest($pubKey, $amt, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null)
+    protected function queryRoutesRequest($pubKey, $amt, $amtMsat = null, $finalCltvDelta = null, $feeLimitFixed = null, $feeLimitFixedMsat = null, $feeLimitPercent = null, $ignoredNodes = null, $sourcePubKey = null, $useMissionControl = null, $cltvLimit = null, $outgoingChanId = null, $lastHopPubkey = null, $destFeatures = null)
     {
         // verify the required parameter 'pubKey' is set
         if ($pubKey === null || (is_array($pubKey) && count($pubKey) === 0)) {
@@ -7841,6 +10924,10 @@ class LightningApi
         $multipart = false;
 
         // query params
+        if ($amtMsat !== null) {
+            $queryParams['amt_msat'] = ObjectSerializer::toQueryValue($amtMsat);
+        }
+        // query params
         if ($finalCltvDelta !== null) {
             $queryParams['final_cltv_delta'] = ObjectSerializer::toQueryValue($finalCltvDelta);
         }
@@ -7849,12 +10936,16 @@ class LightningApi
             $queryParams['fee_limit.fixed'] = ObjectSerializer::toQueryValue($feeLimitFixed);
         }
         // query params
+        if ($feeLimitFixedMsat !== null) {
+            $queryParams['fee_limit.fixed_msat'] = ObjectSerializer::toQueryValue($feeLimitFixedMsat);
+        }
+        // query params
         if ($feeLimitPercent !== null) {
             $queryParams['fee_limit.percent'] = ObjectSerializer::toQueryValue($feeLimitPercent);
         }
         // query params
         if (is_array($ignoredNodes)) {
-            $ignoredNodes = ObjectSerializer::serializeCollection($ignoredNodes, 'csv', true);
+            $ignoredNodes = ObjectSerializer::serializeCollection($ignoredNodes, 'multi', true);
         }
         if ($ignoredNodes !== null) {
             $queryParams['ignored_nodes'] = ObjectSerializer::toQueryValue($ignoredNodes);
@@ -7870,6 +10961,21 @@ class LightningApi
         // query params
         if ($cltvLimit !== null) {
             $queryParams['cltv_limit'] = ObjectSerializer::toQueryValue($cltvLimit);
+        }
+        // query params
+        if ($outgoingChanId !== null) {
+            $queryParams['outgoing_chan_id'] = ObjectSerializer::toQueryValue($outgoingChanId);
+        }
+        // query params
+        if ($lastHopPubkey !== null) {
+            $queryParams['last_hop_pubkey'] = ObjectSerializer::toQueryValue($lastHopPubkey);
+        }
+        // query params
+        if (is_array($destFeatures)) {
+            $destFeatures = ObjectSerializer::serializeCollection($destFeatures, 'multi', true);
+        }
+        if ($destFeatures !== null) {
+            $queryParams['dest_features'] = ObjectSerializer::toQueryValue($destFeatures);
         }
 
         // path params
@@ -7956,7 +11062,7 @@ class LightningApi
     /**
      * Operation restoreChannelBackups
      *
-     * * lncli: `restorechanbackup` RestoreChannelBackups accepts a set of singular channel backups, or a single encrypted multi-chan backup and attempts to recover any funds remaining within the channel. If we are able to unpack the backup, then the new channel will be shown under listchannels, as well as pending channels.
+     * lncli: `restorechanbackup` RestoreChannelBackups accepts a set of singular channel backups, or a single encrypted multi-chan backup and attempts to recover any funds remaining within the channel. If we are able to unpack the backup, then the new channel will be shown under listchannels, as well as pending channels.
      *
      * @param  \Lnd\Rest\Model\LnrpcRestoreChanBackupRequest $body body (required)
      *
@@ -7973,7 +11079,7 @@ class LightningApi
     /**
      * Operation restoreChannelBackupsWithHttpInfo
      *
-     * * lncli: `restorechanbackup` RestoreChannelBackups accepts a set of singular channel backups, or a single encrypted multi-chan backup and attempts to recover any funds remaining within the channel. If we are able to unpack the backup, then the new channel will be shown under listchannels, as well as pending channels.
+     * lncli: `restorechanbackup` RestoreChannelBackups accepts a set of singular channel backups, or a single encrypted multi-chan backup and attempts to recover any funds remaining within the channel. If we are able to unpack the backup, then the new channel will be shown under listchannels, as well as pending channels.
      *
      * @param  \Lnd\Rest\Model\LnrpcRestoreChanBackupRequest $body (required)
      *
@@ -8040,6 +11146,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -8048,7 +11162,7 @@ class LightningApi
     /**
      * Operation restoreChannelBackupsAsync
      *
-     * * lncli: `restorechanbackup` RestoreChannelBackups accepts a set of singular channel backups, or a single encrypted multi-chan backup and attempts to recover any funds remaining within the channel. If we are able to unpack the backup, then the new channel will be shown under listchannels, as well as pending channels.
+     * lncli: `restorechanbackup` RestoreChannelBackups accepts a set of singular channel backups, or a single encrypted multi-chan backup and attempts to recover any funds remaining within the channel. If we are able to unpack the backup, then the new channel will be shown under listchannels, as well as pending channels.
      *
      * @param  \Lnd\Rest\Model\LnrpcRestoreChanBackupRequest $body (required)
      *
@@ -8068,7 +11182,7 @@ class LightningApi
     /**
      * Operation restoreChannelBackupsAsyncWithHttpInfo
      *
-     * * lncli: `restorechanbackup` RestoreChannelBackups accepts a set of singular channel backups, or a single encrypted multi-chan backup and attempts to recover any funds remaining within the channel. If we are able to unpack the backup, then the new channel will be shown under listchannels, as well as pending channels.
+     * lncli: `restorechanbackup` RestoreChannelBackups accepts a set of singular channel backups, or a single encrypted multi-chan backup and attempts to recover any funds remaining within the channel. If we are able to unpack the backup, then the new channel will be shown under listchannels, as well as pending channels.
      *
      * @param  \Lnd\Rest\Model\LnrpcRestoreChanBackupRequest $body (required)
      *
@@ -8213,7 +11327,7 @@ class LightningApi
     /**
      * Operation sendCoins
      *
-     * * lncli: `sendcoins` SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_byte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
+     * lncli: `sendcoins` SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_vbyte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendCoinsRequest $body body (required)
      *
@@ -8230,7 +11344,7 @@ class LightningApi
     /**
      * Operation sendCoinsWithHttpInfo
      *
-     * * lncli: `sendcoins` SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_byte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
+     * lncli: `sendcoins` SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_vbyte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendCoinsRequest $body (required)
      *
@@ -8297,6 +11411,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -8305,7 +11427,7 @@ class LightningApi
     /**
      * Operation sendCoinsAsync
      *
-     * * lncli: `sendcoins` SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_byte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
+     * lncli: `sendcoins` SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_vbyte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendCoinsRequest $body (required)
      *
@@ -8325,7 +11447,7 @@ class LightningApi
     /**
      * Operation sendCoinsAsyncWithHttpInfo
      *
-     * * lncli: `sendcoins` SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_byte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
+     * lncli: `sendcoins` SendCoins executes a request to send coins to a particular address. Unlike SendMany, this RPC call only allows creating a single output at a time. If neither target_conf, or sat_per_vbyte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendCoinsRequest $body (required)
      *
@@ -8468,9 +11590,539 @@ class LightningApi
     }
 
     /**
+     * Operation sendMany
+     *
+     * lncli: `sendmany` SendMany handles a request for a transaction that creates multiple specified outputs in parallel. If neither target_conf, or sat_per_vbyte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendManyRequest $body body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\LnrpcSendManyResponse
+     */
+    public function sendMany($body)
+    {
+        list($response) = $this->sendManyWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation sendManyWithHttpInfo
+     *
+     * lncli: `sendmany` SendMany handles a request for a transaction that creates multiple specified outputs in parallel. If neither target_conf, or sat_per_vbyte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendManyRequest $body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcSendManyResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function sendManyWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcSendManyResponse';
+        $request = $this->sendManyRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcSendManyResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation sendManyAsync
+     *
+     * lncli: `sendmany` SendMany handles a request for a transaction that creates multiple specified outputs in parallel. If neither target_conf, or sat_per_vbyte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendManyRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function sendManyAsync($body)
+    {
+        return $this->sendManyAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation sendManyAsyncWithHttpInfo
+     *
+     * lncli: `sendmany` SendMany handles a request for a transaction that creates multiple specified outputs in parallel. If neither target_conf, or sat_per_vbyte are set, then the internal wallet will consult its fee model to determine a fee for the default confirmation target.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendManyRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function sendManyAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcSendManyResponse';
+        $request = $this->sendManyRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'sendMany'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendManyRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function sendManyRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null || (is_array($body) && count($body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling sendMany'
+            );
+        }
+
+        $resourcePath = '/v1/transactions/many';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation sendPayment
+     *
+     * lncli: `sendpayment` Deprecated, use routerrpc.SendPaymentV2. SendPayment dispatches a bi-directional streaming RPC for sending payments through the Lightning Network. A single RPC invocation creates a persistent bi-directional stream allowing clients to rapidly send payments through the Lightning Network with a single persistent connection.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendRequest $body (streaming inputs) (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcSendResponse
+     */
+    public function sendPayment($body)
+    {
+        list($response) = $this->sendPaymentWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation sendPaymentWithHttpInfo
+     *
+     * lncli: `sendpayment` Deprecated, use routerrpc.SendPaymentV2. SendPayment dispatches a bi-directional streaming RPC for sending payments through the Lightning Network. A single RPC invocation creates a persistent bi-directional stream allowing clients to rapidly send payments through the Lightning Network with a single persistent connection.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendRequest $body (streaming inputs) (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcSendResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function sendPaymentWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcSendResponse';
+        $request = $this->sendPaymentRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcSendResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation sendPaymentAsync
+     *
+     * lncli: `sendpayment` Deprecated, use routerrpc.SendPaymentV2. SendPayment dispatches a bi-directional streaming RPC for sending payments through the Lightning Network. A single RPC invocation creates a persistent bi-directional stream allowing clients to rapidly send payments through the Lightning Network with a single persistent connection.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendRequest $body (streaming inputs) (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function sendPaymentAsync($body)
+    {
+        return $this->sendPaymentAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation sendPaymentAsyncWithHttpInfo
+     *
+     * lncli: `sendpayment` Deprecated, use routerrpc.SendPaymentV2. SendPayment dispatches a bi-directional streaming RPC for sending payments through the Lightning Network. A single RPC invocation creates a persistent bi-directional stream allowing clients to rapidly send payments through the Lightning Network with a single persistent connection.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendRequest $body (streaming inputs) (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function sendPaymentAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcSendResponse';
+        $request = $this->sendPaymentRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'sendPayment'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcSendRequest $body (streaming inputs) (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function sendPaymentRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null || (is_array($body) && count($body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling sendPayment'
+            );
+        }
+
+        $resourcePath = '/v1/channels/transaction-stream';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation sendPaymentSync
      *
-     * * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination's public key and the payment hash (if any) to be encoded as hex strings.
+     * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination's public key and the payment hash (if any) to be encoded as hex strings.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendRequest $body body (required)
      *
@@ -8487,7 +12139,7 @@ class LightningApi
     /**
      * Operation sendPaymentSyncWithHttpInfo
      *
-     * * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination's public key and the payment hash (if any) to be encoded as hex strings.
+     * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination's public key and the payment hash (if any) to be encoded as hex strings.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendRequest $body (required)
      *
@@ -8554,6 +12206,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -8562,7 +12222,7 @@ class LightningApi
     /**
      * Operation sendPaymentSyncAsync
      *
-     * * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination's public key and the payment hash (if any) to be encoded as hex strings.
+     * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination's public key and the payment hash (if any) to be encoded as hex strings.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendRequest $body (required)
      *
@@ -8582,7 +12242,7 @@ class LightningApi
     /**
      * Operation sendPaymentSyncAsyncWithHttpInfo
      *
-     * * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination's public key and the payment hash (if any) to be encoded as hex strings.
+     * SendPaymentSync is the synchronous non-streaming version of SendPayment. This RPC is intended to be consumed by clients of the REST proxy. Additionally, this RPC expects the destination's public key and the payment hash (if any) to be encoded as hex strings.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendRequest $body (required)
      *
@@ -8727,7 +12387,7 @@ class LightningApi
     /**
      * Operation sendToRouteSync
      *
-     * * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+     * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body body (required)
      *
@@ -8744,7 +12404,7 @@ class LightningApi
     /**
      * Operation sendToRouteSyncWithHttpInfo
      *
-     * * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+     * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body (required)
      *
@@ -8811,6 +12471,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -8819,7 +12487,7 @@ class LightningApi
     /**
      * Operation sendToRouteSyncAsync
      *
-     * * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+     * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body (required)
      *
@@ -8839,7 +12507,7 @@ class LightningApi
     /**
      * Operation sendToRouteSyncAsyncWithHttpInfo
      *
-     * * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
+     * SendToRouteSync is a synchronous version of SendToRoute. It Will block until the payment either fails or succeeds.
      *
      * @param  \Lnd\Rest\Model\LnrpcSendToRouteRequest $body (required)
      *
@@ -8984,7 +12652,7 @@ class LightningApi
     /**
      * Operation signMessage
      *
-     * * lncli: `signmessage` SignMessage signs a message with this node's private key. The returned signature string is `zbase32` encoded and pubkey recoverable, meaning that only the message digest and signature are needed for verification.
+     * lncli: `signmessage` SignMessage signs a message with this node's private key. The returned signature string is `zbase32` encoded and pubkey recoverable, meaning that only the message digest and signature are needed for verification.
      *
      * @param  \Lnd\Rest\Model\LnrpcSignMessageRequest $body body (required)
      *
@@ -9001,7 +12669,7 @@ class LightningApi
     /**
      * Operation signMessageWithHttpInfo
      *
-     * * lncli: `signmessage` SignMessage signs a message with this node's private key. The returned signature string is `zbase32` encoded and pubkey recoverable, meaning that only the message digest and signature are needed for verification.
+     * lncli: `signmessage` SignMessage signs a message with this node's private key. The returned signature string is `zbase32` encoded and pubkey recoverable, meaning that only the message digest and signature are needed for verification.
      *
      * @param  \Lnd\Rest\Model\LnrpcSignMessageRequest $body (required)
      *
@@ -9068,6 +12736,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -9076,7 +12752,7 @@ class LightningApi
     /**
      * Operation signMessageAsync
      *
-     * * lncli: `signmessage` SignMessage signs a message with this node's private key. The returned signature string is `zbase32` encoded and pubkey recoverable, meaning that only the message digest and signature are needed for verification.
+     * lncli: `signmessage` SignMessage signs a message with this node's private key. The returned signature string is `zbase32` encoded and pubkey recoverable, meaning that only the message digest and signature are needed for verification.
      *
      * @param  \Lnd\Rest\Model\LnrpcSignMessageRequest $body (required)
      *
@@ -9096,7 +12772,7 @@ class LightningApi
     /**
      * Operation signMessageAsyncWithHttpInfo
      *
-     * * lncli: `signmessage` SignMessage signs a message with this node's private key. The returned signature string is `zbase32` encoded and pubkey recoverable, meaning that only the message digest and signature are needed for verification.
+     * lncli: `signmessage` SignMessage signs a message with this node's private key. The returned signature string is `zbase32` encoded and pubkey recoverable, meaning that only the message digest and signature are needed for verification.
      *
      * @param  \Lnd\Rest\Model\LnrpcSignMessageRequest $body (required)
      *
@@ -9239,16 +12915,1034 @@ class LightningApi
     }
 
     /**
-     * Operation subscribeInvoices
+     * Operation stopDaemon
      *
-     * * SubscribeInvoices returns a uni-directional stream (server -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
+     * lncli: `stop` StopDaemon will send a shutdown request to the interrupt handler, triggering a graceful shutdown of the daemon.
      *
-     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
-     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  \Lnd\Rest\Model\LnrpcStopRequest $body body (required)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Lnd\Rest\Model\LnrpcInvoice
+     * @return \Lnd\Rest\Model\LnrpcStopResponse
+     */
+    public function stopDaemon($body)
+    {
+        list($response) = $this->stopDaemonWithHttpInfo($body);
+        return $response;
+    }
+
+    /**
+     * Operation stopDaemonWithHttpInfo
+     *
+     * lncli: `stop` StopDaemon will send a shutdown request to the interrupt handler, triggering a graceful shutdown of the daemon.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcStopRequest $body (required)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\LnrpcStopResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function stopDaemonWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcStopResponse';
+        $request = $this->stopDaemonRequest($body);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\LnrpcStopResponse',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation stopDaemonAsync
+     *
+     * lncli: `stop` StopDaemon will send a shutdown request to the interrupt handler, triggering a graceful shutdown of the daemon.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcStopRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function stopDaemonAsync($body)
+    {
+        return $this->stopDaemonAsyncWithHttpInfo($body)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation stopDaemonAsyncWithHttpInfo
+     *
+     * lncli: `stop` StopDaemon will send a shutdown request to the interrupt handler, triggering a graceful shutdown of the daemon.
+     *
+     * @param  \Lnd\Rest\Model\LnrpcStopRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function stopDaemonAsyncWithHttpInfo($body)
+    {
+        $returnType = '\Lnd\Rest\Model\LnrpcStopResponse';
+        $request = $this->stopDaemonRequest($body);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'stopDaemon'
+     *
+     * @param  \Lnd\Rest\Model\LnrpcStopRequest $body (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function stopDaemonRequest($body)
+    {
+        // verify the required parameter 'body' is set
+        if ($body === null || (is_array($body) && count($body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling stopDaemon'
+            );
+        }
+
+        $resourcePath = '/v1/stop';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'POST',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation subscribeChannelBackups
+     *
+     * SubscribeChannelBackups allows a client to sub-subscribe to the most up to date information concerning the state of all channel backups. Each time a new channel is added, we return the new set of channels, along with a multi-chan backup containing the backup info for all channels. Each time a channel is closed, we send a new update, which contains new new chan back ups, but the updated set of encrypted multi-chan backups with the closed channel(s) removed.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcChanBackupSnapshot
+     */
+    public function subscribeChannelBackups()
+    {
+        list($response) = $this->subscribeChannelBackupsWithHttpInfo();
+        return $response;
+    }
+
+    /**
+     * Operation subscribeChannelBackupsWithHttpInfo
+     *
+     * SubscribeChannelBackups allows a client to sub-subscribe to the most up to date information concerning the state of all channel backups. Each time a new channel is added, we return the new set of channels, along with a multi-chan backup containing the backup info for all channels. Each time a channel is closed, we send a new update, which contains new new chan back ups, but the updated set of encrypted multi-chan backups with the closed channel(s) removed.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcChanBackupSnapshot, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function subscribeChannelBackupsWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcChanBackupSnapshot';
+        $request = $this->subscribeChannelBackupsRequest();
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcChanBackupSnapshot',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation subscribeChannelBackupsAsync
+     *
+     * SubscribeChannelBackups allows a client to sub-subscribe to the most up to date information concerning the state of all channel backups. Each time a new channel is added, we return the new set of channels, along with a multi-chan backup containing the backup info for all channels. Each time a channel is closed, we send a new update, which contains new new chan back ups, but the updated set of encrypted multi-chan backups with the closed channel(s) removed.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribeChannelBackupsAsync()
+    {
+        return $this->subscribeChannelBackupsAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation subscribeChannelBackupsAsyncWithHttpInfo
+     *
+     * SubscribeChannelBackups allows a client to sub-subscribe to the most up to date information concerning the state of all channel backups. Each time a new channel is added, we return the new set of channels, along with a multi-chan backup containing the backup info for all channels. Each time a channel is closed, we send a new update, which contains new new chan back ups, but the updated set of encrypted multi-chan backups with the closed channel(s) removed.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribeChannelBackupsAsyncWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcChanBackupSnapshot';
+        $request = $this->subscribeChannelBackupsRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'subscribeChannelBackups'
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function subscribeChannelBackupsRequest()
+    {
+
+        $resourcePath = '/v1/channels/backup/subscribe';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation subscribeChannelEvents
+     *
+     * SubscribeChannelEvents creates a uni-directional stream from the server to the client in which any updates relevant to the state of the channels are sent over. Events include new active channels, inactive channels, and closed channels.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcChannelEventUpdate
+     */
+    public function subscribeChannelEvents()
+    {
+        list($response) = $this->subscribeChannelEventsWithHttpInfo();
+        return $response;
+    }
+
+    /**
+     * Operation subscribeChannelEventsWithHttpInfo
+     *
+     * SubscribeChannelEvents creates a uni-directional stream from the server to the client in which any updates relevant to the state of the channels are sent over. Events include new active channels, inactive channels, and closed channels.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcChannelEventUpdate, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function subscribeChannelEventsWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcChannelEventUpdate';
+        $request = $this->subscribeChannelEventsRequest();
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcChannelEventUpdate',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation subscribeChannelEventsAsync
+     *
+     * SubscribeChannelEvents creates a uni-directional stream from the server to the client in which any updates relevant to the state of the channels are sent over. Events include new active channels, inactive channels, and closed channels.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribeChannelEventsAsync()
+    {
+        return $this->subscribeChannelEventsAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation subscribeChannelEventsAsyncWithHttpInfo
+     *
+     * SubscribeChannelEvents creates a uni-directional stream from the server to the client in which any updates relevant to the state of the channels are sent over. Events include new active channels, inactive channels, and closed channels.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribeChannelEventsAsyncWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcChannelEventUpdate';
+        $request = $this->subscribeChannelEventsRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'subscribeChannelEvents'
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function subscribeChannelEventsRequest()
+    {
+
+        $resourcePath = '/v1/channels/subscribe';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation subscribeChannelGraph
+     *
+     * SubscribeChannelGraph launches a streaming RPC that allows the caller to receive notifications upon any changes to the channel graph topology from the point of view of the responding node. Events notified include: new nodes coming online, nodes updating their authenticated attributes, new channels being advertised, updates in the routing policy for a directional channel edge, and when channels are closed on-chain.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcGraphTopologyUpdate
+     */
+    public function subscribeChannelGraph()
+    {
+        list($response) = $this->subscribeChannelGraphWithHttpInfo();
+        return $response;
+    }
+
+    /**
+     * Operation subscribeChannelGraphWithHttpInfo
+     *
+     * SubscribeChannelGraph launches a streaming RPC that allows the caller to receive notifications upon any changes to the channel graph topology from the point of view of the responding node. Events notified include: new nodes coming online, nodes updating their authenticated attributes, new channels being advertised, updates in the routing policy for a directional channel edge, and when channels are closed on-chain.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcGraphTopologyUpdate, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function subscribeChannelGraphWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcGraphTopologyUpdate';
+        $request = $this->subscribeChannelGraphRequest();
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcGraphTopologyUpdate',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation subscribeChannelGraphAsync
+     *
+     * SubscribeChannelGraph launches a streaming RPC that allows the caller to receive notifications upon any changes to the channel graph topology from the point of view of the responding node. Events notified include: new nodes coming online, nodes updating their authenticated attributes, new channels being advertised, updates in the routing policy for a directional channel edge, and when channels are closed on-chain.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribeChannelGraphAsync()
+    {
+        return $this->subscribeChannelGraphAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation subscribeChannelGraphAsyncWithHttpInfo
+     *
+     * SubscribeChannelGraph launches a streaming RPC that allows the caller to receive notifications upon any changes to the channel graph topology from the point of view of the responding node. Events notified include: new nodes coming online, nodes updating their authenticated attributes, new channels being advertised, updates in the routing policy for a directional channel edge, and when channels are closed on-chain.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribeChannelGraphAsyncWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcGraphTopologyUpdate';
+        $request = $this->subscribeChannelGraphRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'subscribeChannelGraph'
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function subscribeChannelGraphRequest()
+    {
+
+        $resourcePath = '/v1/graph/subscribe';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation subscribeInvoices
+     *
+     * SubscribeInvoices returns a uni-directional stream (server -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value. If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value. One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
+     *
+     * @param  string $addIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcInvoice
      */
     public function subscribeInvoices($addIndex = null, $settleIndex = null)
     {
@@ -9259,18 +13953,18 @@ class LightningApi
     /**
      * Operation subscribeInvoicesWithHttpInfo
      *
-     * * SubscribeInvoices returns a uni-directional stream (server -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
+     * SubscribeInvoices returns a uni-directional stream (server -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value. If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value. One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
      *
-     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
-     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $addIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return array of \Lnd\Rest\Model\LnrpcInvoice, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcInvoice, HTTP status code, HTTP response headers (array of strings)
      */
     public function subscribeInvoicesWithHttpInfo($addIndex = null, $settleIndex = null)
     {
-        $returnType = '\Lnd\Rest\Model\LnrpcInvoice';
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcInvoice';
         $request = $this->subscribeInvoicesRequest($addIndex, $settleIndex);
 
         try {
@@ -9322,7 +14016,15 @@ class LightningApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\Lnd\Rest\Model\LnrpcInvoice',
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcInvoice',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -9335,10 +14037,10 @@ class LightningApi
     /**
      * Operation subscribeInvoicesAsync
      *
-     * * SubscribeInvoices returns a uni-directional stream (server -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
+     * SubscribeInvoices returns a uni-directional stream (server -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value. If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value. One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
      *
-     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
-     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $addIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -9356,17 +14058,17 @@ class LightningApi
     /**
      * Operation subscribeInvoicesAsyncWithHttpInfo
      *
-     * * SubscribeInvoices returns a uni-directional stream (server -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value.  If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value.  One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
+     * SubscribeInvoices returns a uni-directional stream (server -> client) for notifying the client of newly added/settled invoices. The caller can optionally specify the add_index and/or the settle_index. If the add_index is specified, then we'll first start by sending add invoice events for all invoices with an add_index greater than the specified value. If the settle_index is specified, the next, we'll send out all settle events for invoices with a settle_index greater than the specified value. One or both of these fields can be set. If no fields are set, then we'll only send out the latest add/settle events.
      *
-     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
-     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $addIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
     public function subscribeInvoicesAsyncWithHttpInfo($addIndex = null, $settleIndex = null)
     {
-        $returnType = '\Lnd\Rest\Model\LnrpcInvoice';
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcInvoice';
         $request = $this->subscribeInvoicesRequest($addIndex, $settleIndex);
 
         return $this->client
@@ -9409,8 +14111,8 @@ class LightningApi
     /**
      * Create request for operation 'subscribeInvoices'
      *
-     * @param  string $addIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
-     * @param  string $settleIndex * If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $addIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all added indexes with an add_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
+     * @param  string $settleIndex If specified (non-zero), then we&#39;ll first start by sending out notifications for all settled indexes with an settle_index greater than this value. This allows callers to catch up on any events they missed while they weren&#39;t connected to the streaming RPC. (optional)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -9500,9 +14202,538 @@ class LightningApi
     }
 
     /**
+     * Operation subscribePeerEvents
+     *
+     * SubscribePeerEvents creates a uni-directional stream from the server to the client in which any events relevant to the state of peers are sent over. Events include peers going online and offline.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcPeerEvent
+     */
+    public function subscribePeerEvents()
+    {
+        list($response) = $this->subscribePeerEventsWithHttpInfo();
+        return $response;
+    }
+
+    /**
+     * Operation subscribePeerEventsWithHttpInfo
+     *
+     * SubscribePeerEvents creates a uni-directional stream from the server to the client in which any events relevant to the state of peers are sent over. Events include peers going online and offline.
+     *
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcPeerEvent, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function subscribePeerEventsWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcPeerEvent';
+        $request = $this->subscribePeerEventsRequest();
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcPeerEvent',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation subscribePeerEventsAsync
+     *
+     * SubscribePeerEvents creates a uni-directional stream from the server to the client in which any events relevant to the state of peers are sent over. Events include peers going online and offline.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribePeerEventsAsync()
+    {
+        return $this->subscribePeerEventsAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation subscribePeerEventsAsyncWithHttpInfo
+     *
+     * SubscribePeerEvents creates a uni-directional stream from the server to the client in which any events relevant to the state of peers are sent over. Events include peers going online and offline.
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribePeerEventsAsyncWithHttpInfo()
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcPeerEvent';
+        $request = $this->subscribePeerEventsRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'subscribePeerEvents'
+     *
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function subscribePeerEventsRequest()
+    {
+
+        $resourcePath = '/v1/peers/subscribe';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation subscribeTransactions
+     *
+     * SubscribeTransactions creates a uni-directional stream from the server to the client in which any newly discovered transactions relevant to the wallet are sent over.
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \Lnd\Rest\Model\StreamResultOfLnrpcTransaction
+     */
+    public function subscribeTransactions($startHeight = null, $endHeight = null, $account = null)
+    {
+        list($response) = $this->subscribeTransactionsWithHttpInfo($startHeight, $endHeight, $account);
+        return $response;
+    }
+
+    /**
+     * Operation subscribeTransactionsWithHttpInfo
+     *
+     * SubscribeTransactions creates a uni-directional stream from the server to the client in which any newly discovered transactions relevant to the wallet are sent over.
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \Lnd\Rest\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \Lnd\Rest\Model\StreamResultOfLnrpcTransaction, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function subscribeTransactionsWithHttpInfo($startHeight = null, $endHeight = null, $account = null)
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcTransaction';
+        $request = $this->subscribeTransactionsRequest($startHeight, $endHeight, $account);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    $response->getBody()
+                );
+            }
+
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+                $content = $responseBody; //stream goes to serializer
+            } else {
+                $content = $responseBody->getContents();
+                if ($returnType !== 'string') {
+                    $content = json_decode($content);
+                }
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\StreamResultOfLnrpcTransaction',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation subscribeTransactionsAsync
+     *
+     * SubscribeTransactions creates a uni-directional stream from the server to the client in which any newly discovered transactions relevant to the wallet are sent over.
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribeTransactionsAsync($startHeight = null, $endHeight = null, $account = null)
+    {
+        return $this->subscribeTransactionsAsyncWithHttpInfo($startHeight, $endHeight, $account)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation subscribeTransactionsAsyncWithHttpInfo
+     *
+     * SubscribeTransactions creates a uni-directional stream from the server to the client in which any newly discovered transactions relevant to the wallet are sent over.
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function subscribeTransactionsAsyncWithHttpInfo($startHeight = null, $endHeight = null, $account = null)
+    {
+        $returnType = '\Lnd\Rest\Model\StreamResultOfLnrpcTransaction';
+        $request = $this->subscribeTransactionsRequest($startHeight, $endHeight, $account);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'subscribeTransactions'
+     *
+     * @param  int $startHeight The height from which to list transactions, inclusive. If this value is greater than end_height, transactions will be read in reverse. (optional)
+     * @param  int $endHeight The height until which to list transactions, inclusive. To include unconfirmed transactions, this value should be set to -1, which will return transactions from start_height until the current chain tip and unconfirmed transactions. If no end_height is provided, the call will default to this option. (optional)
+     * @param  string $account An optional filter to only include transactions relevant to an account. (optional)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    protected function subscribeTransactionsRequest($startHeight = null, $endHeight = null, $account = null)
+    {
+
+        $resourcePath = '/v1/transactions/subscribe';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        if ($startHeight !== null) {
+            $queryParams['start_height'] = ObjectSerializer::toQueryValue($startHeight);
+        }
+        // query params
+        if ($endHeight !== null) {
+            $queryParams['end_height'] = ObjectSerializer::toQueryValue($endHeight);
+        }
+        // query params
+        if ($account !== null) {
+            $queryParams['account'] = ObjectSerializer::toQueryValue($account);
+        }
+
+
+        // body params
+        $_tempBody = null;
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json'],
+                ['application/json']
+            );
+        }
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            // $_tempBody is the method argument, if present
+            $httpBody = $_tempBody;
+            // \stdClass has no __toString(), so we should encode it manually
+            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($httpBody);
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $multipartContents[] = [
+                        'name' => $formParamName,
+                        'contents' => $formParamValue
+                    ];
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'GET',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation updateChannelPolicy
      *
-     * * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
+     * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
      *
      * @param  \Lnd\Rest\Model\LnrpcPolicyUpdateRequest $body body (required)
      *
@@ -9519,7 +14750,7 @@ class LightningApi
     /**
      * Operation updateChannelPolicyWithHttpInfo
      *
-     * * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
+     * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
      *
      * @param  \Lnd\Rest\Model\LnrpcPolicyUpdateRequest $body (required)
      *
@@ -9586,6 +14817,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -9594,7 +14833,7 @@ class LightningApi
     /**
      * Operation updateChannelPolicyAsync
      *
-     * * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
+     * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
      *
      * @param  \Lnd\Rest\Model\LnrpcPolicyUpdateRequest $body (required)
      *
@@ -9614,7 +14853,7 @@ class LightningApi
     /**
      * Operation updateChannelPolicyAsyncWithHttpInfo
      *
-     * * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
+     * lncli: `updatechanpolicy` UpdateChannelPolicy allows the caller to update the fee schedule and channel policies for all channels globally, or a particular channel.
      *
      * @param  \Lnd\Rest\Model\LnrpcPolicyUpdateRequest $body (required)
      *
@@ -9759,7 +14998,7 @@ class LightningApi
     /**
      * Operation verifyChanBackup
      *
-     * * VerifyChanBackup allows a caller to verify the integrity of a channel backup snapshot. This method will accept either a packed Single or a packed Multi. Specifying both will result in an error.
+     * VerifyChanBackup allows a caller to verify the integrity of a channel backup snapshot. This method will accept either a packed Single or a packed Multi. Specifying both will result in an error.
      *
      * @param  \Lnd\Rest\Model\LnrpcChanBackupSnapshot $body body (required)
      *
@@ -9776,7 +15015,7 @@ class LightningApi
     /**
      * Operation verifyChanBackupWithHttpInfo
      *
-     * * VerifyChanBackup allows a caller to verify the integrity of a channel backup snapshot. This method will accept either a packed Single or a packed Multi. Specifying both will result in an error.
+     * VerifyChanBackup allows a caller to verify the integrity of a channel backup snapshot. This method will accept either a packed Single or a packed Multi. Specifying both will result in an error.
      *
      * @param  \Lnd\Rest\Model\LnrpcChanBackupSnapshot $body (required)
      *
@@ -9843,6 +15082,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -9851,7 +15098,7 @@ class LightningApi
     /**
      * Operation verifyChanBackupAsync
      *
-     * * VerifyChanBackup allows a caller to verify the integrity of a channel backup snapshot. This method will accept either a packed Single or a packed Multi. Specifying both will result in an error.
+     * VerifyChanBackup allows a caller to verify the integrity of a channel backup snapshot. This method will accept either a packed Single or a packed Multi. Specifying both will result in an error.
      *
      * @param  \Lnd\Rest\Model\LnrpcChanBackupSnapshot $body (required)
      *
@@ -9871,7 +15118,7 @@ class LightningApi
     /**
      * Operation verifyChanBackupAsyncWithHttpInfo
      *
-     * * VerifyChanBackup allows a caller to verify the integrity of a channel backup snapshot. This method will accept either a packed Single or a packed Multi. Specifying both will result in an error.
+     * VerifyChanBackup allows a caller to verify the integrity of a channel backup snapshot. This method will accept either a packed Single or a packed Multi. Specifying both will result in an error.
      *
      * @param  \Lnd\Rest\Model\LnrpcChanBackupSnapshot $body (required)
      *
@@ -10016,7 +15263,7 @@ class LightningApi
     /**
      * Operation verifyMessage
      *
-     * * lncli: `verifymessage` VerifyMessage verifies a signature over a msg. The signature must be zbase32 encoded and signed by an active node in the resident node's channel database. In addition to returning the validity of the signature, VerifyMessage also returns the recovered pubkey from the signature.
+     * lncli: `verifymessage` VerifyMessage verifies a signature over a msg. The signature must be zbase32 encoded and signed by an active node in the resident node's channel database. In addition to returning the validity of the signature, VerifyMessage also returns the recovered pubkey from the signature.
      *
      * @param  \Lnd\Rest\Model\LnrpcVerifyMessageRequest $body body (required)
      *
@@ -10033,7 +15280,7 @@ class LightningApi
     /**
      * Operation verifyMessageWithHttpInfo
      *
-     * * lncli: `verifymessage` VerifyMessage verifies a signature over a msg. The signature must be zbase32 encoded and signed by an active node in the resident node's channel database. In addition to returning the validity of the signature, VerifyMessage also returns the recovered pubkey from the signature.
+     * lncli: `verifymessage` VerifyMessage verifies a signature over a msg. The signature must be zbase32 encoded and signed by an active node in the resident node's channel database. In addition to returning the validity of the signature, VerifyMessage also returns the recovered pubkey from the signature.
      *
      * @param  \Lnd\Rest\Model\LnrpcVerifyMessageRequest $body (required)
      *
@@ -10100,6 +15347,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -10108,7 +15363,7 @@ class LightningApi
     /**
      * Operation verifyMessageAsync
      *
-     * * lncli: `verifymessage` VerifyMessage verifies a signature over a msg. The signature must be zbase32 encoded and signed by an active node in the resident node's channel database. In addition to returning the validity of the signature, VerifyMessage also returns the recovered pubkey from the signature.
+     * lncli: `verifymessage` VerifyMessage verifies a signature over a msg. The signature must be zbase32 encoded and signed by an active node in the resident node's channel database. In addition to returning the validity of the signature, VerifyMessage also returns the recovered pubkey from the signature.
      *
      * @param  \Lnd\Rest\Model\LnrpcVerifyMessageRequest $body (required)
      *
@@ -10128,7 +15383,7 @@ class LightningApi
     /**
      * Operation verifyMessageAsyncWithHttpInfo
      *
-     * * lncli: `verifymessage` VerifyMessage verifies a signature over a msg. The signature must be zbase32 encoded and signed by an active node in the resident node's channel database. In addition to returning the validity of the signature, VerifyMessage also returns the recovered pubkey from the signature.
+     * lncli: `verifymessage` VerifyMessage verifies a signature over a msg. The signature must be zbase32 encoded and signed by an active node in the resident node's channel database. In addition to returning the validity of the signature, VerifyMessage also returns the recovered pubkey from the signature.
      *
      * @param  \Lnd\Rest\Model\LnrpcVerifyMessageRequest $body (required)
      *
@@ -10273,7 +15528,7 @@ class LightningApi
     /**
      * Operation walletBalance
      *
-     * * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
+     * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -10289,7 +15544,7 @@ class LightningApi
     /**
      * Operation walletBalanceWithHttpInfo
      *
-     * * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
+     * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
      *
      *
      * @throws \Lnd\Rest\ApiException on non-2xx response
@@ -10355,6 +15610,14 @@ class LightningApi
                     );
                     $e->setResponseObject($data);
                     break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Lnd\Rest\Model\RuntimeError',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
             }
             throw $e;
         }
@@ -10363,7 +15626,7 @@ class LightningApi
     /**
      * Operation walletBalanceAsync
      *
-     * * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
+     * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
      *
      *
      * @throws \InvalidArgumentException
@@ -10382,7 +15645,7 @@ class LightningApi
     /**
      * Operation walletBalanceAsyncWithHttpInfo
      *
-     * * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
+     * lncli: `walletbalance` WalletBalance returns total unspent outputs(confirmed and unconfirmed), all confirmed unspent outputs and all unconfirmed unspent outputs under control of the wallet.
      *
      *
      * @throws \InvalidArgumentException

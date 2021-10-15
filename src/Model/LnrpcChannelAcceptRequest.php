@@ -301,7 +301,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets nodePubkey
      *
-     * @param string $nodePubkey / The pubkey of the node that wishes to open an inbound channel.
+     * @param string $nodePubkey The pubkey of the node that wishes to open an inbound channel.
      *
      * @return $this
      */
@@ -330,7 +330,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets chainHash
      *
-     * @param string $chainHash / The hash of the genesis block that the proposed channel resides in.
+     * @param string $chainHash The hash of the genesis block that the proposed channel resides in.
      *
      * @return $this
      */
@@ -359,7 +359,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets pendingChanId
      *
-     * @param string $pendingChanId / The pending channel id.
+     * @param string $pendingChanId The pending channel id.
      *
      * @return $this
      */
@@ -388,7 +388,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets fundingAmt
      *
-     * @param string $fundingAmt / The funding amount in satoshis that initiator wishes to use in the channel.
+     * @param string $fundingAmt The funding amount in satoshis that initiator wishes to use in the channel.
      *
      * @return $this
      */
@@ -412,7 +412,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets pushAmt
      *
-     * @param string $pushAmt / The push amount of the proposed channel in millisatoshis.
+     * @param string $pushAmt The push amount of the proposed channel in millisatoshis.
      *
      * @return $this
      */
@@ -436,7 +436,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets dustLimit
      *
-     * @param string $dustLimit / The dust limit of the initiator's commitment tx.
+     * @param string $dustLimit The dust limit of the initiator's commitment tx.
      *
      * @return $this
      */
@@ -460,7 +460,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets maxValueInFlight
      *
-     * @param string $maxValueInFlight / The maximum amount of coins in millisatoshis that can be pending in this channel.
+     * @param string $maxValueInFlight The maximum amount of coins in millisatoshis that can be pending in this channel.
      *
      * @return $this
      */
@@ -484,7 +484,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets channelReserve
      *
-     * @param string $channelReserve / The minimum amount of satoshis the initiator requires us to have at all times.
+     * @param string $channelReserve The minimum amount of satoshis the initiator requires us to have at all times.
      *
      * @return $this
      */
@@ -508,7 +508,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets minHtlc
      *
-     * @param string $minHtlc / The smallest HTLC in millisatoshis that the initiator will accept.
+     * @param string $minHtlc The smallest HTLC in millisatoshis that the initiator will accept.
      *
      * @return $this
      */
@@ -532,7 +532,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets feePerKw
      *
-     * @param string $feePerKw / The initial fee rate that the initiator suggests for both commitment transactions.
+     * @param string $feePerKw The initial fee rate that the initiator suggests for both commitment transactions.
      *
      * @return $this
      */
@@ -556,7 +556,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets csvDelay
      *
-     * @param int $csvDelay * The number of blocks to use for the relative time lock in the pay-to-self output of both commitment transactions.
+     * @param int $csvDelay The number of blocks to use for the relative time lock in the pay-to-self output of both commitment transactions.
      *
      * @return $this
      */
@@ -580,7 +580,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets maxAcceptedHtlcs
      *
-     * @param int $maxAcceptedHtlcs / The total number of incoming HTLC's that the initiator will accept.
+     * @param int $maxAcceptedHtlcs The total number of incoming HTLC's that the initiator will accept.
      *
      * @return $this
      */
@@ -604,7 +604,7 @@ class LnrpcChannelAcceptRequest implements ModelInterface, ArrayAccess
     /**
      * Sets channelFlags
      *
-     * @param int $channelFlags / A bit-field which the initiator uses to specify proposed channel behavior.
+     * @param int $channelFlags A bit-field which the initiator uses to specify proposed channel behavior.
      *
      * @return $this
      */

@@ -36,7 +36,7 @@ use \Lnd\Rest\ObjectSerializer;
  * LnrpcRoute Class Doc Comment
  *
  * @category Class
- * @description * A path through the channel graph which runs over one or more channels in succession. This struct carries all the information required to craft the Sphinx onion packet, and send the payment along the first hop in the path. A route is only selected as valid if all the channels have sufficient capacity to carry the initial payment amount after fees are accounted for.
+ * @description A path through the channel graph which runs over one or more channels in succession. This struct carries all the information required to craft the Sphinx onion packet, and send the payment along the first hop in the path. A route is only selected as valid if all the channels have sufficient capacity to carry the initial payment amount after fees are accounted for.
  * @package  Lnd\Rest
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
@@ -248,7 +248,7 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
     /**
      * Sets totalTimeLock
      *
-     * @param int $totalTimeLock * The cumulative (final) time lock across the entire route.  This is the CLTV value that should be extended to the first hop in the route. All other hops will decrement the time-lock as advertised, leaving enough time for all hops to wait for or present the payment preimage to complete the payment.
+     * @param int $totalTimeLock The cumulative (final) time lock across the entire route. This is the CLTV value that should be extended to the first hop in the route. All other hops will decrement the time-lock as advertised, leaving enough time for all hops to wait for or present the payment preimage to complete the payment.
      *
      * @return $this
      */
@@ -272,7 +272,7 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
     /**
      * Sets totalFees
      *
-     * @param string $totalFees * The sum of the fees paid at each hop within the final route.  In the case of a one-hop payment, this value will be zero as we don't need to pay a fee to ourselves.
+     * @param string $totalFees The sum of the fees paid at each hop within the final route. In the case of a one-hop payment, this value will be zero as we don't need to pay a fee to ourselves.
      *
      * @return $this
      */
@@ -296,7 +296,7 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
     /**
      * Sets totalAmt
      *
-     * @param string $totalAmt * The total amount of funds required to complete a payment over this route. This value includes the cumulative fees at each hop. As a result, the HTLC extended to the first-hop in the route will need to have at least this many satoshis, otherwise the route will fail at an intermediate node due to an insufficient amount of fees.
+     * @param string $totalAmt The total amount of funds required to complete a payment over this route. This value includes the cumulative fees at each hop. As a result, the HTLC extended to the first-hop in the route will need to have at least this many satoshis, otherwise the route will fail at an intermediate node due to an insufficient amount of fees.
      *
      * @return $this
      */
@@ -320,7 +320,7 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
     /**
      * Sets hops
      *
-     * @param \Lnd\Rest\Model\LnrpcHop[] $hops * Contains details concerning the specific forwarding details at each hop.
+     * @param \Lnd\Rest\Model\LnrpcHop[] $hops Contains details concerning the specific forwarding details at each hop.
      *
      * @return $this
      */
@@ -344,7 +344,7 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
     /**
      * Sets totalFeesMsat
      *
-     * @param string $totalFeesMsat * The total fees in millisatoshis.
+     * @param string $totalFeesMsat The total fees in millisatoshis.
      *
      * @return $this
      */
@@ -368,7 +368,7 @@ class LnrpcRoute implements ModelInterface, ArrayAccess
     /**
      * Sets totalAmtMsat
      *
-     * @param string $totalAmtMsat * The total amount in millisatoshis.
+     * @param string $totalAmtMsat The total amount in millisatoshis.
      *
      * @return $this
      */

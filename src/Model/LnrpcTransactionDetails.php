@@ -217,7 +217,7 @@ class LnrpcTransactionDetails implements ModelInterface, ArrayAccess
     /**
      * Sets transactions
      *
-     * @param \Lnd\Rest\Model\LnrpcTransaction[] $transactions / The list of transactions relevant to the wallet.
+     * @param \Lnd\Rest\Model\LnrpcTransaction[] $transactions The list of transactions relevant to the wallet.
      *
      * @return $this
      */

@@ -62,7 +62,9 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'baseFeeMsat' => 'string',
         'feeRate' => 'double',
         'timeLockDelta' => 'int',
-        'maxHtlcMsat' => 'string'
+        'maxHtlcMsat' => 'string',
+        'minHtlcMsat' => 'string',
+        'minHtlcMsatSpecified' => 'bool'
     ];
 
     /**
@@ -76,7 +78,9 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'baseFeeMsat' => 'int64',
         'feeRate' => 'double',
         'timeLockDelta' => 'int64',
-        'maxHtlcMsat' => 'uint64'
+        'maxHtlcMsat' => 'uint64',
+        'minHtlcMsat' => 'uint64',
+        'minHtlcMsatSpecified' => 'boolean'
     ];
 
     /**
@@ -111,7 +115,9 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'baseFeeMsat' => 'base_fee_msat',
         'feeRate' => 'fee_rate',
         'timeLockDelta' => 'time_lock_delta',
-        'maxHtlcMsat' => 'max_htlc_msat'
+        'maxHtlcMsat' => 'max_htlc_msat',
+        'minHtlcMsat' => 'min_htlc_msat',
+        'minHtlcMsatSpecified' => 'min_htlc_msat_specified'
     ];
 
     /**
@@ -125,7 +131,9 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'baseFeeMsat' => 'setBaseFeeMsat',
         'feeRate' => 'setFeeRate',
         'timeLockDelta' => 'setTimeLockDelta',
-        'maxHtlcMsat' => 'setMaxHtlcMsat'
+        'maxHtlcMsat' => 'setMaxHtlcMsat',
+        'minHtlcMsat' => 'setMinHtlcMsat',
+        'minHtlcMsatSpecified' => 'setMinHtlcMsatSpecified'
     ];
 
     /**
@@ -139,7 +147,9 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         'baseFeeMsat' => 'getBaseFeeMsat',
         'feeRate' => 'getFeeRate',
         'timeLockDelta' => 'getTimeLockDelta',
-        'maxHtlcMsat' => 'getMaxHtlcMsat'
+        'maxHtlcMsat' => 'getMaxHtlcMsat',
+        'minHtlcMsat' => 'getMinHtlcMsat',
+        'minHtlcMsatSpecified' => 'getMinHtlcMsatSpecified'
     ];
 
     /**
@@ -208,6 +218,8 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
         $this->container['feeRate'] = isset($data['feeRate']) ? $data['feeRate'] : null;
         $this->container['timeLockDelta'] = isset($data['timeLockDelta']) ? $data['timeLockDelta'] : null;
         $this->container['maxHtlcMsat'] = isset($data['maxHtlcMsat']) ? $data['maxHtlcMsat'] : null;
+        $this->container['minHtlcMsat'] = isset($data['minHtlcMsat']) ? $data['minHtlcMsat'] : null;
+        $this->container['minHtlcMsatSpecified'] = isset($data['minHtlcMsatSpecified']) ? $data['minHtlcMsatSpecified'] : null;
     }
 
     /**
@@ -247,7 +259,7 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
     /**
      * Sets global
      *
-     * @param bool $global / If set, then this update applies to all currently active channels.
+     * @param bool $global If set, then this update applies to all currently active channels.
      *
      * @return $this
      */
@@ -271,7 +283,7 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
     /**
      * Sets chanPoint
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelPoint $chanPoint / If set, this update will target a specific channel.
+     * @param \Lnd\Rest\Model\LnrpcChannelPoint $chanPoint If set, this update will target a specific channel.
      *
      * @return $this
      */
@@ -295,7 +307,7 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
     /**
      * Sets baseFeeMsat
      *
-     * @param string $baseFeeMsat / The base fee charged regardless of the number of milli-satoshis sent.
+     * @param string $baseFeeMsat The base fee charged regardless of the number of milli-satoshis sent.
      *
      * @return $this
      */
@@ -319,7 +331,7 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
     /**
      * Sets feeRate
      *
-     * @param double $feeRate / The effective fee rate in milli-satoshis. The precision of this value goes up to 6 decimal places, so 1e-6.
+     * @param double $feeRate The effective fee rate in milli-satoshis. The precision of this value goes up to 6 decimal places, so 1e-6.
      *
      * @return $this
      */
@@ -343,7 +355,7 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
     /**
      * Sets timeLockDelta
      *
-     * @param int $timeLockDelta / The required timelock delta for HTLCs forwarded over the channel.
+     * @param int $timeLockDelta The required timelock delta for HTLCs forwarded over the channel.
      *
      * @return $this
      */
@@ -367,13 +379,61 @@ class LnrpcPolicyUpdateRequest implements ModelInterface, ArrayAccess
     /**
      * Sets maxHtlcMsat
      *
-     * @param string $maxHtlcMsat / If set, the maximum HTLC size in milli-satoshis. If unset, the maximum HTLC will be unchanged.
+     * @param string $maxHtlcMsat If set, the maximum HTLC size in milli-satoshis. If unset, the maximum HTLC will be unchanged.
      *
      * @return $this
      */
     public function setMaxHtlcMsat($maxHtlcMsat)
     {
         $this->container['maxHtlcMsat'] = $maxHtlcMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets minHtlcMsat
+     *
+     * @return string
+     */
+    public function getMinHtlcMsat()
+    {
+        return $this->container['minHtlcMsat'];
+    }
+
+    /**
+     * Sets minHtlcMsat
+     *
+     * @param string $minHtlcMsat The minimum HTLC size in milli-satoshis. Only applied if min_htlc_msat_specified is true.
+     *
+     * @return $this
+     */
+    public function setMinHtlcMsat($minHtlcMsat)
+    {
+        $this->container['minHtlcMsat'] = $minHtlcMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets minHtlcMsatSpecified
+     *
+     * @return bool
+     */
+    public function getMinHtlcMsatSpecified()
+    {
+        return $this->container['minHtlcMsatSpecified'];
+    }
+
+    /**
+     * Sets minHtlcMsatSpecified
+     *
+     * @param bool $minHtlcMsatSpecified If true, min_htlc_msat is applied.
+     *
+     * @return $this
+     */
+    public function setMinHtlcMsatSpecified($minHtlcMsatSpecified)
+    {
+        $this->container['minHtlcMsatSpecified'] = $minHtlcMsatSpecified;
 
         return $this;
     }

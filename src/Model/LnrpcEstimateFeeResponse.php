@@ -58,7 +58,8 @@ class LnrpcEstimateFeeResponse implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'feeSat' => 'string',
-        'feerateSatPerByte' => 'string'
+        'feerateSatPerByte' => 'string',
+        'satPerVbyte' => 'string'
     ];
 
     /**
@@ -68,7 +69,8 @@ class LnrpcEstimateFeeResponse implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'feeSat' => 'int64',
-        'feerateSatPerByte' => 'int64'
+        'feerateSatPerByte' => 'int64',
+        'satPerVbyte' => 'uint64'
     ];
 
     /**
@@ -99,7 +101,8 @@ class LnrpcEstimateFeeResponse implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'feeSat' => 'fee_sat',
-        'feerateSatPerByte' => 'feerate_sat_per_byte'
+        'feerateSatPerByte' => 'feerate_sat_per_byte',
+        'satPerVbyte' => 'sat_per_vbyte'
     ];
 
     /**
@@ -109,7 +112,8 @@ class LnrpcEstimateFeeResponse implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'feeSat' => 'setFeeSat',
-        'feerateSatPerByte' => 'setFeerateSatPerByte'
+        'feerateSatPerByte' => 'setFeerateSatPerByte',
+        'satPerVbyte' => 'setSatPerVbyte'
     ];
 
     /**
@@ -119,7 +123,8 @@ class LnrpcEstimateFeeResponse implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'feeSat' => 'getFeeSat',
-        'feerateSatPerByte' => 'getFeerateSatPerByte'
+        'feerateSatPerByte' => 'getFeerateSatPerByte',
+        'satPerVbyte' => 'getSatPerVbyte'
     ];
 
     /**
@@ -184,6 +189,7 @@ class LnrpcEstimateFeeResponse implements ModelInterface, ArrayAccess
     {
         $this->container['feeSat'] = isset($data['feeSat']) ? $data['feeSat'] : null;
         $this->container['feerateSatPerByte'] = isset($data['feerateSatPerByte']) ? $data['feerateSatPerByte'] : null;
+        $this->container['satPerVbyte'] = isset($data['satPerVbyte']) ? $data['satPerVbyte'] : null;
     }
 
     /**
@@ -223,7 +229,7 @@ class LnrpcEstimateFeeResponse implements ModelInterface, ArrayAccess
     /**
      * Sets feeSat
      *
-     * @param string $feeSat / The total fee in satoshis.
+     * @param string $feeSat The total fee in satoshis.
      *
      * @return $this
      */
@@ -247,13 +253,37 @@ class LnrpcEstimateFeeResponse implements ModelInterface, ArrayAccess
     /**
      * Sets feerateSatPerByte
      *
-     * @param string $feerateSatPerByte / The fee rate in satoshi/byte.
+     * @param string $feerateSatPerByte Deprecated, use sat_per_vbyte. The fee rate in satoshi/vbyte.
      *
      * @return $this
      */
     public function setFeerateSatPerByte($feerateSatPerByte)
     {
         $this->container['feerateSatPerByte'] = $feerateSatPerByte;
+
+        return $this;
+    }
+
+    /**
+     * Gets satPerVbyte
+     *
+     * @return string
+     */
+    public function getSatPerVbyte()
+    {
+        return $this->container['satPerVbyte'];
+    }
+
+    /**
+     * Sets satPerVbyte
+     *
+     * @param string $satPerVbyte The fee rate in satoshi/vbyte.
+     *
+     * @return $this
+     */
+    public function setSatPerVbyte($satPerVbyte)
+    {
+        $this->container['satPerVbyte'] = $satPerVbyte;
 
         return $this;
     }

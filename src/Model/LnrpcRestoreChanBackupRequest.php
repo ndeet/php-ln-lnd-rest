@@ -227,7 +227,7 @@ class LnrpcRestoreChanBackupRequest implements ModelInterface, ArrayAccess
     /**
      * Sets chanBackups
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelBackups $chanBackups chanBackups
+     * @param \Lnd\Rest\Model\LnrpcChannelBackups $chanBackups The channels to restore as a list of channel/backup pairs.
      *
      * @return $this
      */
@@ -251,7 +251,7 @@ class LnrpcRestoreChanBackupRequest implements ModelInterface, ArrayAccess
     /**
      * Sets multiChanBackup
      *
-     * @param string $multiChanBackup multiChanBackup
+     * @param string $multiChanBackup The channels to restore in the packed multi backup format. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */

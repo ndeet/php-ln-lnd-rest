@@ -227,7 +227,7 @@ class LnrpcChannelBackup implements ModelInterface, ArrayAccess
     /**
      * Sets chanPoint
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelPoint $chanPoint * Identifies the channel that this backup belongs to.
+     * @param \Lnd\Rest\Model\LnrpcChannelPoint $chanPoint Identifies the channel that this backup belongs to.
      *
      * @return $this
      */
@@ -251,7 +251,7 @@ class LnrpcChannelBackup implements ModelInterface, ArrayAccess
     /**
      * Sets chanBackup
      *
-     * @param string $chanBackup * Is an encrypted single-chan backup. this can be passed to RestoreChannelBackups, or the WalletUnlocker Init and Unlock methods in order to trigger the recovery protocol.
+     * @param string $chanBackup Is an encrypted single-chan backup. this can be passed to RestoreChannelBackups, or the WalletUnlocker Init and Unlock methods in order to trigger the recovery protocol. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */

@@ -57,6 +57,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
+        'satPerVbyte' => 'string',
         'nodePubkey' => 'string',
         'nodePubkeyString' => 'string',
         'localFundingAmount' => 'string',
@@ -67,7 +68,12 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'minHtlcMsat' => 'string',
         'remoteCsvDelay' => 'int',
         'minConfs' => 'int',
-        'spendUnconfirmed' => 'bool'
+        'spendUnconfirmed' => 'bool',
+        'closeAddress' => 'string',
+        'fundingShim' => '\Lnd\Rest\Model\LnrpcFundingShim',
+        'remoteMaxValueInFlightMsat' => 'string',
+        'remoteMaxHtlcs' => 'int',
+        'maxLocalCsv' => 'int'
     ];
 
     /**
@@ -76,6 +82,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
+        'satPerVbyte' => 'uint64',
         'nodePubkey' => 'byte',
         'nodePubkeyString' => null,
         'localFundingAmount' => 'int64',
@@ -86,7 +93,12 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'minHtlcMsat' => 'int64',
         'remoteCsvDelay' => 'int64',
         'minConfs' => 'int32',
-        'spendUnconfirmed' => 'boolean'
+        'spendUnconfirmed' => 'boolean',
+        'closeAddress' => null,
+        'fundingShim' => null,
+        'remoteMaxValueInFlightMsat' => 'uint64',
+        'remoteMaxHtlcs' => 'int64',
+        'maxLocalCsv' => 'int64'
     ];
 
     /**
@@ -116,6 +128,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
+        'satPerVbyte' => 'sat_per_vbyte',
         'nodePubkey' => 'node_pubkey',
         'nodePubkeyString' => 'node_pubkey_string',
         'localFundingAmount' => 'local_funding_amount',
@@ -126,7 +139,12 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'minHtlcMsat' => 'min_htlc_msat',
         'remoteCsvDelay' => 'remote_csv_delay',
         'minConfs' => 'min_confs',
-        'spendUnconfirmed' => 'spend_unconfirmed'
+        'spendUnconfirmed' => 'spend_unconfirmed',
+        'closeAddress' => 'close_address',
+        'fundingShim' => 'funding_shim',
+        'remoteMaxValueInFlightMsat' => 'remote_max_value_in_flight_msat',
+        'remoteMaxHtlcs' => 'remote_max_htlcs',
+        'maxLocalCsv' => 'max_local_csv'
     ];
 
     /**
@@ -135,6 +153,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
+        'satPerVbyte' => 'setSatPerVbyte',
         'nodePubkey' => 'setNodePubkey',
         'nodePubkeyString' => 'setNodePubkeyString',
         'localFundingAmount' => 'setLocalFundingAmount',
@@ -145,7 +164,12 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'minHtlcMsat' => 'setMinHtlcMsat',
         'remoteCsvDelay' => 'setRemoteCsvDelay',
         'minConfs' => 'setMinConfs',
-        'spendUnconfirmed' => 'setSpendUnconfirmed'
+        'spendUnconfirmed' => 'setSpendUnconfirmed',
+        'closeAddress' => 'setCloseAddress',
+        'fundingShim' => 'setFundingShim',
+        'remoteMaxValueInFlightMsat' => 'setRemoteMaxValueInFlightMsat',
+        'remoteMaxHtlcs' => 'setRemoteMaxHtlcs',
+        'maxLocalCsv' => 'setMaxLocalCsv'
     ];
 
     /**
@@ -154,6 +178,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
+        'satPerVbyte' => 'getSatPerVbyte',
         'nodePubkey' => 'getNodePubkey',
         'nodePubkeyString' => 'getNodePubkeyString',
         'localFundingAmount' => 'getLocalFundingAmount',
@@ -164,7 +189,12 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         'minHtlcMsat' => 'getMinHtlcMsat',
         'remoteCsvDelay' => 'getRemoteCsvDelay',
         'minConfs' => 'getMinConfs',
-        'spendUnconfirmed' => 'getSpendUnconfirmed'
+        'spendUnconfirmed' => 'getSpendUnconfirmed',
+        'closeAddress' => 'getCloseAddress',
+        'fundingShim' => 'getFundingShim',
+        'remoteMaxValueInFlightMsat' => 'getRemoteMaxValueInFlightMsat',
+        'remoteMaxHtlcs' => 'getRemoteMaxHtlcs',
+        'maxLocalCsv' => 'getMaxLocalCsv'
     ];
 
     /**
@@ -227,6 +257,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
+        $this->container['satPerVbyte'] = isset($data['satPerVbyte']) ? $data['satPerVbyte'] : null;
         $this->container['nodePubkey'] = isset($data['nodePubkey']) ? $data['nodePubkey'] : null;
         $this->container['nodePubkeyString'] = isset($data['nodePubkeyString']) ? $data['nodePubkeyString'] : null;
         $this->container['localFundingAmount'] = isset($data['localFundingAmount']) ? $data['localFundingAmount'] : null;
@@ -238,6 +269,11 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
         $this->container['remoteCsvDelay'] = isset($data['remoteCsvDelay']) ? $data['remoteCsvDelay'] : null;
         $this->container['minConfs'] = isset($data['minConfs']) ? $data['minConfs'] : null;
         $this->container['spendUnconfirmed'] = isset($data['spendUnconfirmed']) ? $data['spendUnconfirmed'] : null;
+        $this->container['closeAddress'] = isset($data['closeAddress']) ? $data['closeAddress'] : null;
+        $this->container['fundingShim'] = isset($data['fundingShim']) ? $data['fundingShim'] : null;
+        $this->container['remoteMaxValueInFlightMsat'] = isset($data['remoteMaxValueInFlightMsat']) ? $data['remoteMaxValueInFlightMsat'] : null;
+        $this->container['remoteMaxHtlcs'] = isset($data['remoteMaxHtlcs']) ? $data['remoteMaxHtlcs'] : null;
+        $this->container['maxLocalCsv'] = isset($data['maxLocalCsv']) ? $data['maxLocalCsv'] : null;
     }
 
     /**
@@ -269,6 +305,30 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
 
 
     /**
+     * Gets satPerVbyte
+     *
+     * @return string
+     */
+    public function getSatPerVbyte()
+    {
+        return $this->container['satPerVbyte'];
+    }
+
+    /**
+     * Sets satPerVbyte
+     *
+     * @param string $satPerVbyte A manual fee rate set in sat/vbyte that should be used when crafting the funding transaction.
+     *
+     * @return $this
+     */
+    public function setSatPerVbyte($satPerVbyte)
+    {
+        $this->container['satPerVbyte'] = $satPerVbyte;
+
+        return $this;
+    }
+
+    /**
      * Gets nodePubkey
      *
      * @return string
@@ -281,7 +341,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets nodePubkey
      *
-     * @param string $nodePubkey nodePubkey
+     * @param string $nodePubkey The pubkey of the node to open a channel with. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */
@@ -310,7 +370,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets nodePubkeyString
      *
-     * @param string $nodePubkeyString nodePubkeyString
+     * @param string $nodePubkeyString The hex encoded pubkey of the node to open a channel with. Deprecated now that the REST gateway supports base64 encoding of bytes fields.
      *
      * @return $this
      */
@@ -382,7 +442,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets targetConf
      *
-     * @param int $targetConf / The target number of blocks that the funding transaction should be confirmed by.
+     * @param int $targetConf The target number of blocks that the funding transaction should be confirmed by.
      *
      * @return $this
      */
@@ -406,7 +466,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets satPerByte
      *
-     * @param string $satPerByte / A manual fee rate set in sat/byte that should be used when crafting the funding transaction.
+     * @param string $satPerByte Deprecated, use sat_per_vbyte. A manual fee rate set in sat/vbyte that should be used when crafting the funding transaction.
      *
      * @return $this
      */
@@ -430,7 +490,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets private
      *
-     * @param bool $private / Whether this channel should be private, not announced to the greater network.
+     * @param bool $private Whether this channel should be private, not announced to the greater network.
      *
      * @return $this
      */
@@ -454,7 +514,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets minHtlcMsat
      *
-     * @param string $minHtlcMsat / The minimum value in millisatoshi we will require for incoming HTLCs on the channel.
+     * @param string $minHtlcMsat The minimum value in millisatoshi we will require for incoming HTLCs on the channel.
      *
      * @return $this
      */
@@ -478,7 +538,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets remoteCsvDelay
      *
-     * @param int $remoteCsvDelay / The delay we require on the remote's commitment transaction. If this is not set, it will be scaled automatically with the channel size.
+     * @param int $remoteCsvDelay The delay we require on the remote's commitment transaction. If this is not set, it will be scaled automatically with the channel size.
      *
      * @return $this
      */
@@ -502,7 +562,7 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets minConfs
      *
-     * @param int $minConfs / The minimum number of confirmations each one of your outputs used for the funding transaction must satisfy.
+     * @param int $minConfs The minimum number of confirmations each one of your outputs used for the funding transaction must satisfy.
      *
      * @return $this
      */
@@ -526,13 +586,133 @@ class LnrpcOpenChannelRequest implements ModelInterface, ArrayAccess
     /**
      * Sets spendUnconfirmed
      *
-     * @param bool $spendUnconfirmed / Whether unconfirmed outputs should be used as inputs for the funding transaction.
+     * @param bool $spendUnconfirmed Whether unconfirmed outputs should be used as inputs for the funding transaction.
      *
      * @return $this
      */
     public function setSpendUnconfirmed($spendUnconfirmed)
     {
         $this->container['spendUnconfirmed'] = $spendUnconfirmed;
+
+        return $this;
+    }
+
+    /**
+     * Gets closeAddress
+     *
+     * @return string
+     */
+    public function getCloseAddress()
+    {
+        return $this->container['closeAddress'];
+    }
+
+    /**
+     * Sets closeAddress
+     *
+     * @param string $closeAddress Close address is an optional address which specifies the address to which funds should be paid out to upon cooperative close. This field may only be set if the peer supports the option upfront feature bit (call listpeers to check). The remote peer will only accept cooperative closes to this address if it is set.  Note: If this value is set on channel creation, you will *not* be able to cooperatively close out to a different address.
+     *
+     * @return $this
+     */
+    public function setCloseAddress($closeAddress)
+    {
+        $this->container['closeAddress'] = $closeAddress;
+
+        return $this;
+    }
+
+    /**
+     * Gets fundingShim
+     *
+     * @return \Lnd\Rest\Model\LnrpcFundingShim
+     */
+    public function getFundingShim()
+    {
+        return $this->container['fundingShim'];
+    }
+
+    /**
+     * Sets fundingShim
+     *
+     * @param \Lnd\Rest\Model\LnrpcFundingShim $fundingShim Funding shims are an optional argument that allow the caller to intercept certain funding functionality. For example, a shim can be provided to use a particular key for the commitment key (ideally cold) rather than use one that is generated by the wallet as normal, or signal that signing will be carried out in an interactive manner (PSBT based).
+     *
+     * @return $this
+     */
+    public function setFundingShim($fundingShim)
+    {
+        $this->container['fundingShim'] = $fundingShim;
+
+        return $this;
+    }
+
+    /**
+     * Gets remoteMaxValueInFlightMsat
+     *
+     * @return string
+     */
+    public function getRemoteMaxValueInFlightMsat()
+    {
+        return $this->container['remoteMaxValueInFlightMsat'];
+    }
+
+    /**
+     * Sets remoteMaxValueInFlightMsat
+     *
+     * @param string $remoteMaxValueInFlightMsat The maximum amount of coins in millisatoshi that can be pending within the channel. It only applies to the remote party.
+     *
+     * @return $this
+     */
+    public function setRemoteMaxValueInFlightMsat($remoteMaxValueInFlightMsat)
+    {
+        $this->container['remoteMaxValueInFlightMsat'] = $remoteMaxValueInFlightMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets remoteMaxHtlcs
+     *
+     * @return int
+     */
+    public function getRemoteMaxHtlcs()
+    {
+        return $this->container['remoteMaxHtlcs'];
+    }
+
+    /**
+     * Sets remoteMaxHtlcs
+     *
+     * @param int $remoteMaxHtlcs The maximum number of concurrent HTLCs we will allow the remote party to add to the commitment transaction.
+     *
+     * @return $this
+     */
+    public function setRemoteMaxHtlcs($remoteMaxHtlcs)
+    {
+        $this->container['remoteMaxHtlcs'] = $remoteMaxHtlcs;
+
+        return $this;
+    }
+
+    /**
+     * Gets maxLocalCsv
+     *
+     * @return int
+     */
+    public function getMaxLocalCsv()
+    {
+        return $this->container['maxLocalCsv'];
+    }
+
+    /**
+     * Sets maxLocalCsv
+     *
+     * @param int $maxLocalCsv Max local csv is the maximum csv delay we will allow for our own commitment transaction.
+     *
+     * @return $this
+     */
+    public function setMaxLocalCsv($maxLocalCsv)
+    {
+        $this->container['maxLocalCsv'] = $maxLocalCsv;
 
         return $this;
     }

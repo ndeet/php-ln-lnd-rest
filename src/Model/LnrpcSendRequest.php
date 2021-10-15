@@ -60,14 +60,19 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'dest' => 'string',
         'destString' => 'string',
         'amt' => 'string',
+        'amtMsat' => 'string',
         'paymentHash' => 'string',
         'paymentHashString' => 'string',
         'paymentRequest' => 'string',
         'finalCltvDelta' => 'int',
         'feeLimit' => '\Lnd\Rest\Model\LnrpcFeeLimit',
         'outgoingChanId' => 'string',
+        'lastHopPubkey' => 'string',
         'cltvLimit' => 'int',
-        'destTlv' => 'map[string,string]'
+        'destCustomRecords' => 'map[string,string]',
+        'allowSelfPayment' => 'bool',
+        'destFeatures' => '\Lnd\Rest\Model\LnrpcFeatureBit[]',
+        'paymentAddr' => 'string'
     ];
 
     /**
@@ -79,14 +84,19 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'dest' => 'byte',
         'destString' => null,
         'amt' => 'int64',
+        'amtMsat' => 'int64',
         'paymentHash' => 'byte',
         'paymentHashString' => null,
         'paymentRequest' => null,
         'finalCltvDelta' => 'int32',
         'feeLimit' => null,
         'outgoingChanId' => 'uint64',
+        'lastHopPubkey' => 'byte',
         'cltvLimit' => 'int64',
-        'destTlv' => 'byte'
+        'destCustomRecords' => 'byte',
+        'allowSelfPayment' => 'boolean',
+        'destFeatures' => null,
+        'paymentAddr' => 'byte'
     ];
 
     /**
@@ -119,14 +129,19 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'dest' => 'dest',
         'destString' => 'dest_string',
         'amt' => 'amt',
+        'amtMsat' => 'amt_msat',
         'paymentHash' => 'payment_hash',
         'paymentHashString' => 'payment_hash_string',
         'paymentRequest' => 'payment_request',
         'finalCltvDelta' => 'final_cltv_delta',
         'feeLimit' => 'fee_limit',
         'outgoingChanId' => 'outgoing_chan_id',
+        'lastHopPubkey' => 'last_hop_pubkey',
         'cltvLimit' => 'cltv_limit',
-        'destTlv' => 'dest_tlv'
+        'destCustomRecords' => 'dest_custom_records',
+        'allowSelfPayment' => 'allow_self_payment',
+        'destFeatures' => 'dest_features',
+        'paymentAddr' => 'payment_addr'
     ];
 
     /**
@@ -138,14 +153,19 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'dest' => 'setDest',
         'destString' => 'setDestString',
         'amt' => 'setAmt',
+        'amtMsat' => 'setAmtMsat',
         'paymentHash' => 'setPaymentHash',
         'paymentHashString' => 'setPaymentHashString',
         'paymentRequest' => 'setPaymentRequest',
         'finalCltvDelta' => 'setFinalCltvDelta',
         'feeLimit' => 'setFeeLimit',
         'outgoingChanId' => 'setOutgoingChanId',
+        'lastHopPubkey' => 'setLastHopPubkey',
         'cltvLimit' => 'setCltvLimit',
-        'destTlv' => 'setDestTlv'
+        'destCustomRecords' => 'setDestCustomRecords',
+        'allowSelfPayment' => 'setAllowSelfPayment',
+        'destFeatures' => 'setDestFeatures',
+        'paymentAddr' => 'setPaymentAddr'
     ];
 
     /**
@@ -157,14 +177,19 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         'dest' => 'getDest',
         'destString' => 'getDestString',
         'amt' => 'getAmt',
+        'amtMsat' => 'getAmtMsat',
         'paymentHash' => 'getPaymentHash',
         'paymentHashString' => 'getPaymentHashString',
         'paymentRequest' => 'getPaymentRequest',
         'finalCltvDelta' => 'getFinalCltvDelta',
         'feeLimit' => 'getFeeLimit',
         'outgoingChanId' => 'getOutgoingChanId',
+        'lastHopPubkey' => 'getLastHopPubkey',
         'cltvLimit' => 'getCltvLimit',
-        'destTlv' => 'getDestTlv'
+        'destCustomRecords' => 'getDestCustomRecords',
+        'allowSelfPayment' => 'getAllowSelfPayment',
+        'destFeatures' => 'getDestFeatures',
+        'paymentAddr' => 'getPaymentAddr'
     ];
 
     /**
@@ -230,14 +255,19 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
         $this->container['dest'] = isset($data['dest']) ? $data['dest'] : null;
         $this->container['destString'] = isset($data['destString']) ? $data['destString'] : null;
         $this->container['amt'] = isset($data['amt']) ? $data['amt'] : null;
+        $this->container['amtMsat'] = isset($data['amtMsat']) ? $data['amtMsat'] : null;
         $this->container['paymentHash'] = isset($data['paymentHash']) ? $data['paymentHash'] : null;
         $this->container['paymentHashString'] = isset($data['paymentHashString']) ? $data['paymentHashString'] : null;
         $this->container['paymentRequest'] = isset($data['paymentRequest']) ? $data['paymentRequest'] : null;
         $this->container['finalCltvDelta'] = isset($data['finalCltvDelta']) ? $data['finalCltvDelta'] : null;
         $this->container['feeLimit'] = isset($data['feeLimit']) ? $data['feeLimit'] : null;
         $this->container['outgoingChanId'] = isset($data['outgoingChanId']) ? $data['outgoingChanId'] : null;
+        $this->container['lastHopPubkey'] = isset($data['lastHopPubkey']) ? $data['lastHopPubkey'] : null;
         $this->container['cltvLimit'] = isset($data['cltvLimit']) ? $data['cltvLimit'] : null;
-        $this->container['destTlv'] = isset($data['destTlv']) ? $data['destTlv'] : null;
+        $this->container['destCustomRecords'] = isset($data['destCustomRecords']) ? $data['destCustomRecords'] : null;
+        $this->container['allowSelfPayment'] = isset($data['allowSelfPayment']) ? $data['allowSelfPayment'] : null;
+        $this->container['destFeatures'] = isset($data['destFeatures']) ? $data['destFeatures'] : null;
+        $this->container['paymentAddr'] = isset($data['paymentAddr']) ? $data['paymentAddr'] : null;
     }
 
     /**
@@ -255,6 +285,14 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
 
         if (!is_null($this->container['paymentHash']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['paymentHash'])) {
             $invalidProperties[] = "invalid value for 'paymentHash', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        }
+
+        if (!is_null($this->container['lastHopPubkey']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['lastHopPubkey'])) {
+            $invalidProperties[] = "invalid value for 'lastHopPubkey', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        }
+
+        if (!is_null($this->container['paymentAddr']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['paymentAddr'])) {
+            $invalidProperties[] = "invalid value for 'paymentAddr', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
         }
 
         return $invalidProperties;
@@ -285,7 +323,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets dest
      *
-     * @param string $dest dest
+     * @param string $dest The identity pubkey of the payment recipient. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */
@@ -314,7 +352,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets destString
      *
-     * @param string $destString destString
+     * @param string $destString The hex-encoded identity pubkey of the payment recipient. Deprecated now that the REST gateway supports base64 encoding of bytes fields.
      *
      * @return $this
      */
@@ -338,13 +376,37 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets amt
      *
-     * @param string $amt / Number of satoshis to send.
+     * @param string $amt The amount to send expressed in satoshis.  The fields amt and amt_msat are mutually exclusive.
      *
      * @return $this
      */
     public function setAmt($amt)
     {
         $this->container['amt'] = $amt;
+
+        return $this;
+    }
+
+    /**
+     * Gets amtMsat
+     *
+     * @return string
+     */
+    public function getAmtMsat()
+    {
+        return $this->container['amtMsat'];
+    }
+
+    /**
+     * Sets amtMsat
+     *
+     * @param string $amtMsat The amount to send expressed in millisatoshis.  The fields amt and amt_msat are mutually exclusive.
+     *
+     * @return $this
+     */
+    public function setAmtMsat($amtMsat)
+    {
+        $this->container['amtMsat'] = $amtMsat;
 
         return $this;
     }
@@ -362,7 +424,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets paymentHash
      *
-     * @param string $paymentHash paymentHash
+     * @param string $paymentHash The hash to use within the payment's HTLC. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */
@@ -391,7 +453,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets paymentHashString
      *
-     * @param string $paymentHashString paymentHashString
+     * @param string $paymentHashString The hex-encoded hash to use within the payment's HTLC. Deprecated now that the REST gateway supports base64 encoding of bytes fields.
      *
      * @return $this
      */
@@ -415,7 +477,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets paymentRequest
      *
-     * @param string $paymentRequest * A bare-bones invoice for a payment within the Lightning Network.  With the details of the invoice, the sender has all the data necessary to send a payment to the recipient.
+     * @param string $paymentRequest A bare-bones invoice for a payment within the Lightning Network. With the details of the invoice, the sender has all the data necessary to send a payment to the recipient.
      *
      * @return $this
      */
@@ -439,7 +501,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets finalCltvDelta
      *
-     * @param int $finalCltvDelta * The CLTV delta from the current height that should be used to set the timelock for the final hop.
+     * @param int $finalCltvDelta The CLTV delta from the current height that should be used to set the timelock for the final hop.
      *
      * @return $this
      */
@@ -463,7 +525,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets feeLimit
      *
-     * @param \Lnd\Rest\Model\LnrpcFeeLimit $feeLimit * The maximum number of satoshis that will be paid as a fee of the payment. This value can be represented either as a percentage of the amount being sent, or as a fixed amount of the maximum fee the user is willing the pay to send the payment.
+     * @param \Lnd\Rest\Model\LnrpcFeeLimit $feeLimit The maximum number of satoshis that will be paid as a fee of the payment. This value can be represented either as a percentage of the amount being sent, or as a fixed amount of the maximum fee the user is willing the pay to send the payment.
      *
      * @return $this
      */
@@ -487,13 +549,42 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets outgoingChanId
      *
-     * @param string $outgoingChanId * The channel id of the channel that must be taken to the first hop. If zero, any channel may be used.
+     * @param string $outgoingChanId The channel id of the channel that must be taken to the first hop. If zero, any channel may be used.
      *
      * @return $this
      */
     public function setOutgoingChanId($outgoingChanId)
     {
         $this->container['outgoingChanId'] = $outgoingChanId;
+
+        return $this;
+    }
+
+    /**
+     * Gets lastHopPubkey
+     *
+     * @return string
+     */
+    public function getLastHopPubkey()
+    {
+        return $this->container['lastHopPubkey'];
+    }
+
+    /**
+     * Sets lastHopPubkey
+     *
+     * @param string $lastHopPubkey The pubkey of the last hop of the route. If empty, any hop may be used.
+     *
+     * @return $this
+     */
+    public function setLastHopPubkey($lastHopPubkey)
+    {
+
+        if (!is_null($lastHopPubkey) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $lastHopPubkey))) {
+            throw new \InvalidArgumentException("invalid value for $lastHopPubkey when calling LnrpcSendRequest., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        }
+
+        $this->container['lastHopPubkey'] = $lastHopPubkey;
 
         return $this;
     }
@@ -511,7 +602,7 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     /**
      * Sets cltvLimit
      *
-     * @param int $cltvLimit *  An optional maximum total time lock for the route. This should not exceed lnd's `--max-cltv-expiry` setting. If zero, then the value of `--max-cltv-expiry` is enforced.
+     * @param int $cltvLimit An optional maximum total time lock for the route. This should not exceed lnd's `--max-cltv-expiry` setting. If zero, then the value of `--max-cltv-expiry` is enforced.
      *
      * @return $this
      */
@@ -523,25 +614,102 @@ class LnrpcSendRequest implements ModelInterface, ArrayAccess
     }
 
     /**
-     * Gets destTlv
+     * Gets destCustomRecords
      *
      * @return map[string,string]
      */
-    public function getDestTlv()
+    public function getDestCustomRecords()
     {
-        return $this->container['destTlv'];
+        return $this->container['destCustomRecords'];
     }
 
     /**
-     * Sets destTlv
+     * Sets destCustomRecords
      *
-     * @param map[string,string] $destTlv *  An optional field that can be used to pass an arbitrary set of TLV records to a peer which understands the new records. This can be used to pass application specific data during the payment attempt.
+     * @param map[string,string] $destCustomRecords An optional field that can be used to pass an arbitrary set of TLV records to a peer which understands the new records. This can be used to pass application specific data during the payment attempt. Record types are required to be in the custom range >= 65536. When using REST, the values must be encoded as base64.
      *
      * @return $this
      */
-    public function setDestTlv($destTlv)
+    public function setDestCustomRecords($destCustomRecords)
     {
-        $this->container['destTlv'] = $destTlv;
+        $this->container['destCustomRecords'] = $destCustomRecords;
+
+        return $this;
+    }
+
+    /**
+     * Gets allowSelfPayment
+     *
+     * @return bool
+     */
+    public function getAllowSelfPayment()
+    {
+        return $this->container['allowSelfPayment'];
+    }
+
+    /**
+     * Sets allowSelfPayment
+     *
+     * @param bool $allowSelfPayment If set, circular payments to self are permitted.
+     *
+     * @return $this
+     */
+    public function setAllowSelfPayment($allowSelfPayment)
+    {
+        $this->container['allowSelfPayment'] = $allowSelfPayment;
+
+        return $this;
+    }
+
+    /**
+     * Gets destFeatures
+     *
+     * @return \Lnd\Rest\Model\LnrpcFeatureBit[]
+     */
+    public function getDestFeatures()
+    {
+        return $this->container['destFeatures'];
+    }
+
+    /**
+     * Sets destFeatures
+     *
+     * @param \Lnd\Rest\Model\LnrpcFeatureBit[] $destFeatures Features assumed to be supported by the final node. All transitive feature dependencies must also be set properly. For a given feature bit pair, either optional or remote may be set, but not both. If this field is nil or empty, the router will try to load destination features from the graph as a fallback.
+     *
+     * @return $this
+     */
+    public function setDestFeatures($destFeatures)
+    {
+        $this->container['destFeatures'] = $destFeatures;
+
+        return $this;
+    }
+
+    /**
+     * Gets paymentAddr
+     *
+     * @return string
+     */
+    public function getPaymentAddr()
+    {
+        return $this->container['paymentAddr'];
+    }
+
+    /**
+     * Sets paymentAddr
+     *
+     * @param string $paymentAddr The payment address of the generated invoice.
+     *
+     * @return $this
+     */
+    public function setPaymentAddr($paymentAddr)
+    {
+
+        if (!is_null($paymentAddr) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $paymentAddr))) {
+            throw new \InvalidArgumentException("invalid value for $paymentAddr when calling LnrpcSendRequest., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        }
+
+        $this->container['paymentAddr'] = $paymentAddr;
 
         return $this;
     }

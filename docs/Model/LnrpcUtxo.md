@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | [**\Lnd\Rest\Model\LnrpcAddressType**](LnrpcAddressType.md) |  | [optional] 
+**addressType** | [**\Lnd\Rest\Model\LnrpcAddressType**](LnrpcAddressType.md) |  | [optional] 
 **address** | **string** |  | [optional] 
 **amountSat** | **string** |  | [optional] 
 **pkScript** | **string** |  | [optional] 

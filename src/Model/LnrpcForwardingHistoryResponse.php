@@ -223,7 +223,7 @@ class LnrpcForwardingHistoryResponse implements ModelInterface, ArrayAccess
     /**
      * Sets forwardingEvents
      *
-     * @param \Lnd\Rest\Model\LnrpcForwardingEvent[] $forwardingEvents / A list of forwarding events from the time slice of the time series specified in the request.
+     * @param \Lnd\Rest\Model\LnrpcForwardingEvent[] $forwardingEvents A list of forwarding events from the time slice of the time series specified in the request.
      *
      * @return $this
      */
@@ -247,7 +247,7 @@ class LnrpcForwardingHistoryResponse implements ModelInterface, ArrayAccess
     /**
      * Sets lastOffsetIndex
      *
-     * @param int $lastOffsetIndex / The index of the last time in the set of returned forwarding events. Can be used to seek further, pagination style.
+     * @param int $lastOffsetIndex The index of the last time in the set of returned forwarding events. Can be used to seek further, pagination style.
      *
      * @return $this
      */

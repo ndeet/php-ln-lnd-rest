@@ -235,7 +235,7 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
     /**
      * Sets channelFees
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelFeeReport[] $channelFees / An array of channel fee reports which describes the current fee schedule for each channel.
+     * @param \Lnd\Rest\Model\LnrpcChannelFeeReport[] $channelFees An array of channel fee reports which describes the current fee schedule for each channel.
      *
      * @return $this
      */
@@ -259,7 +259,7 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
     /**
      * Sets dayFeeSum
      *
-     * @param string $dayFeeSum / The total amount of fee revenue (in satoshis) the switch has collected over the past 24 hrs.
+     * @param string $dayFeeSum The total amount of fee revenue (in satoshis) the switch has collected over the past 24 hrs.
      *
      * @return $this
      */
@@ -283,7 +283,7 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
     /**
      * Sets weekFeeSum
      *
-     * @param string $weekFeeSum / The total amount of fee revenue (in satoshis) the switch has collected over the past 1 week.
+     * @param string $weekFeeSum The total amount of fee revenue (in satoshis) the switch has collected over the past 1 week.
      *
      * @return $this
      */
@@ -307,7 +307,7 @@ class LnrpcFeeReportResponse implements ModelInterface, ArrayAccess
     /**
      * Sets monthFeeSum
      *
-     * @param string $monthFeeSum / The total amount of fee revenue (in satoshis) the switch has collected over the past 1 month.
+     * @param string $monthFeeSum The total amount of fee revenue (in satoshis) the switch has collected over the past 1 month.
      *
      * @return $this
      */

@@ -61,7 +61,9 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'identityKey' => 'string',
         'globalFeatures' => 'string',
         'alias' => 'string',
-        'color' => 'string'
+        'color' => 'string',
+        'nodeAddresses' => '\Lnd\Rest\Model\LnrpcNodeAddress[]',
+        'features' => 'map[string,\Lnd\Rest\Model\LnrpcFeature]'
     ];
 
     /**
@@ -74,7 +76,9 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'identityKey' => null,
         'globalFeatures' => 'byte',
         'alias' => null,
-        'color' => null
+        'color' => null,
+        'nodeAddresses' => null,
+        'features' => null
     ];
 
     /**
@@ -108,7 +112,9 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'identityKey' => 'identity_key',
         'globalFeatures' => 'global_features',
         'alias' => 'alias',
-        'color' => 'color'
+        'color' => 'color',
+        'nodeAddresses' => 'node_addresses',
+        'features' => 'features'
     ];
 
     /**
@@ -121,7 +127,9 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'identityKey' => 'setIdentityKey',
         'globalFeatures' => 'setGlobalFeatures',
         'alias' => 'setAlias',
-        'color' => 'setColor'
+        'color' => 'setColor',
+        'nodeAddresses' => 'setNodeAddresses',
+        'features' => 'setFeatures'
     ];
 
     /**
@@ -134,7 +142,9 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         'identityKey' => 'getIdentityKey',
         'globalFeatures' => 'getGlobalFeatures',
         'alias' => 'getAlias',
-        'color' => 'getColor'
+        'color' => 'getColor',
+        'nodeAddresses' => 'getNodeAddresses',
+        'features' => 'getFeatures'
     ];
 
     /**
@@ -202,6 +212,8 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
         $this->container['globalFeatures'] = isset($data['globalFeatures']) ? $data['globalFeatures'] : null;
         $this->container['alias'] = isset($data['alias']) ? $data['alias'] : null;
         $this->container['color'] = isset($data['color']) ? $data['color'] : null;
+        $this->container['nodeAddresses'] = isset($data['nodeAddresses']) ? $data['nodeAddresses'] : null;
+        $this->container['features'] = isset($data['features']) ? $data['features'] : null;
     }
 
     /**
@@ -245,7 +257,7 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
     /**
      * Sets addresses
      *
-     * @param string[] $addresses addresses
+     * @param string[] $addresses Deprecated, use node_addresses.
      *
      * @return $this
      */
@@ -293,7 +305,7 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
     /**
      * Sets globalFeatures
      *
-     * @param string $globalFeatures globalFeatures
+     * @param string $globalFeatures Deprecated, use features.
      *
      * @return $this
      */
@@ -353,6 +365,54 @@ class LnrpcNodeUpdate implements ModelInterface, ArrayAccess
     public function setColor($color)
     {
         $this->container['color'] = $color;
+
+        return $this;
+    }
+
+    /**
+     * Gets nodeAddresses
+     *
+     * @return \Lnd\Rest\Model\LnrpcNodeAddress[]
+     */
+    public function getNodeAddresses()
+    {
+        return $this->container['nodeAddresses'];
+    }
+
+    /**
+     * Sets nodeAddresses
+     *
+     * @param \Lnd\Rest\Model\LnrpcNodeAddress[] $nodeAddresses nodeAddresses
+     *
+     * @return $this
+     */
+    public function setNodeAddresses($nodeAddresses)
+    {
+        $this->container['nodeAddresses'] = $nodeAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Gets features
+     *
+     * @return map[string,\Lnd\Rest\Model\LnrpcFeature]
+     */
+    public function getFeatures()
+    {
+        return $this->container['features'];
+    }
+
+    /**
+     * Sets features
+     *
+     * @param map[string,\Lnd\Rest\Model\LnrpcFeature] $features Features that the node has advertised in the init message, node announcements and invoices.
+     *
+     * @return $this
+     */
+    public function setFeatures($features)
+    {
+        $this->container['features'] = $features;
 
         return $this;
     }

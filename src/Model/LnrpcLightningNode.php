@@ -36,7 +36,7 @@ use \Lnd\Rest\ObjectSerializer;
  * LnrpcLightningNode Class Doc Comment
  *
  * @category Class
- * @description * An individual vertex/node within the channel graph. A node is connected to other nodes by one or more channel edges emanating from it. As the graph is directed, a node will also have an incoming edge attached to it for each outgoing edge.
+ * @description An individual vertex/node within the channel graph. A node is connected to other nodes by one or more channel edges emanating from it. As the graph is directed, a node will also have an incoming edge attached to it for each outgoing edge.
  * @package  Lnd\Rest
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
@@ -62,7 +62,8 @@ class LnrpcLightningNode implements ModelInterface, ArrayAccess
         'pubKey' => 'string',
         'alias' => 'string',
         'addresses' => '\Lnd\Rest\Model\LnrpcNodeAddress[]',
-        'color' => 'string'
+        'color' => 'string',
+        'features' => 'map[string,\Lnd\Rest\Model\LnrpcFeature]'
     ];
 
     /**
@@ -75,7 +76,8 @@ class LnrpcLightningNode implements ModelInterface, ArrayAccess
         'pubKey' => null,
         'alias' => null,
         'addresses' => null,
-        'color' => null
+        'color' => null,
+        'features' => null
     ];
 
     /**
@@ -109,7 +111,8 @@ class LnrpcLightningNode implements ModelInterface, ArrayAccess
         'pubKey' => 'pub_key',
         'alias' => 'alias',
         'addresses' => 'addresses',
-        'color' => 'color'
+        'color' => 'color',
+        'features' => 'features'
     ];
 
     /**
@@ -122,7 +125,8 @@ class LnrpcLightningNode implements ModelInterface, ArrayAccess
         'pubKey' => 'setPubKey',
         'alias' => 'setAlias',
         'addresses' => 'setAddresses',
-        'color' => 'setColor'
+        'color' => 'setColor',
+        'features' => 'setFeatures'
     ];
 
     /**
@@ -135,7 +139,8 @@ class LnrpcLightningNode implements ModelInterface, ArrayAccess
         'pubKey' => 'getPubKey',
         'alias' => 'getAlias',
         'addresses' => 'getAddresses',
-        'color' => 'getColor'
+        'color' => 'getColor',
+        'features' => 'getFeatures'
     ];
 
     /**
@@ -203,6 +208,7 @@ class LnrpcLightningNode implements ModelInterface, ArrayAccess
         $this->container['alias'] = isset($data['alias']) ? $data['alias'] : null;
         $this->container['addresses'] = isset($data['addresses']) ? $data['addresses'] : null;
         $this->container['color'] = isset($data['color']) ? $data['color'] : null;
+        $this->container['features'] = isset($data['features']) ? $data['features'] : null;
     }
 
     /**
@@ -345,6 +351,30 @@ class LnrpcLightningNode implements ModelInterface, ArrayAccess
     public function setColor($color)
     {
         $this->container['color'] = $color;
+
+        return $this;
+    }
+
+    /**
+     * Gets features
+     *
+     * @return map[string,\Lnd\Rest\Model\LnrpcFeature]
+     */
+    public function getFeatures()
+    {
+        return $this->container['features'];
+    }
+
+    /**
+     * Sets features
+     *
+     * @param map[string,\Lnd\Rest\Model\LnrpcFeature] $features features
+     *
+     * @return $this
+     */
+    public function setFeatures($features)
+    {
+        $this->container['features'] = $features;
 
         return $this;
     }

@@ -65,7 +65,11 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
         'satRecv' => 'string',
         'inbound' => 'bool',
         'pingTime' => 'string',
-        'syncType' => '\Lnd\Rest\Model\PeerSyncType'
+        'syncType' => '\Lnd\Rest\Model\PeerSyncType',
+        'features' => 'map[string,\Lnd\Rest\Model\LnrpcFeature]',
+        'errors' => '\Lnd\Rest\Model\LnrpcTimestampedError[]',
+        'flapCount' => 'int',
+        'lastFlapNs' => 'string'
     ];
 
     /**
@@ -82,7 +86,11 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
         'satRecv' => 'int64',
         'inbound' => 'boolean',
         'pingTime' => 'int64',
-        'syncType' => null
+        'syncType' => null,
+        'features' => null,
+        'errors' => null,
+        'flapCount' => 'int32',
+        'lastFlapNs' => 'int64'
     ];
 
     /**
@@ -120,7 +128,11 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
         'satRecv' => 'sat_recv',
         'inbound' => 'inbound',
         'pingTime' => 'ping_time',
-        'syncType' => 'sync_type'
+        'syncType' => 'sync_type',
+        'features' => 'features',
+        'errors' => 'errors',
+        'flapCount' => 'flap_count',
+        'lastFlapNs' => 'last_flap_ns'
     ];
 
     /**
@@ -137,7 +149,11 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
         'satRecv' => 'setSatRecv',
         'inbound' => 'setInbound',
         'pingTime' => 'setPingTime',
-        'syncType' => 'setSyncType'
+        'syncType' => 'setSyncType',
+        'features' => 'setFeatures',
+        'errors' => 'setErrors',
+        'flapCount' => 'setFlapCount',
+        'lastFlapNs' => 'setLastFlapNs'
     ];
 
     /**
@@ -154,7 +170,11 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
         'satRecv' => 'getSatRecv',
         'inbound' => 'getInbound',
         'pingTime' => 'getPingTime',
-        'syncType' => 'getSyncType'
+        'syncType' => 'getSyncType',
+        'features' => 'getFeatures',
+        'errors' => 'getErrors',
+        'flapCount' => 'getFlapCount',
+        'lastFlapNs' => 'getLastFlapNs'
     ];
 
     /**
@@ -226,6 +246,10 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
         $this->container['inbound'] = isset($data['inbound']) ? $data['inbound'] : null;
         $this->container['pingTime'] = isset($data['pingTime']) ? $data['pingTime'] : null;
         $this->container['syncType'] = isset($data['syncType']) ? $data['syncType'] : null;
+        $this->container['features'] = isset($data['features']) ? $data['features'] : null;
+        $this->container['errors'] = isset($data['errors']) ? $data['errors'] : null;
+        $this->container['flapCount'] = isset($data['flapCount']) ? $data['flapCount'] : null;
+        $this->container['lastFlapNs'] = isset($data['lastFlapNs']) ? $data['lastFlapNs'] : null;
     }
 
     /**
@@ -464,6 +488,102 @@ class LnrpcPeer implements ModelInterface, ArrayAccess
     public function setSyncType($syncType)
     {
         $this->container['syncType'] = $syncType;
+
+        return $this;
+    }
+
+    /**
+     * Gets features
+     *
+     * @return map[string,\Lnd\Rest\Model\LnrpcFeature]
+     */
+    public function getFeatures()
+    {
+        return $this->container['features'];
+    }
+
+    /**
+     * Sets features
+     *
+     * @param map[string,\Lnd\Rest\Model\LnrpcFeature] $features Features advertised by the remote peer in their init message.
+     *
+     * @return $this
+     */
+    public function setFeatures($features)
+    {
+        $this->container['features'] = $features;
+
+        return $this;
+    }
+
+    /**
+     * Gets errors
+     *
+     * @return \Lnd\Rest\Model\LnrpcTimestampedError[]
+     */
+    public function getErrors()
+    {
+        return $this->container['errors'];
+    }
+
+    /**
+     * Sets errors
+     *
+     * @param \Lnd\Rest\Model\LnrpcTimestampedError[] $errors The latest errors received from our peer with timestamps, limited to the 10 most recent errors. These errors are tracked across peer connections, but are not persisted across lnd restarts. Note that these errors are only stored for peers that we have channels open with, to prevent peers from spamming us with errors at no cost.
+     *
+     * @return $this
+     */
+    public function setErrors($errors)
+    {
+        $this->container['errors'] = $errors;
+
+        return $this;
+    }
+
+    /**
+     * Gets flapCount
+     *
+     * @return int
+     */
+    public function getFlapCount()
+    {
+        return $this->container['flapCount'];
+    }
+
+    /**
+     * Sets flapCount
+     *
+     * @param int $flapCount The number of times we have recorded this peer going offline or coming online, recorded across restarts. Note that this value is decreased over time if the peer has not recently flapped, so that we can forgive peers with historically high flap counts.
+     *
+     * @return $this
+     */
+    public function setFlapCount($flapCount)
+    {
+        $this->container['flapCount'] = $flapCount;
+
+        return $this;
+    }
+
+    /**
+     * Gets lastFlapNs
+     *
+     * @return string
+     */
+    public function getLastFlapNs()
+    {
+        return $this->container['lastFlapNs'];
+    }
+
+    /**
+     * Sets lastFlapNs
+     *
+     * @param string $lastFlapNs The timestamp of the last flap we observed for this peer. If this value is zero, we have not observed any flaps for this peer.
+     *
+     * @return $this
+     */
+    public function setLastFlapNs($lastFlapNs)
+    {
+        $this->container['lastFlapNs'] = $lastFlapNs;
 
         return $this;
     }

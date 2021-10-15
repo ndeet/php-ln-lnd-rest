@@ -57,7 +57,8 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'chanPoint' => 'string',
+        'chanId' => 'string',
+        'channelPoint' => 'string',
         'baseFeeMsat' => 'string',
         'feePerMil' => 'string',
         'feeRate' => 'double'
@@ -69,7 +70,8 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'chanPoint' => null,
+        'chanId' => 'uint64',
+        'channelPoint' => null,
         'baseFeeMsat' => 'int64',
         'feePerMil' => 'int64',
         'feeRate' => 'double'
@@ -102,7 +104,8 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'chanPoint' => 'chan_point',
+        'chanId' => 'chan_id',
+        'channelPoint' => 'channel_point',
         'baseFeeMsat' => 'base_fee_msat',
         'feePerMil' => 'fee_per_mil',
         'feeRate' => 'fee_rate'
@@ -114,7 +117,8 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'chanPoint' => 'setChanPoint',
+        'chanId' => 'setChanId',
+        'channelPoint' => 'setChannelPoint',
         'baseFeeMsat' => 'setBaseFeeMsat',
         'feePerMil' => 'setFeePerMil',
         'feeRate' => 'setFeeRate'
@@ -126,7 +130,8 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'chanPoint' => 'getChanPoint',
+        'chanId' => 'getChanId',
+        'channelPoint' => 'getChannelPoint',
         'baseFeeMsat' => 'getBaseFeeMsat',
         'feePerMil' => 'getFeePerMil',
         'feeRate' => 'getFeeRate'
@@ -192,7 +197,8 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['chanPoint'] = isset($data['chanPoint']) ? $data['chanPoint'] : null;
+        $this->container['chanId'] = isset($data['chanId']) ? $data['chanId'] : null;
+        $this->container['channelPoint'] = isset($data['channelPoint']) ? $data['channelPoint'] : null;
         $this->container['baseFeeMsat'] = isset($data['baseFeeMsat']) ? $data['baseFeeMsat'] : null;
         $this->container['feePerMil'] = isset($data['feePerMil']) ? $data['feePerMil'] : null;
         $this->container['feeRate'] = isset($data['feeRate']) ? $data['feeRate'] : null;
@@ -223,25 +229,49 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets chanPoint
+     * Gets chanId
      *
      * @return string
      */
-    public function getChanPoint()
+    public function getChanId()
     {
-        return $this->container['chanPoint'];
+        return $this->container['chanId'];
     }
 
     /**
-     * Sets chanPoint
+     * Sets chanId
      *
-     * @param string $chanPoint / The channel that this fee report belongs to.
+     * @param string $chanId The short channel id that this fee report belongs to.
      *
      * @return $this
      */
-    public function setChanPoint($chanPoint)
+    public function setChanId($chanId)
     {
-        $this->container['chanPoint'] = $chanPoint;
+        $this->container['chanId'] = $chanId;
+
+        return $this;
+    }
+
+    /**
+     * Gets channelPoint
+     *
+     * @return string
+     */
+    public function getChannelPoint()
+    {
+        return $this->container['channelPoint'];
+    }
+
+    /**
+     * Sets channelPoint
+     *
+     * @param string $channelPoint The channel that this fee report belongs to.
+     *
+     * @return $this
+     */
+    public function setChannelPoint($channelPoint)
+    {
+        $this->container['channelPoint'] = $channelPoint;
 
         return $this;
     }
@@ -259,7 +289,7 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
     /**
      * Sets baseFeeMsat
      *
-     * @param string $baseFeeMsat / The base fee charged regardless of the number of milli-satoshis sent.
+     * @param string $baseFeeMsat The base fee charged regardless of the number of milli-satoshis sent.
      *
      * @return $this
      */
@@ -283,7 +313,7 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
     /**
      * Sets feePerMil
      *
-     * @param string $feePerMil / The amount charged per milli-satoshis transferred expressed in millionths of a satoshi.
+     * @param string $feePerMil The amount charged per milli-satoshis transferred expressed in millionths of a satoshi.
      *
      * @return $this
      */
@@ -307,7 +337,7 @@ class LnrpcChannelFeeReport implements ModelInterface, ArrayAccess
     /**
      * Sets feeRate
      *
-     * @param double $feeRate / The effective fee rate in milli-satoshis. Computed by dividing the fee_per_mil value by 1 million.
+     * @param double $feeRate The effective fee rate in milli-satoshis. Computed by dividing the fee_per_mil value by 1 million.
      *
      * @return $this
      */

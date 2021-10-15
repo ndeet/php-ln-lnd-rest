@@ -64,7 +64,10 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
         'acceptTime' => 'string',
         'resolveTime' => 'string',
         'expiryHeight' => 'int',
-        'state' => '\Lnd\Rest\Model\LnrpcInvoiceHTLCState'
+        'state' => '\Lnd\Rest\Model\LnrpcInvoiceHTLCState',
+        'customRecords' => 'map[string,string]',
+        'mppTotalAmtMsat' => 'string',
+        'amp' => '\Lnd\Rest\Model\LnrpcAMP'
     ];
 
     /**
@@ -80,7 +83,10 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
         'acceptTime' => 'int64',
         'resolveTime' => 'int64',
         'expiryHeight' => 'int32',
-        'state' => null
+        'state' => null,
+        'customRecords' => 'byte',
+        'mppTotalAmtMsat' => 'uint64',
+        'amp' => null
     ];
 
     /**
@@ -117,7 +123,10 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
         'acceptTime' => 'accept_time',
         'resolveTime' => 'resolve_time',
         'expiryHeight' => 'expiry_height',
-        'state' => 'state'
+        'state' => 'state',
+        'customRecords' => 'custom_records',
+        'mppTotalAmtMsat' => 'mpp_total_amt_msat',
+        'amp' => 'amp'
     ];
 
     /**
@@ -133,7 +142,10 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
         'acceptTime' => 'setAcceptTime',
         'resolveTime' => 'setResolveTime',
         'expiryHeight' => 'setExpiryHeight',
-        'state' => 'setState'
+        'state' => 'setState',
+        'customRecords' => 'setCustomRecords',
+        'mppTotalAmtMsat' => 'setMppTotalAmtMsat',
+        'amp' => 'setAmp'
     ];
 
     /**
@@ -149,7 +161,10 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
         'acceptTime' => 'getAcceptTime',
         'resolveTime' => 'getResolveTime',
         'expiryHeight' => 'getExpiryHeight',
-        'state' => 'getState'
+        'state' => 'getState',
+        'customRecords' => 'getCustomRecords',
+        'mppTotalAmtMsat' => 'getMppTotalAmtMsat',
+        'amp' => 'getAmp'
     ];
 
     /**
@@ -220,6 +235,9 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
         $this->container['resolveTime'] = isset($data['resolveTime']) ? $data['resolveTime'] : null;
         $this->container['expiryHeight'] = isset($data['expiryHeight']) ? $data['expiryHeight'] : null;
         $this->container['state'] = isset($data['state']) ? $data['state'] : null;
+        $this->container['customRecords'] = isset($data['customRecords']) ? $data['customRecords'] : null;
+        $this->container['mppTotalAmtMsat'] = isset($data['mppTotalAmtMsat']) ? $data['mppTotalAmtMsat'] : null;
+        $this->container['amp'] = isset($data['amp']) ? $data['amp'] : null;
     }
 
     /**
@@ -259,7 +277,7 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets chanId
      *
-     * @param string $chanId / Short channel id over which the htlc was received.
+     * @param string $chanId Short channel id over which the htlc was received.
      *
      * @return $this
      */
@@ -283,7 +301,7 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets htlcIndex
      *
-     * @param string $htlcIndex / Index identifying the htlc on the channel.
+     * @param string $htlcIndex Index identifying the htlc on the channel.
      *
      * @return $this
      */
@@ -307,7 +325,7 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets amtMsat
      *
-     * @param string $amtMsat / The amount of the htlc in msat.
+     * @param string $amtMsat The amount of the htlc in msat.
      *
      * @return $this
      */
@@ -331,7 +349,7 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets acceptHeight
      *
-     * @param int $acceptHeight / Block height at which this htlc was accepted.
+     * @param int $acceptHeight Block height at which this htlc was accepted.
      *
      * @return $this
      */
@@ -355,7 +373,7 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets acceptTime
      *
-     * @param string $acceptTime / Time at which this htlc was accepted.
+     * @param string $acceptTime Time at which this htlc was accepted.
      *
      * @return $this
      */
@@ -379,7 +397,7 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets resolveTime
      *
-     * @param string $resolveTime / Time at which this htlc was settled or canceled.
+     * @param string $resolveTime Time at which this htlc was settled or canceled.
      *
      * @return $this
      */
@@ -403,7 +421,7 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets expiryHeight
      *
-     * @param int $expiryHeight / Block height at which this htlc expires.
+     * @param int $expiryHeight Block height at which this htlc expires.
      *
      * @return $this
      */
@@ -427,13 +445,85 @@ class LnrpcInvoiceHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets state
      *
-     * @param \Lnd\Rest\Model\LnrpcInvoiceHTLCState $state / Current state the htlc is in.
+     * @param \Lnd\Rest\Model\LnrpcInvoiceHTLCState $state Current state the htlc is in.
      *
      * @return $this
      */
     public function setState($state)
     {
         $this->container['state'] = $state;
+
+        return $this;
+    }
+
+    /**
+     * Gets customRecords
+     *
+     * @return map[string,string]
+     */
+    public function getCustomRecords()
+    {
+        return $this->container['customRecords'];
+    }
+
+    /**
+     * Sets customRecords
+     *
+     * @param map[string,string] $customRecords Custom tlv records.
+     *
+     * @return $this
+     */
+    public function setCustomRecords($customRecords)
+    {
+        $this->container['customRecords'] = $customRecords;
+
+        return $this;
+    }
+
+    /**
+     * Gets mppTotalAmtMsat
+     *
+     * @return string
+     */
+    public function getMppTotalAmtMsat()
+    {
+        return $this->container['mppTotalAmtMsat'];
+    }
+
+    /**
+     * Sets mppTotalAmtMsat
+     *
+     * @param string $mppTotalAmtMsat The total amount of the mpp payment in msat.
+     *
+     * @return $this
+     */
+    public function setMppTotalAmtMsat($mppTotalAmtMsat)
+    {
+        $this->container['mppTotalAmtMsat'] = $mppTotalAmtMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets amp
+     *
+     * @return \Lnd\Rest\Model\LnrpcAMP
+     */
+    public function getAmp()
+    {
+        return $this->container['amp'];
+    }
+
+    /**
+     * Sets amp
+     *
+     * @param \Lnd\Rest\Model\LnrpcAMP $amp Details relevant to AMP HTLCs, only populated if this is an AMP HTLC.
+     *
+     * @return $this
+     */
+    public function setAmp($amp)
+    {
+        $this->container['amp'] = $amp;
 
         return $this;
     }

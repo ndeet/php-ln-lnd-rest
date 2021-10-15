@@ -34,7 +34,7 @@ use \Lnd\Rest\ObjectSerializer;
  * PeerSyncType Class Doc Comment
  *
  * @category Class
- * @description - UNKNOWN_SYNC: * Denotes that we cannot determine the peer&#39;s current sync type.  - ACTIVE_SYNC: * Denotes that we are actively receiving new graph updates from the peer.  - PASSIVE_SYNC: * Denotes that we are not receiving new graph updates from the peer.
+ * @description - UNKNOWN_SYNC: Denotes that we cannot determine the peer&#39;s current sync type.  - ACTIVE_SYNC: Denotes that we are actively receiving new graph updates from the peer.  - PASSIVE_SYNC: Denotes that we are not receiving new graph updates from the peer.  - PINNED_SYNC: Denotes that this peer is pinned into an active sync.
  * @package  Lnd\Rest
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
@@ -47,6 +47,7 @@ class PeerSyncType
     const UNKNOWN_SYNC = 'UNKNOWN_SYNC';
     const ACTIVE_SYNC = 'ACTIVE_SYNC';
     const PASSIVE_SYNC = 'PASSIVE_SYNC';
+    const PINNED_SYNC = 'PINNED_SYNC';
     
     /**
      * Gets allowable values of the enum
@@ -58,6 +59,7 @@ class PeerSyncType
             self::UNKNOWN_SYNC,
             self::ACTIVE_SYNC,
             self::PASSIVE_SYNC,
+            self::PINNED_SYNC,
         ];
     }
 }

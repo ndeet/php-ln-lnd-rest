@@ -63,7 +63,10 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'amtIn' => 'string',
         'amtOut' => 'string',
         'fee' => 'string',
-        'feeMsat' => 'string'
+        'feeMsat' => 'string',
+        'amtInMsat' => 'string',
+        'amtOutMsat' => 'string',
+        'timestampNs' => 'string'
     ];
 
     /**
@@ -78,7 +81,10 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'amtIn' => 'uint64',
         'amtOut' => 'uint64',
         'fee' => 'uint64',
-        'feeMsat' => 'uint64'
+        'feeMsat' => 'uint64',
+        'amtInMsat' => 'uint64',
+        'amtOutMsat' => 'uint64',
+        'timestampNs' => 'uint64'
     ];
 
     /**
@@ -114,7 +120,10 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'amtIn' => 'amt_in',
         'amtOut' => 'amt_out',
         'fee' => 'fee',
-        'feeMsat' => 'fee_msat'
+        'feeMsat' => 'fee_msat',
+        'amtInMsat' => 'amt_in_msat',
+        'amtOutMsat' => 'amt_out_msat',
+        'timestampNs' => 'timestamp_ns'
     ];
 
     /**
@@ -129,7 +138,10 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'amtIn' => 'setAmtIn',
         'amtOut' => 'setAmtOut',
         'fee' => 'setFee',
-        'feeMsat' => 'setFeeMsat'
+        'feeMsat' => 'setFeeMsat',
+        'amtInMsat' => 'setAmtInMsat',
+        'amtOutMsat' => 'setAmtOutMsat',
+        'timestampNs' => 'setTimestampNs'
     ];
 
     /**
@@ -144,7 +156,10 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         'amtIn' => 'getAmtIn',
         'amtOut' => 'getAmtOut',
         'fee' => 'getFee',
-        'feeMsat' => 'getFeeMsat'
+        'feeMsat' => 'getFeeMsat',
+        'amtInMsat' => 'getAmtInMsat',
+        'amtOutMsat' => 'getAmtOutMsat',
+        'timestampNs' => 'getTimestampNs'
     ];
 
     /**
@@ -214,6 +229,9 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
         $this->container['amtOut'] = isset($data['amtOut']) ? $data['amtOut'] : null;
         $this->container['fee'] = isset($data['fee']) ? $data['fee'] : null;
         $this->container['feeMsat'] = isset($data['feeMsat']) ? $data['feeMsat'] : null;
+        $this->container['amtInMsat'] = isset($data['amtInMsat']) ? $data['amtInMsat'] : null;
+        $this->container['amtOutMsat'] = isset($data['amtOutMsat']) ? $data['amtOutMsat'] : null;
+        $this->container['timestampNs'] = isset($data['timestampNs']) ? $data['timestampNs'] : null;
     }
 
     /**
@@ -253,7 +271,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets timestamp
      *
-     * @param string $timestamp / Timestamp is the time (unix epoch offset) that this circuit was completed.
+     * @param string $timestamp Timestamp is the time (unix epoch offset) that this circuit was completed. Deprecated by timestamp_ns.
      *
      * @return $this
      */
@@ -277,7 +295,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets chanIdIn
      *
-     * @param string $chanIdIn / The incoming channel ID that carried the HTLC that created the circuit.
+     * @param string $chanIdIn The incoming channel ID that carried the HTLC that created the circuit.
      *
      * @return $this
      */
@@ -301,7 +319,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets chanIdOut
      *
-     * @param string $chanIdOut / The outgoing channel ID that carried the preimage that completed the circuit.
+     * @param string $chanIdOut The outgoing channel ID that carried the preimage that completed the circuit.
      *
      * @return $this
      */
@@ -325,7 +343,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets amtIn
      *
-     * @param string $amtIn / The total amount (in satoshis) of the incoming HTLC that created half the circuit.
+     * @param string $amtIn The total amount (in satoshis) of the incoming HTLC that created half the circuit.
      *
      * @return $this
      */
@@ -349,7 +367,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets amtOut
      *
-     * @param string $amtOut / The total amount (in satoshis) of the outgoing HTLC that created the second half of the circuit.
+     * @param string $amtOut The total amount (in satoshis) of the outgoing HTLC that created the second half of the circuit.
      *
      * @return $this
      */
@@ -373,7 +391,7 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets fee
      *
-     * @param string $fee / The total fee (in satoshis) that this payment circuit carried.
+     * @param string $fee The total fee (in satoshis) that this payment circuit carried.
      *
      * @return $this
      */
@@ -397,13 +415,85 @@ class LnrpcForwardingEvent implements ModelInterface, ArrayAccess
     /**
      * Sets feeMsat
      *
-     * @param string $feeMsat / The total fee (in milli-satoshis) that this payment circuit carried.
+     * @param string $feeMsat The total fee (in milli-satoshis) that this payment circuit carried.
      *
      * @return $this
      */
     public function setFeeMsat($feeMsat)
     {
         $this->container['feeMsat'] = $feeMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets amtInMsat
+     *
+     * @return string
+     */
+    public function getAmtInMsat()
+    {
+        return $this->container['amtInMsat'];
+    }
+
+    /**
+     * Sets amtInMsat
+     *
+     * @param string $amtInMsat The total amount (in milli-satoshis) of the incoming HTLC that created half the circuit.
+     *
+     * @return $this
+     */
+    public function setAmtInMsat($amtInMsat)
+    {
+        $this->container['amtInMsat'] = $amtInMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets amtOutMsat
+     *
+     * @return string
+     */
+    public function getAmtOutMsat()
+    {
+        return $this->container['amtOutMsat'];
+    }
+
+    /**
+     * Sets amtOutMsat
+     *
+     * @param string $amtOutMsat The total amount (in milli-satoshis) of the outgoing HTLC that created the second half of the circuit.
+     *
+     * @return $this
+     */
+    public function setAmtOutMsat($amtOutMsat)
+    {
+        $this->container['amtOutMsat'] = $amtOutMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets timestampNs
+     *
+     * @return string
+     */
+    public function getTimestampNs()
+    {
+        return $this->container['timestampNs'];
+    }
+
+    /**
+     * Sets timestampNs
+     *
+     * @param string $timestampNs The number of nanoseconds elapsed since January 1, 1970 UTC when this circuit was completed.
+     *
+     * @return $this
+     */
+    public function setTimestampNs($timestampNs)
+    {
+        $this->container['timestampNs'] = $timestampNs;
 
         return $this;
     }

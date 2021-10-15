@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **alias** | **string** |  | [optional] 
 **addresses** | [**\Lnd\Rest\Model\LnrpcNodeAddress[]**](LnrpcNodeAddress.md) |  | [optional] 
 **color** | **string** |  | [optional] 
+**features** | [**map[string,\Lnd\Rest\Model\LnrpcFeature]**](LnrpcFeature.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

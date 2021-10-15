@@ -12,16 +12,12 @@
     "license": "proprietary",
     "authors": [
         {
-            "name": "Andreas Tasch",
-            "homepage": "http://www.attec.at"
-        },
-        {
             "name": "Swagger and contributors",
             "homepage": "https://github.com/swagger-api/swagger-codegen"
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=5.5",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",

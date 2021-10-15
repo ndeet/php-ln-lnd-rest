@@ -57,7 +57,9 @@ class LnrpcListPaymentsResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'payments' => '\Lnd\Rest\Model\LnrpcPayment[]'
+        'payments' => '\Lnd\Rest\Model\LnrpcPayment[]',
+        'firstIndexOffset' => 'string',
+        'lastIndexOffset' => 'string'
     ];
 
     /**
@@ -66,7 +68,9 @@ class LnrpcListPaymentsResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'payments' => null
+        'payments' => null,
+        'firstIndexOffset' => 'uint64',
+        'lastIndexOffset' => 'uint64'
     ];
 
     /**
@@ -96,7 +100,9 @@ class LnrpcListPaymentsResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'payments' => 'payments'
+        'payments' => 'payments',
+        'firstIndexOffset' => 'first_index_offset',
+        'lastIndexOffset' => 'last_index_offset'
     ];
 
     /**
@@ -105,7 +111,9 @@ class LnrpcListPaymentsResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'payments' => 'setPayments'
+        'payments' => 'setPayments',
+        'firstIndexOffset' => 'setFirstIndexOffset',
+        'lastIndexOffset' => 'setLastIndexOffset'
     ];
 
     /**
@@ -114,7 +122,9 @@ class LnrpcListPaymentsResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'payments' => 'getPayments'
+        'payments' => 'getPayments',
+        'firstIndexOffset' => 'getFirstIndexOffset',
+        'lastIndexOffset' => 'getLastIndexOffset'
     ];
 
     /**
@@ -178,6 +188,8 @@ class LnrpcListPaymentsResponse implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['payments'] = isset($data['payments']) ? $data['payments'] : null;
+        $this->container['firstIndexOffset'] = isset($data['firstIndexOffset']) ? $data['firstIndexOffset'] : null;
+        $this->container['lastIndexOffset'] = isset($data['lastIndexOffset']) ? $data['lastIndexOffset'] : null;
     }
 
     /**
@@ -224,6 +236,54 @@ class LnrpcListPaymentsResponse implements ModelInterface, ArrayAccess
     public function setPayments($payments)
     {
         $this->container['payments'] = $payments;
+
+        return $this;
+    }
+
+    /**
+     * Gets firstIndexOffset
+     *
+     * @return string
+     */
+    public function getFirstIndexOffset()
+    {
+        return $this->container['firstIndexOffset'];
+    }
+
+    /**
+     * Sets firstIndexOffset
+     *
+     * @param string $firstIndexOffset The index of the first item in the set of returned payments. This can be used as the index_offset to continue seeking backwards in the next request.
+     *
+     * @return $this
+     */
+    public function setFirstIndexOffset($firstIndexOffset)
+    {
+        $this->container['firstIndexOffset'] = $firstIndexOffset;
+
+        return $this;
+    }
+
+    /**
+     * Gets lastIndexOffset
+     *
+     * @return string
+     */
+    public function getLastIndexOffset()
+    {
+        return $this->container['lastIndexOffset'];
+    }
+
+    /**
+     * Sets lastIndexOffset
+     *
+     * @param string $lastIndexOffset The index of the last item in the set of returned payments. This can be used as the index_offset to continue seeking forwards in the next request.
+     *
+     * @return $this
+     */
+    public function setLastIndexOffset($lastIndexOffset)
+    {
+        $this->container['lastIndexOffset'] = $lastIndexOffset;
 
         return $this;
     }

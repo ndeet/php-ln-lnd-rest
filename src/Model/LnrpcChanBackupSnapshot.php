@@ -223,7 +223,7 @@ class LnrpcChanBackupSnapshot implements ModelInterface, ArrayAccess
     /**
      * Sets singleChanBackups
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelBackups $singleChanBackups * The set of new channels that have been added since the last channel backup snapshot was requested.
+     * @param \Lnd\Rest\Model\LnrpcChannelBackups $singleChanBackups The set of new channels that have been added since the last channel backup snapshot was requested.
      *
      * @return $this
      */
@@ -247,7 +247,7 @@ class LnrpcChanBackupSnapshot implements ModelInterface, ArrayAccess
     /**
      * Sets multiChanBackup
      *
-     * @param \Lnd\Rest\Model\LnrpcMultiChanBackup $multiChanBackup * A multi-channel backup that covers all open channels currently known to lnd.
+     * @param \Lnd\Rest\Model\LnrpcMultiChanBackup $multiChanBackup A multi-channel backup that covers all open channels currently known to lnd.
      *
      * @return $this
      */

@@ -235,7 +235,7 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     /**
      * Sets node
      *
-     * @param \Lnd\Rest\Model\LnrpcLightningNode $node * An individual vertex/node within the channel graph. A node is connected to other nodes by one or more channel edges emanating from it. As the graph is directed, a node will also have an incoming edge attached to it for each outgoing edge.
+     * @param \Lnd\Rest\Model\LnrpcLightningNode $node An individual vertex/node within the channel graph. A node is connected to other nodes by one or more channel edges emanating from it. As the graph is directed, a node will also have an incoming edge attached to it for each outgoing edge.
      *
      * @return $this
      */
@@ -259,7 +259,7 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     /**
      * Sets numChannels
      *
-     * @param int $numChannels / The total number of channels for the node.
+     * @param int $numChannels The total number of channels for the node.
      *
      * @return $this
      */
@@ -283,7 +283,7 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     /**
      * Sets totalCapacity
      *
-     * @param string $totalCapacity / The sum of all channels capacity for the node, denominated in satoshis.
+     * @param string $totalCapacity The sum of all channels capacity for the node, denominated in satoshis.
      *
      * @return $this
      */
@@ -307,7 +307,7 @@ class LnrpcNodeInfo implements ModelInterface, ArrayAccess
     /**
      * Sets channels
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelEdge[] $channels / A list of all public channels for the node.
+     * @param \Lnd\Rest\Model\LnrpcChannelEdge[] $channels A list of all public channels for the node.
      *
      * @return $this
      */

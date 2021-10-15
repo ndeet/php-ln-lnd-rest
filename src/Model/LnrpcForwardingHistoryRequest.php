@@ -235,7 +235,7 @@ class LnrpcForwardingHistoryRequest implements ModelInterface, ArrayAccess
     /**
      * Sets startTime
      *
-     * @param string $startTime / Start time is the starting point of the forwarding history request. All records beyond this point will be included, respecting the end time, and the index offset.
+     * @param string $startTime Start time is the starting point of the forwarding history request. All records beyond this point will be included, respecting the end time, and the index offset.
      *
      * @return $this
      */
@@ -259,7 +259,7 @@ class LnrpcForwardingHistoryRequest implements ModelInterface, ArrayAccess
     /**
      * Sets endTime
      *
-     * @param string $endTime / End time is the end point of the forwarding history request. The response will carry at most 50k records between the start time and the end time. The index offset can be used to implement pagination.
+     * @param string $endTime End time is the end point of the forwarding history request. The response will carry at most 50k records between the start time and the end time. The index offset can be used to implement pagination.
      *
      * @return $this
      */
@@ -283,7 +283,7 @@ class LnrpcForwardingHistoryRequest implements ModelInterface, ArrayAccess
     /**
      * Sets indexOffset
      *
-     * @param int $indexOffset / Index offset is the offset in the time series to start at. As each response can only contain 50k records, callers can use this to skip around within a packed time series.
+     * @param int $indexOffset Index offset is the offset in the time series to start at. As each response can only contain 50k records, callers can use this to skip around within a packed time series.
      *
      * @return $this
      */
@@ -307,7 +307,7 @@ class LnrpcForwardingHistoryRequest implements ModelInterface, ArrayAccess
     /**
      * Sets numMaxEvents
      *
-     * @param int $numMaxEvents / The max number of events to return in the response to this query.
+     * @param int $numMaxEvents The max number of events to return in the response to this query.
      *
      * @return $this
      */

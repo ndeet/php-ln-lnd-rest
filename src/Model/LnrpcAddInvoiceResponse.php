@@ -59,7 +59,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     protected static $swaggerTypes = [
         'rHash' => 'string',
         'paymentRequest' => 'string',
-        'addIndex' => 'string'
+        'addIndex' => 'string',
+        'paymentAddr' => 'string'
     ];
 
     /**
@@ -70,7 +71,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     protected static $swaggerFormats = [
         'rHash' => 'byte',
         'paymentRequest' => null,
-        'addIndex' => 'uint64'
+        'addIndex' => 'uint64',
+        'paymentAddr' => 'byte'
     ];
 
     /**
@@ -102,7 +104,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     protected static $attributeMap = [
         'rHash' => 'r_hash',
         'paymentRequest' => 'payment_request',
-        'addIndex' => 'add_index'
+        'addIndex' => 'add_index',
+        'paymentAddr' => 'payment_addr'
     ];
 
     /**
@@ -113,7 +116,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     protected static $setters = [
         'rHash' => 'setRHash',
         'paymentRequest' => 'setPaymentRequest',
-        'addIndex' => 'setAddIndex'
+        'addIndex' => 'setAddIndex',
+        'paymentAddr' => 'setPaymentAddr'
     ];
 
     /**
@@ -124,7 +128,8 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     protected static $getters = [
         'rHash' => 'getRHash',
         'paymentRequest' => 'getPaymentRequest',
-        'addIndex' => 'getAddIndex'
+        'addIndex' => 'getAddIndex',
+        'paymentAddr' => 'getPaymentAddr'
     ];
 
     /**
@@ -190,6 +195,7 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
         $this->container['rHash'] = isset($data['rHash']) ? $data['rHash'] : null;
         $this->container['paymentRequest'] = isset($data['paymentRequest']) ? $data['paymentRequest'] : null;
         $this->container['addIndex'] = isset($data['addIndex']) ? $data['addIndex'] : null;
+        $this->container['paymentAddr'] = isset($data['paymentAddr']) ? $data['paymentAddr'] : null;
     }
 
     /**
@@ -203,6 +209,10 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
 
         if (!is_null($this->container['rHash']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['rHash'])) {
             $invalidProperties[] = "invalid value for 'rHash', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        }
+
+        if (!is_null($this->container['paymentAddr']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['paymentAddr'])) {
+            $invalidProperties[] = "invalid value for 'paymentAddr', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
         }
 
         return $invalidProperties;
@@ -262,7 +272,7 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     /**
      * Sets paymentRequest
      *
-     * @param string $paymentRequest * A bare-bones invoice for a payment within the Lightning Network.  With the details of the invoice, the sender has all the data necessary to send a payment to the recipient.
+     * @param string $paymentRequest A bare-bones invoice for a payment within the Lightning Network. With the details of the invoice, the sender has all the data necessary to send a payment to the recipient.
      *
      * @return $this
      */
@@ -286,13 +296,42 @@ class LnrpcAddInvoiceResponse implements ModelInterface, ArrayAccess
     /**
      * Sets addIndex
      *
-     * @param string $addIndex * The \"add\" index of this invoice. Each newly created invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all added invoices with an add_index greater than this one.
+     * @param string $addIndex The \"add\" index of this invoice. Each newly created invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all added invoices with an add_index greater than this one.
      *
      * @return $this
      */
     public function setAddIndex($addIndex)
     {
         $this->container['addIndex'] = $addIndex;
+
+        return $this;
+    }
+
+    /**
+     * Gets paymentAddr
+     *
+     * @return string
+     */
+    public function getPaymentAddr()
+    {
+        return $this->container['paymentAddr'];
+    }
+
+    /**
+     * Sets paymentAddr
+     *
+     * @param string $paymentAddr The payment address of the generated invoice. This value should be used in all payments for this invoice as we require it for end to end security.
+     *
+     * @return $this
+     */
+    public function setPaymentAddr($paymentAddr)
+    {
+
+        if (!is_null($paymentAddr) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $paymentAddr))) {
+            throw new \InvalidArgumentException("invalid value for $paymentAddr when calling LnrpcAddInvoiceResponse., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        }
+
+        $this->container['paymentAddr'] = $paymentAddr;
 
         return $this;
     }

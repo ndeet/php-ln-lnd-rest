@@ -60,7 +60,6 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentHash' => 'string',
         'value' => 'string',
         'creationDate' => 'string',
-        'path' => 'string[]',
         'fee' => 'string',
         'paymentPreimage' => 'string',
         'valueSat' => 'string',
@@ -68,7 +67,11 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentRequest' => 'string',
         'status' => '\Lnd\Rest\Model\PaymentPaymentStatus',
         'feeSat' => 'string',
-        'feeMsat' => 'string'
+        'feeMsat' => 'string',
+        'creationTimeNs' => 'string',
+        'htlcs' => '\Lnd\Rest\Model\LnrpcHTLCAttempt[]',
+        'paymentIndex' => 'string',
+        'failureReason' => '\Lnd\Rest\Model\LnrpcPaymentFailureReason'
     ];
 
     /**
@@ -80,7 +83,6 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentHash' => null,
         'value' => 'int64',
         'creationDate' => 'int64',
-        'path' => null,
         'fee' => 'int64',
         'paymentPreimage' => null,
         'valueSat' => 'int64',
@@ -88,7 +90,11 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentRequest' => null,
         'status' => null,
         'feeSat' => 'int64',
-        'feeMsat' => 'int64'
+        'feeMsat' => 'int64',
+        'creationTimeNs' => 'int64',
+        'htlcs' => null,
+        'paymentIndex' => 'uint64',
+        'failureReason' => null
     ];
 
     /**
@@ -121,7 +127,6 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentHash' => 'payment_hash',
         'value' => 'value',
         'creationDate' => 'creation_date',
-        'path' => 'path',
         'fee' => 'fee',
         'paymentPreimage' => 'payment_preimage',
         'valueSat' => 'value_sat',
@@ -129,7 +134,11 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentRequest' => 'payment_request',
         'status' => 'status',
         'feeSat' => 'fee_sat',
-        'feeMsat' => 'fee_msat'
+        'feeMsat' => 'fee_msat',
+        'creationTimeNs' => 'creation_time_ns',
+        'htlcs' => 'htlcs',
+        'paymentIndex' => 'payment_index',
+        'failureReason' => 'failure_reason'
     ];
 
     /**
@@ -141,7 +150,6 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentHash' => 'setPaymentHash',
         'value' => 'setValue',
         'creationDate' => 'setCreationDate',
-        'path' => 'setPath',
         'fee' => 'setFee',
         'paymentPreimage' => 'setPaymentPreimage',
         'valueSat' => 'setValueSat',
@@ -149,7 +157,11 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentRequest' => 'setPaymentRequest',
         'status' => 'setStatus',
         'feeSat' => 'setFeeSat',
-        'feeMsat' => 'setFeeMsat'
+        'feeMsat' => 'setFeeMsat',
+        'creationTimeNs' => 'setCreationTimeNs',
+        'htlcs' => 'setHtlcs',
+        'paymentIndex' => 'setPaymentIndex',
+        'failureReason' => 'setFailureReason'
     ];
 
     /**
@@ -161,7 +173,6 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentHash' => 'getPaymentHash',
         'value' => 'getValue',
         'creationDate' => 'getCreationDate',
-        'path' => 'getPath',
         'fee' => 'getFee',
         'paymentPreimage' => 'getPaymentPreimage',
         'valueSat' => 'getValueSat',
@@ -169,7 +180,11 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         'paymentRequest' => 'getPaymentRequest',
         'status' => 'getStatus',
         'feeSat' => 'getFeeSat',
-        'feeMsat' => 'getFeeMsat'
+        'feeMsat' => 'getFeeMsat',
+        'creationTimeNs' => 'getCreationTimeNs',
+        'htlcs' => 'getHtlcs',
+        'paymentIndex' => 'getPaymentIndex',
+        'failureReason' => 'getFailureReason'
     ];
 
     /**
@@ -235,7 +250,6 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         $this->container['paymentHash'] = isset($data['paymentHash']) ? $data['paymentHash'] : null;
         $this->container['value'] = isset($data['value']) ? $data['value'] : null;
         $this->container['creationDate'] = isset($data['creationDate']) ? $data['creationDate'] : null;
-        $this->container['path'] = isset($data['path']) ? $data['path'] : null;
         $this->container['fee'] = isset($data['fee']) ? $data['fee'] : null;
         $this->container['paymentPreimage'] = isset($data['paymentPreimage']) ? $data['paymentPreimage'] : null;
         $this->container['valueSat'] = isset($data['valueSat']) ? $data['valueSat'] : null;
@@ -244,6 +258,10 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
         $this->container['status'] = isset($data['status']) ? $data['status'] : null;
         $this->container['feeSat'] = isset($data['feeSat']) ? $data['feeSat'] : null;
         $this->container['feeMsat'] = isset($data['feeMsat']) ? $data['feeMsat'] : null;
+        $this->container['creationTimeNs'] = isset($data['creationTimeNs']) ? $data['creationTimeNs'] : null;
+        $this->container['htlcs'] = isset($data['htlcs']) ? $data['htlcs'] : null;
+        $this->container['paymentIndex'] = isset($data['paymentIndex']) ? $data['paymentIndex'] : null;
+        $this->container['failureReason'] = isset($data['failureReason']) ? $data['failureReason'] : null;
     }
 
     /**
@@ -307,7 +325,7 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
     /**
      * Sets value
      *
-     * @param string $value / Deprecated, use value_sat or value_msat.
+     * @param string $value Deprecated, use value_sat or value_msat.
      *
      * @return $this
      */
@@ -343,30 +361,6 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
     }
 
     /**
-     * Gets path
-     *
-     * @return string[]
-     */
-    public function getPath()
-    {
-        return $this->container['path'];
-    }
-
-    /**
-     * Sets path
-     *
-     * @param string[] $path path
-     *
-     * @return $this
-     */
-    public function setPath($path)
-    {
-        $this->container['path'] = $path;
-
-        return $this;
-    }
-
-    /**
      * Gets fee
      *
      * @return string
@@ -379,7 +373,7 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
     /**
      * Sets fee
      *
-     * @param string $fee / Deprecated, use fee_sat or fee_msat.
+     * @param string $fee Deprecated, use fee_sat or fee_msat.
      *
      * @return $this
      */
@@ -475,7 +469,7 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
     /**
      * Sets paymentRequest
      *
-     * @param string $paymentRequest / The optional payment request being fulfilled.
+     * @param string $paymentRequest The optional payment request being fulfilled.
      *
      * @return $this
      */
@@ -554,6 +548,102 @@ class LnrpcPayment implements ModelInterface, ArrayAccess
     public function setFeeMsat($feeMsat)
     {
         $this->container['feeMsat'] = $feeMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets creationTimeNs
+     *
+     * @return string
+     */
+    public function getCreationTimeNs()
+    {
+        return $this->container['creationTimeNs'];
+    }
+
+    /**
+     * Sets creationTimeNs
+     *
+     * @param string $creationTimeNs The time in UNIX nanoseconds at which the payment was created.
+     *
+     * @return $this
+     */
+    public function setCreationTimeNs($creationTimeNs)
+    {
+        $this->container['creationTimeNs'] = $creationTimeNs;
+
+        return $this;
+    }
+
+    /**
+     * Gets htlcs
+     *
+     * @return \Lnd\Rest\Model\LnrpcHTLCAttempt[]
+     */
+    public function getHtlcs()
+    {
+        return $this->container['htlcs'];
+    }
+
+    /**
+     * Sets htlcs
+     *
+     * @param \Lnd\Rest\Model\LnrpcHTLCAttempt[] $htlcs The HTLCs made in attempt to settle the payment.
+     *
+     * @return $this
+     */
+    public function setHtlcs($htlcs)
+    {
+        $this->container['htlcs'] = $htlcs;
+
+        return $this;
+    }
+
+    /**
+     * Gets paymentIndex
+     *
+     * @return string
+     */
+    public function getPaymentIndex()
+    {
+        return $this->container['paymentIndex'];
+    }
+
+    /**
+     * Sets paymentIndex
+     *
+     * @param string $paymentIndex The creation index of this payment. Each payment can be uniquely identified by this index, which may not strictly increment by 1 for payments made in older versions of lnd.
+     *
+     * @return $this
+     */
+    public function setPaymentIndex($paymentIndex)
+    {
+        $this->container['paymentIndex'] = $paymentIndex;
+
+        return $this;
+    }
+
+    /**
+     * Gets failureReason
+     *
+     * @return \Lnd\Rest\Model\LnrpcPaymentFailureReason
+     */
+    public function getFailureReason()
+    {
+        return $this->container['failureReason'];
+    }
+
+    /**
+     * Sets failureReason
+     *
+     * @param \Lnd\Rest\Model\LnrpcPaymentFailureReason $failureReason failureReason
+     *
+     * @return $this
+     */
+    public function setFailureReason($failureReason)
+    {
+        $this->container['failureReason'] = $failureReason;
 
         return $this;
     }

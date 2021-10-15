@@ -47,6 +47,7 @@ class ChannelEventUpdateUpdateType
     const CLOSED_CHANNEL = 'CLOSED_CHANNEL';
     const ACTIVE_CHANNEL = 'ACTIVE_CHANNEL';
     const INACTIVE_CHANNEL = 'INACTIVE_CHANNEL';
+    const PENDING_OPEN_CHANNEL = 'PENDING_OPEN_CHANNEL';
     
     /**
      * Gets allowable values of the enum
@@ -59,6 +60,7 @@ class ChannelEventUpdateUpdateType
             self::CLOSED_CHANNEL,
             self::ACTIVE_CHANNEL,
             self::INACTIVE_CHANNEL,
+            self::PENDING_OPEN_CHANNEL,
         ];
     }
 }

@@ -63,7 +63,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'localBalance' => 'string',
         'remoteBalance' => 'string',
         'localChanReserveSat' => 'string',
-        'remoteChanReserveSat' => 'string'
+        'remoteChanReserveSat' => 'string',
+        'initiator' => '\Lnd\Rest\Model\LnrpcInitiator',
+        'commitmentType' => '\Lnd\Rest\Model\LnrpcCommitmentType'
     ];
 
     /**
@@ -78,7 +80,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'localBalance' => 'int64',
         'remoteBalance' => 'int64',
         'localChanReserveSat' => 'int64',
-        'remoteChanReserveSat' => 'int64'
+        'remoteChanReserveSat' => 'int64',
+        'initiator' => null,
+        'commitmentType' => null
     ];
 
     /**
@@ -114,7 +118,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'localBalance' => 'local_balance',
         'remoteBalance' => 'remote_balance',
         'localChanReserveSat' => 'local_chan_reserve_sat',
-        'remoteChanReserveSat' => 'remote_chan_reserve_sat'
+        'remoteChanReserveSat' => 'remote_chan_reserve_sat',
+        'initiator' => 'initiator',
+        'commitmentType' => 'commitment_type'
     ];
 
     /**
@@ -129,7 +135,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'localBalance' => 'setLocalBalance',
         'remoteBalance' => 'setRemoteBalance',
         'localChanReserveSat' => 'setLocalChanReserveSat',
-        'remoteChanReserveSat' => 'setRemoteChanReserveSat'
+        'remoteChanReserveSat' => 'setRemoteChanReserveSat',
+        'initiator' => 'setInitiator',
+        'commitmentType' => 'setCommitmentType'
     ];
 
     /**
@@ -144,7 +152,9 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         'localBalance' => 'getLocalBalance',
         'remoteBalance' => 'getRemoteBalance',
         'localChanReserveSat' => 'getLocalChanReserveSat',
-        'remoteChanReserveSat' => 'getRemoteChanReserveSat'
+        'remoteChanReserveSat' => 'getRemoteChanReserveSat',
+        'initiator' => 'getInitiator',
+        'commitmentType' => 'getCommitmentType'
     ];
 
     /**
@@ -214,6 +224,8 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
         $this->container['remoteBalance'] = isset($data['remoteBalance']) ? $data['remoteBalance'] : null;
         $this->container['localChanReserveSat'] = isset($data['localChanReserveSat']) ? $data['localChanReserveSat'] : null;
         $this->container['remoteChanReserveSat'] = isset($data['remoteChanReserveSat']) ? $data['remoteChanReserveSat'] : null;
+        $this->container['initiator'] = isset($data['initiator']) ? $data['initiator'] : null;
+        $this->container['commitmentType'] = isset($data['commitmentType']) ? $data['commitmentType'] : null;
     }
 
     /**
@@ -373,7 +385,7 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
     /**
      * Sets localChanReserveSat
      *
-     * @param string $localChanReserveSat / The minimum satoshis this node is required to reserve in its balance.
+     * @param string $localChanReserveSat The minimum satoshis this node is required to reserve in its balance.
      *
      * @return $this
      */
@@ -397,13 +409,61 @@ class PendingChannelsResponsePendingChannel implements ModelInterface, ArrayAcce
     /**
      * Sets remoteChanReserveSat
      *
-     * @param string $remoteChanReserveSat * The minimum satoshis the other node is required to reserve in its balance.
+     * @param string $remoteChanReserveSat The minimum satoshis the other node is required to reserve in its balance.
      *
      * @return $this
      */
     public function setRemoteChanReserveSat($remoteChanReserveSat)
     {
         $this->container['remoteChanReserveSat'] = $remoteChanReserveSat;
+
+        return $this;
+    }
+
+    /**
+     * Gets initiator
+     *
+     * @return \Lnd\Rest\Model\LnrpcInitiator
+     */
+    public function getInitiator()
+    {
+        return $this->container['initiator'];
+    }
+
+    /**
+     * Sets initiator
+     *
+     * @param \Lnd\Rest\Model\LnrpcInitiator $initiator The party that initiated opening the channel.
+     *
+     * @return $this
+     */
+    public function setInitiator($initiator)
+    {
+        $this->container['initiator'] = $initiator;
+
+        return $this;
+    }
+
+    /**
+     * Gets commitmentType
+     *
+     * @return \Lnd\Rest\Model\LnrpcCommitmentType
+     */
+    public function getCommitmentType()
+    {
+        return $this->container['commitmentType'];
+    }
+
+    /**
+     * Sets commitmentType
+     *
+     * @param \Lnd\Rest\Model\LnrpcCommitmentType $commitmentType The commitment type used by this channel.
+     *
+     * @return $this
+     */
+    public function setCommitmentType($commitmentType)
+    {
+        $this->container['commitmentType'] = $commitmentType;
 
         return $this;
     }

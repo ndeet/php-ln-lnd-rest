@@ -289,7 +289,7 @@ class LnrpcPendingChannelsResponse implements ModelInterface, ArrayAccess
     /**
      * Sets pendingClosingChannels
      *
-     * @param \Lnd\Rest\Model\PendingChannelsResponseClosedChannel[] $pendingClosingChannels pendingClosingChannels
+     * @param \Lnd\Rest\Model\PendingChannelsResponseClosedChannel[] $pendingClosingChannels Deprecated: Channels pending closing previously contained cooperatively closed channels with a single confirmation. These channels are now considered closed from the time we see them on chain.
      *
      * @return $this
      */

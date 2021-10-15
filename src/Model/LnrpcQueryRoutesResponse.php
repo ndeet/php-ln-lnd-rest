@@ -223,7 +223,7 @@ class LnrpcQueryRoutesResponse implements ModelInterface, ArrayAccess
     /**
      * Sets routes
      *
-     * @param \Lnd\Rest\Model\LnrpcRoute[] $routes * The route that results from the path finding operation. This is still a repeated field to retain backwards compatibility.
+     * @param \Lnd\Rest\Model\LnrpcRoute[] $routes The route that results from the path finding operation. This is still a repeated field to retain backwards compatibility.
      *
      * @return $this
      */
