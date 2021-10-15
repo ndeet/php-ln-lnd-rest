@@ -59,7 +59,8 @@ class LnrpcWalletBalanceResponse implements ModelInterface, ArrayAccess
     protected static $swaggerTypes = [
         'totalBalance' => 'string',
         'confirmedBalance' => 'string',
-        'unconfirmedBalance' => 'string'
+        'unconfirmedBalance' => 'string',
+        'accountBalance' => 'map[string,\Lnd\Rest\Model\LnrpcWalletAccountBalance]'
     ];
 
     /**
@@ -70,7 +71,8 @@ class LnrpcWalletBalanceResponse implements ModelInterface, ArrayAccess
     protected static $swaggerFormats = [
         'totalBalance' => 'int64',
         'confirmedBalance' => 'int64',
-        'unconfirmedBalance' => 'int64'
+        'unconfirmedBalance' => 'int64',
+        'accountBalance' => null
     ];
 
     /**
@@ -102,7 +104,8 @@ class LnrpcWalletBalanceResponse implements ModelInterface, ArrayAccess
     protected static $attributeMap = [
         'totalBalance' => 'total_balance',
         'confirmedBalance' => 'confirmed_balance',
-        'unconfirmedBalance' => 'unconfirmed_balance'
+        'unconfirmedBalance' => 'unconfirmed_balance',
+        'accountBalance' => 'account_balance'
     ];
 
     /**
@@ -113,7 +116,8 @@ class LnrpcWalletBalanceResponse implements ModelInterface, ArrayAccess
     protected static $setters = [
         'totalBalance' => 'setTotalBalance',
         'confirmedBalance' => 'setConfirmedBalance',
-        'unconfirmedBalance' => 'setUnconfirmedBalance'
+        'unconfirmedBalance' => 'setUnconfirmedBalance',
+        'accountBalance' => 'setAccountBalance'
     ];
 
     /**
@@ -124,7 +128,8 @@ class LnrpcWalletBalanceResponse implements ModelInterface, ArrayAccess
     protected static $getters = [
         'totalBalance' => 'getTotalBalance',
         'confirmedBalance' => 'getConfirmedBalance',
-        'unconfirmedBalance' => 'getUnconfirmedBalance'
+        'unconfirmedBalance' => 'getUnconfirmedBalance',
+        'accountBalance' => 'getAccountBalance'
     ];
 
     /**
@@ -190,6 +195,7 @@ class LnrpcWalletBalanceResponse implements ModelInterface, ArrayAccess
         $this->container['totalBalance'] = isset($data['totalBalance']) ? $data['totalBalance'] : null;
         $this->container['confirmedBalance'] = isset($data['confirmedBalance']) ? $data['confirmedBalance'] : null;
         $this->container['unconfirmedBalance'] = isset($data['unconfirmedBalance']) ? $data['unconfirmedBalance'] : null;
+        $this->container['accountBalance'] = isset($data['accountBalance']) ? $data['accountBalance'] : null;
     }
 
     /**
@@ -284,6 +290,30 @@ class LnrpcWalletBalanceResponse implements ModelInterface, ArrayAccess
     public function setUnconfirmedBalance($unconfirmedBalance)
     {
         $this->container['unconfirmedBalance'] = $unconfirmedBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets accountBalance
+     *
+     * @return map[string,\Lnd\Rest\Model\LnrpcWalletAccountBalance]
+     */
+    public function getAccountBalance()
+    {
+        return $this->container['accountBalance'];
+    }
+
+    /**
+     * Sets accountBalance
+     *
+     * @param map[string,\Lnd\Rest\Model\LnrpcWalletAccountBalance] $accountBalance A mapping of each wallet account's name to its balance.
+     *
+     * @return $this
+     */
+    public function setAccountBalance($accountBalance)
+    {
+        $this->container['accountBalance'] = $accountBalance;
 
         return $this;
     }

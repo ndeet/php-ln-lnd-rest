@@ -36,7 +36,7 @@ use \Lnd\Rest\ObjectSerializer;
  * LnrpcChannelGraph Class Doc Comment
  *
  * @category Class
- * @description / Returns a new instance of the directed channel graph.
+ * @description Returns a new instance of the directed channel graph.
  * @package  Lnd\Rest
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen

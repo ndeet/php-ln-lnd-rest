@@ -343,7 +343,7 @@ class LnrpcPendingHTLC implements ModelInterface, ArrayAccess
     /**
      * Sets blocksTilMaturity
      *
-     * @param int $blocksTilMaturity * The number of blocks remaining until the current stage can be swept. Negative values indicate how many blocks have passed since becoming mature.
+     * @param int $blocksTilMaturity The number of blocks remaining until the current stage can be swept. Negative values indicate how many blocks have passed since becoming mature.
      *
      * @return $this
      */

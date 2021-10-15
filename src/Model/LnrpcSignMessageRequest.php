@@ -221,7 +221,7 @@ class LnrpcSignMessageRequest implements ModelInterface, ArrayAccess
     /**
      * Sets msg
      *
-     * @param string $msg msg
+     * @param string $msg The message to be signed. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */

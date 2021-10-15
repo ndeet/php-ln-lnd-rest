@@ -63,7 +63,8 @@ class PendingChannelsResponseForceClosedChannel implements ModelInterface, Array
         'maturityHeight' => 'int',
         'blocksTilMaturity' => 'int',
         'recoveredBalance' => 'string',
-        'pendingHtlcs' => '\Lnd\Rest\Model\LnrpcPendingHTLC[]'
+        'pendingHtlcs' => '\Lnd\Rest\Model\LnrpcPendingHTLC[]',
+        'anchor' => '\Lnd\Rest\Model\ForceClosedChannelAnchorState'
     ];
 
     /**
@@ -78,7 +79,8 @@ class PendingChannelsResponseForceClosedChannel implements ModelInterface, Array
         'maturityHeight' => 'int64',
         'blocksTilMaturity' => 'int32',
         'recoveredBalance' => 'int64',
-        'pendingHtlcs' => null
+        'pendingHtlcs' => null,
+        'anchor' => null
     ];
 
     /**
@@ -114,7 +116,8 @@ class PendingChannelsResponseForceClosedChannel implements ModelInterface, Array
         'maturityHeight' => 'maturity_height',
         'blocksTilMaturity' => 'blocks_til_maturity',
         'recoveredBalance' => 'recovered_balance',
-        'pendingHtlcs' => 'pending_htlcs'
+        'pendingHtlcs' => 'pending_htlcs',
+        'anchor' => 'anchor'
     ];
 
     /**
@@ -129,7 +132,8 @@ class PendingChannelsResponseForceClosedChannel implements ModelInterface, Array
         'maturityHeight' => 'setMaturityHeight',
         'blocksTilMaturity' => 'setBlocksTilMaturity',
         'recoveredBalance' => 'setRecoveredBalance',
-        'pendingHtlcs' => 'setPendingHtlcs'
+        'pendingHtlcs' => 'setPendingHtlcs',
+        'anchor' => 'setAnchor'
     ];
 
     /**
@@ -144,7 +148,8 @@ class PendingChannelsResponseForceClosedChannel implements ModelInterface, Array
         'maturityHeight' => 'getMaturityHeight',
         'blocksTilMaturity' => 'getBlocksTilMaturity',
         'recoveredBalance' => 'getRecoveredBalance',
-        'pendingHtlcs' => 'getPendingHtlcs'
+        'pendingHtlcs' => 'getPendingHtlcs',
+        'anchor' => 'getAnchor'
     ];
 
     /**
@@ -214,6 +219,7 @@ class PendingChannelsResponseForceClosedChannel implements ModelInterface, Array
         $this->container['blocksTilMaturity'] = isset($data['blocksTilMaturity']) ? $data['blocksTilMaturity'] : null;
         $this->container['recoveredBalance'] = isset($data['recoveredBalance']) ? $data['recoveredBalance'] : null;
         $this->container['pendingHtlcs'] = isset($data['pendingHtlcs']) ? $data['pendingHtlcs'] : null;
+        $this->container['anchor'] = isset($data['anchor']) ? $data['anchor'] : null;
     }
 
     /**
@@ -404,6 +410,30 @@ class PendingChannelsResponseForceClosedChannel implements ModelInterface, Array
     public function setPendingHtlcs($pendingHtlcs)
     {
         $this->container['pendingHtlcs'] = $pendingHtlcs;
+
+        return $this;
+    }
+
+    /**
+     * Gets anchor
+     *
+     * @return \Lnd\Rest\Model\ForceClosedChannelAnchorState
+     */
+    public function getAnchor()
+    {
+        return $this->container['anchor'];
+    }
+
+    /**
+     * Sets anchor
+     *
+     * @param \Lnd\Rest\Model\ForceClosedChannelAnchorState $anchor anchor
+     *
+     * @return $this
+     */
+    public function setAnchor($anchor)
+    {
+        $this->container['anchor'] = $anchor;
 
         return $this;
     }

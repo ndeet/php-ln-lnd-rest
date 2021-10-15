@@ -217,7 +217,7 @@ class LnrpcChannelBackups implements ModelInterface, ArrayAccess
     /**
      * Sets chanBackups
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelBackup[] $chanBackups * A set of single-chan static channel backups.
+     * @param \Lnd\Rest\Model\LnrpcChannelBackup[] $chanBackups A set of single-chan static channel backups.
      *
      * @return $this
      */

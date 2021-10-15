@@ -66,7 +66,10 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
         'closeHeight' => 'int',
         'settledBalance' => 'string',
         'timeLockedBalance' => 'string',
-        'closeType' => '\Lnd\Rest\Model\ChannelCloseSummaryClosureType'
+        'closeType' => '\Lnd\Rest\Model\ChannelCloseSummaryClosureType',
+        'openInitiator' => '\Lnd\Rest\Model\LnrpcInitiator',
+        'closeInitiator' => '\Lnd\Rest\Model\LnrpcInitiator',
+        'resolutions' => '\Lnd\Rest\Model\LnrpcResolution[]'
     ];
 
     /**
@@ -84,7 +87,10 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
         'closeHeight' => 'int64',
         'settledBalance' => 'int64',
         'timeLockedBalance' => 'int64',
-        'closeType' => null
+        'closeType' => null,
+        'openInitiator' => null,
+        'closeInitiator' => null,
+        'resolutions' => null
     ];
 
     /**
@@ -123,7 +129,10 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
         'closeHeight' => 'close_height',
         'settledBalance' => 'settled_balance',
         'timeLockedBalance' => 'time_locked_balance',
-        'closeType' => 'close_type'
+        'closeType' => 'close_type',
+        'openInitiator' => 'open_initiator',
+        'closeInitiator' => 'close_initiator',
+        'resolutions' => 'resolutions'
     ];
 
     /**
@@ -141,7 +150,10 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
         'closeHeight' => 'setCloseHeight',
         'settledBalance' => 'setSettledBalance',
         'timeLockedBalance' => 'setTimeLockedBalance',
-        'closeType' => 'setCloseType'
+        'closeType' => 'setCloseType',
+        'openInitiator' => 'setOpenInitiator',
+        'closeInitiator' => 'setCloseInitiator',
+        'resolutions' => 'setResolutions'
     ];
 
     /**
@@ -159,7 +171,10 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
         'closeHeight' => 'getCloseHeight',
         'settledBalance' => 'getSettledBalance',
         'timeLockedBalance' => 'getTimeLockedBalance',
-        'closeType' => 'getCloseType'
+        'closeType' => 'getCloseType',
+        'openInitiator' => 'getOpenInitiator',
+        'closeInitiator' => 'getCloseInitiator',
+        'resolutions' => 'getResolutions'
     ];
 
     /**
@@ -232,6 +247,9 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
         $this->container['settledBalance'] = isset($data['settledBalance']) ? $data['settledBalance'] : null;
         $this->container['timeLockedBalance'] = isset($data['timeLockedBalance']) ? $data['timeLockedBalance'] : null;
         $this->container['closeType'] = isset($data['closeType']) ? $data['closeType'] : null;
+        $this->container['openInitiator'] = isset($data['openInitiator']) ? $data['openInitiator'] : null;
+        $this->container['closeInitiator'] = isset($data['closeInitiator']) ? $data['closeInitiator'] : null;
+        $this->container['resolutions'] = isset($data['resolutions']) ? $data['resolutions'] : null;
     }
 
     /**
@@ -271,7 +289,7 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
     /**
      * Sets channelPoint
      *
-     * @param string $channelPoint / The outpoint (txid:index) of the funding transaction.
+     * @param string $channelPoint The outpoint (txid:index) of the funding transaction.
      *
      * @return $this
      */
@@ -295,7 +313,7 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
     /**
      * Sets chanId
      *
-     * @param string $chanId /  The unique channel ID for the channel.
+     * @param string $chanId The unique channel ID for the channel.
      *
      * @return $this
      */
@@ -319,7 +337,7 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
     /**
      * Sets chainHash
      *
-     * @param string $chainHash / The hash of the genesis block that this channel resides within.
+     * @param string $chainHash The hash of the genesis block that this channel resides within.
      *
      * @return $this
      */
@@ -343,7 +361,7 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
     /**
      * Sets closingTxHash
      *
-     * @param string $closingTxHash / The txid of the transaction which ultimately closed this channel.
+     * @param string $closingTxHash The txid of the transaction which ultimately closed this channel.
      *
      * @return $this
      */
@@ -367,7 +385,7 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
     /**
      * Sets remotePubkey
      *
-     * @param string $remotePubkey / Public key of the remote peer that we formerly had a channel with.
+     * @param string $remotePubkey Public key of the remote peer that we formerly had a channel with.
      *
      * @return $this
      */
@@ -391,7 +409,7 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
     /**
      * Sets capacity
      *
-     * @param string $capacity / Total capacity of the channel.
+     * @param string $capacity Total capacity of the channel.
      *
      * @return $this
      */
@@ -415,7 +433,7 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
     /**
      * Sets closeHeight
      *
-     * @param int $closeHeight / Height at which the funding transaction was spent.
+     * @param int $closeHeight Height at which the funding transaction was spent.
      *
      * @return $this
      */
@@ -487,13 +505,85 @@ class LnrpcChannelCloseSummary implements ModelInterface, ArrayAccess
     /**
      * Sets closeType
      *
-     * @param \Lnd\Rest\Model\ChannelCloseSummaryClosureType $closeType / Details on how the channel was closed.
+     * @param \Lnd\Rest\Model\ChannelCloseSummaryClosureType $closeType Details on how the channel was closed.
      *
      * @return $this
      */
     public function setCloseType($closeType)
     {
         $this->container['closeType'] = $closeType;
+
+        return $this;
+    }
+
+    /**
+     * Gets openInitiator
+     *
+     * @return \Lnd\Rest\Model\LnrpcInitiator
+     */
+    public function getOpenInitiator()
+    {
+        return $this->container['openInitiator'];
+    }
+
+    /**
+     * Sets openInitiator
+     *
+     * @param \Lnd\Rest\Model\LnrpcInitiator $openInitiator Open initiator is the party that initiated opening the channel. Note that this value may be unknown if the channel was closed before we migrated to store open channel information after close.
+     *
+     * @return $this
+     */
+    public function setOpenInitiator($openInitiator)
+    {
+        $this->container['openInitiator'] = $openInitiator;
+
+        return $this;
+    }
+
+    /**
+     * Gets closeInitiator
+     *
+     * @return \Lnd\Rest\Model\LnrpcInitiator
+     */
+    public function getCloseInitiator()
+    {
+        return $this->container['closeInitiator'];
+    }
+
+    /**
+     * Sets closeInitiator
+     *
+     * @param \Lnd\Rest\Model\LnrpcInitiator $closeInitiator Close initiator indicates which party initiated the close. This value will be unknown for channels that were cooperatively closed before we started tracking cooperative close initiators. Note that this indicates which party initiated a close, and it is possible for both to initiate cooperative or force closes, although only one party's close will be confirmed on chain.
+     *
+     * @return $this
+     */
+    public function setCloseInitiator($closeInitiator)
+    {
+        $this->container['closeInitiator'] = $closeInitiator;
+
+        return $this;
+    }
+
+    /**
+     * Gets resolutions
+     *
+     * @return \Lnd\Rest\Model\LnrpcResolution[]
+     */
+    public function getResolutions()
+    {
+        return $this->container['resolutions'];
+    }
+
+    /**
+     * Sets resolutions
+     *
+     * @param \Lnd\Rest\Model\LnrpcResolution[] $resolutions resolutions
+     *
+     * @return $this
+     */
+    public function setResolutions($resolutions)
+    {
+        $this->container['resolutions'] = $resolutions;
 
         return $this;
     }

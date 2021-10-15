@@ -58,6 +58,7 @@ class LnrpcFeeLimit implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'fixed' => 'string',
+        'fixedMsat' => 'string',
         'percent' => 'string'
     ];
 
@@ -68,6 +69,7 @@ class LnrpcFeeLimit implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'fixed' => 'int64',
+        'fixedMsat' => 'int64',
         'percent' => 'int64'
     ];
 
@@ -99,6 +101,7 @@ class LnrpcFeeLimit implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'fixed' => 'fixed',
+        'fixedMsat' => 'fixed_msat',
         'percent' => 'percent'
     ];
 
@@ -109,6 +112,7 @@ class LnrpcFeeLimit implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'fixed' => 'setFixed',
+        'fixedMsat' => 'setFixedMsat',
         'percent' => 'setPercent'
     ];
 
@@ -119,6 +123,7 @@ class LnrpcFeeLimit implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'fixed' => 'getFixed',
+        'fixedMsat' => 'getFixedMsat',
         'percent' => 'getPercent'
     ];
 
@@ -183,6 +188,7 @@ class LnrpcFeeLimit implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['fixed'] = isset($data['fixed']) ? $data['fixed'] : null;
+        $this->container['fixedMsat'] = isset($data['fixedMsat']) ? $data['fixedMsat'] : null;
         $this->container['percent'] = isset($data['percent']) ? $data['percent'] : null;
     }
 
@@ -223,13 +229,37 @@ class LnrpcFeeLimit implements ModelInterface, ArrayAccess
     /**
      * Sets fixed
      *
-     * @param string $fixed / The fee limit expressed as a fixed amount of satoshis.
+     * @param string $fixed The fee limit expressed as a fixed amount of satoshis.  The fields fixed and fixed_msat are mutually exclusive.
      *
      * @return $this
      */
     public function setFixed($fixed)
     {
         $this->container['fixed'] = $fixed;
+
+        return $this;
+    }
+
+    /**
+     * Gets fixedMsat
+     *
+     * @return string
+     */
+    public function getFixedMsat()
+    {
+        return $this->container['fixedMsat'];
+    }
+
+    /**
+     * Sets fixedMsat
+     *
+     * @param string $fixedMsat The fee limit expressed as a fixed amount of millisatoshis.  The fields fixed and fixed_msat are mutually exclusive.
+     *
+     * @return $this
+     */
+    public function setFixedMsat($fixedMsat)
+    {
+        $this->container['fixedMsat'] = $fixedMsat;
 
         return $this;
     }
@@ -247,7 +277,7 @@ class LnrpcFeeLimit implements ModelInterface, ArrayAccess
     /**
      * Sets percent
      *
-     * @param string $percent / The fee limit expressed as a percentage of the payment amount.
+     * @param string $percent The fee limit expressed as a percentage of the payment amount.
      *
      * @return $this
      */

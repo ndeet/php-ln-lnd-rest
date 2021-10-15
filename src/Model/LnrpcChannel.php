@@ -77,7 +77,16 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'bool',
         'chanStatusFlags' => 'string',
         'localChanReserveSat' => 'string',
-        'remoteChanReserveSat' => 'string'
+        'remoteChanReserveSat' => 'string',
+        'staticRemoteKey' => 'bool',
+        'commitmentType' => '\Lnd\Rest\Model\LnrpcCommitmentType',
+        'lifetime' => 'string',
+        'uptime' => 'string',
+        'closeAddress' => 'string',
+        'pushAmountSat' => 'string',
+        'thawHeight' => 'int',
+        'localConstraints' => '\Lnd\Rest\Model\LnrpcChannelConstraints',
+        'remoteConstraints' => '\Lnd\Rest\Model\LnrpcChannelConstraints'
     ];
 
     /**
@@ -106,7 +115,16 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'boolean',
         'chanStatusFlags' => null,
         'localChanReserveSat' => 'int64',
-        'remoteChanReserveSat' => 'int64'
+        'remoteChanReserveSat' => 'int64',
+        'staticRemoteKey' => 'boolean',
+        'commitmentType' => null,
+        'lifetime' => 'int64',
+        'uptime' => 'int64',
+        'closeAddress' => null,
+        'pushAmountSat' => 'uint64',
+        'thawHeight' => 'int64',
+        'localConstraints' => null,
+        'remoteConstraints' => null
     ];
 
     /**
@@ -156,7 +174,16 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'initiator',
         'chanStatusFlags' => 'chan_status_flags',
         'localChanReserveSat' => 'local_chan_reserve_sat',
-        'remoteChanReserveSat' => 'remote_chan_reserve_sat'
+        'remoteChanReserveSat' => 'remote_chan_reserve_sat',
+        'staticRemoteKey' => 'static_remote_key',
+        'commitmentType' => 'commitment_type',
+        'lifetime' => 'lifetime',
+        'uptime' => 'uptime',
+        'closeAddress' => 'close_address',
+        'pushAmountSat' => 'push_amount_sat',
+        'thawHeight' => 'thaw_height',
+        'localConstraints' => 'local_constraints',
+        'remoteConstraints' => 'remote_constraints'
     ];
 
     /**
@@ -185,7 +212,16 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'setInitiator',
         'chanStatusFlags' => 'setChanStatusFlags',
         'localChanReserveSat' => 'setLocalChanReserveSat',
-        'remoteChanReserveSat' => 'setRemoteChanReserveSat'
+        'remoteChanReserveSat' => 'setRemoteChanReserveSat',
+        'staticRemoteKey' => 'setStaticRemoteKey',
+        'commitmentType' => 'setCommitmentType',
+        'lifetime' => 'setLifetime',
+        'uptime' => 'setUptime',
+        'closeAddress' => 'setCloseAddress',
+        'pushAmountSat' => 'setPushAmountSat',
+        'thawHeight' => 'setThawHeight',
+        'localConstraints' => 'setLocalConstraints',
+        'remoteConstraints' => 'setRemoteConstraints'
     ];
 
     /**
@@ -214,7 +250,16 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         'initiator' => 'getInitiator',
         'chanStatusFlags' => 'getChanStatusFlags',
         'localChanReserveSat' => 'getLocalChanReserveSat',
-        'remoteChanReserveSat' => 'getRemoteChanReserveSat'
+        'remoteChanReserveSat' => 'getRemoteChanReserveSat',
+        'staticRemoteKey' => 'getStaticRemoteKey',
+        'commitmentType' => 'getCommitmentType',
+        'lifetime' => 'getLifetime',
+        'uptime' => 'getUptime',
+        'closeAddress' => 'getCloseAddress',
+        'pushAmountSat' => 'getPushAmountSat',
+        'thawHeight' => 'getThawHeight',
+        'localConstraints' => 'getLocalConstraints',
+        'remoteConstraints' => 'getRemoteConstraints'
     ];
 
     /**
@@ -298,6 +343,15 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
         $this->container['chanStatusFlags'] = isset($data['chanStatusFlags']) ? $data['chanStatusFlags'] : null;
         $this->container['localChanReserveSat'] = isset($data['localChanReserveSat']) ? $data['localChanReserveSat'] : null;
         $this->container['remoteChanReserveSat'] = isset($data['remoteChanReserveSat']) ? $data['remoteChanReserveSat'] : null;
+        $this->container['staticRemoteKey'] = isset($data['staticRemoteKey']) ? $data['staticRemoteKey'] : null;
+        $this->container['commitmentType'] = isset($data['commitmentType']) ? $data['commitmentType'] : null;
+        $this->container['lifetime'] = isset($data['lifetime']) ? $data['lifetime'] : null;
+        $this->container['uptime'] = isset($data['uptime']) ? $data['uptime'] : null;
+        $this->container['closeAddress'] = isset($data['closeAddress']) ? $data['closeAddress'] : null;
+        $this->container['pushAmountSat'] = isset($data['pushAmountSat']) ? $data['pushAmountSat'] : null;
+        $this->container['thawHeight'] = isset($data['thawHeight']) ? $data['thawHeight'] : null;
+        $this->container['localConstraints'] = isset($data['localConstraints']) ? $data['localConstraints'] : null;
+        $this->container['remoteConstraints'] = isset($data['remoteConstraints']) ? $data['remoteConstraints'] : null;
     }
 
     /**
@@ -385,7 +439,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets channelPoint
      *
-     * @param string $channelPoint * The outpoint (txid:index) of the funding transaction. With this value, Bob will be able to generate a signature for Alice's version of the commitment transaction.
+     * @param string $channelPoint The outpoint (txid:index) of the funding transaction. With this value, Bob will be able to generate a signature for Alice's version of the commitment transaction.
      *
      * @return $this
      */
@@ -409,7 +463,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets chanId
      *
-     * @param string $chanId * The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel.
+     * @param string $chanId The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel.
      *
      * @return $this
      */
@@ -505,7 +559,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets commitFee
      *
-     * @param string $commitFee * The amount calculated to be paid in fees for the current set of commitment transactions. The fee amount is persisted with the channel in order to allow the fee amount to be removed and recalculated with each channel state update, including updates that happen after a system restart.
+     * @param string $commitFee The amount calculated to be paid in fees for the current set of commitment transactions. The fee amount is persisted with the channel in order to allow the fee amount to be removed and recalculated with each channel state update, including updates that happen after a system restart.
      *
      * @return $this
      */
@@ -553,7 +607,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets feePerKw
      *
-     * @param string $feePerKw * The required number of satoshis per kilo-weight that the requester will pay at all times, for both the funding transaction and commitment transaction. This value can later be updated once the channel is open.
+     * @param string $feePerKw The required number of satoshis per kilo-weight that the requester will pay at all times, for both the funding transaction and commitment transaction. This value can later be updated once the channel is open.
      *
      * @return $this
      */
@@ -601,7 +655,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets totalSatoshisSent
      *
-     * @param string $totalSatoshisSent * The total number of satoshis we've sent within this channel.
+     * @param string $totalSatoshisSent The total number of satoshis we've sent within this channel.
      *
      * @return $this
      */
@@ -625,7 +679,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets totalSatoshisReceived
      *
-     * @param string $totalSatoshisReceived * The total number of satoshis we've received within this channel.
+     * @param string $totalSatoshisReceived The total number of satoshis we've received within this channel.
      *
      * @return $this
      */
@@ -649,7 +703,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets numUpdates
      *
-     * @param string $numUpdates * The total number of updates conducted within this channel.
+     * @param string $numUpdates The total number of updates conducted within this channel.
      *
      * @return $this
      */
@@ -673,7 +727,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets pendingHtlcs
      *
-     * @param \Lnd\Rest\Model\LnrpcHTLC[] $pendingHtlcs * The list of active, uncleared HTLCs currently pending within the channel.
+     * @param \Lnd\Rest\Model\LnrpcHTLC[] $pendingHtlcs The list of active, uncleared HTLCs currently pending within the channel.
      *
      * @return $this
      */
@@ -697,7 +751,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets csvDelay
      *
-     * @param int $csvDelay * The CSV delay expressed in relative blocks. If the channel is force closed, we will need to wait for this many blocks before we can regain our funds.
+     * @param int $csvDelay Deprecated. The CSV delay expressed in relative blocks. If the channel is force closed, we will need to wait for this many blocks before we can regain our funds.
      *
      * @return $this
      */
@@ -721,7 +775,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets private
      *
-     * @param bool $private / Whether this channel is advertised to the network or not.
+     * @param bool $private Whether this channel is advertised to the network or not.
      *
      * @return $this
      */
@@ -745,7 +799,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets initiator
      *
-     * @param bool $initiator / True if we were the ones that created the channel.
+     * @param bool $initiator True if we were the ones that created the channel.
      *
      * @return $this
      */
@@ -769,7 +823,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets chanStatusFlags
      *
-     * @param string $chanStatusFlags / A set of flags showing the current state of the channel.
+     * @param string $chanStatusFlags A set of flags showing the current state of the channel.
      *
      * @return $this
      */
@@ -793,7 +847,7 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets localChanReserveSat
      *
-     * @param string $localChanReserveSat / The minimum satoshis this node is required to reserve in its balance.
+     * @param string $localChanReserveSat Deprecated. The minimum satoshis this node is required to reserve in its balance.
      *
      * @return $this
      */
@@ -817,13 +871,229 @@ class LnrpcChannel implements ModelInterface, ArrayAccess
     /**
      * Sets remoteChanReserveSat
      *
-     * @param string $remoteChanReserveSat * The minimum satoshis the other node is required to reserve in its balance.
+     * @param string $remoteChanReserveSat Deprecated. The minimum satoshis the other node is required to reserve in its balance.
      *
      * @return $this
      */
     public function setRemoteChanReserveSat($remoteChanReserveSat)
     {
         $this->container['remoteChanReserveSat'] = $remoteChanReserveSat;
+
+        return $this;
+    }
+
+    /**
+     * Gets staticRemoteKey
+     *
+     * @return bool
+     */
+    public function getStaticRemoteKey()
+    {
+        return $this->container['staticRemoteKey'];
+    }
+
+    /**
+     * Sets staticRemoteKey
+     *
+     * @param bool $staticRemoteKey Deprecated. Use commitment_type.
+     *
+     * @return $this
+     */
+    public function setStaticRemoteKey($staticRemoteKey)
+    {
+        $this->container['staticRemoteKey'] = $staticRemoteKey;
+
+        return $this;
+    }
+
+    /**
+     * Gets commitmentType
+     *
+     * @return \Lnd\Rest\Model\LnrpcCommitmentType
+     */
+    public function getCommitmentType()
+    {
+        return $this->container['commitmentType'];
+    }
+
+    /**
+     * Sets commitmentType
+     *
+     * @param \Lnd\Rest\Model\LnrpcCommitmentType $commitmentType The commitment type used by this channel.
+     *
+     * @return $this
+     */
+    public function setCommitmentType($commitmentType)
+    {
+        $this->container['commitmentType'] = $commitmentType;
+
+        return $this;
+    }
+
+    /**
+     * Gets lifetime
+     *
+     * @return string
+     */
+    public function getLifetime()
+    {
+        return $this->container['lifetime'];
+    }
+
+    /**
+     * Sets lifetime
+     *
+     * @param string $lifetime The number of seconds that the channel has been monitored by the channel scoring system. Scores are currently not persisted, so this value may be less than the lifetime of the channel [EXPERIMENTAL].
+     *
+     * @return $this
+     */
+    public function setLifetime($lifetime)
+    {
+        $this->container['lifetime'] = $lifetime;
+
+        return $this;
+    }
+
+    /**
+     * Gets uptime
+     *
+     * @return string
+     */
+    public function getUptime()
+    {
+        return $this->container['uptime'];
+    }
+
+    /**
+     * Sets uptime
+     *
+     * @param string $uptime The number of seconds that the remote peer has been observed as being online by the channel scoring system over the lifetime of the channel [EXPERIMENTAL].
+     *
+     * @return $this
+     */
+    public function setUptime($uptime)
+    {
+        $this->container['uptime'] = $uptime;
+
+        return $this;
+    }
+
+    /**
+     * Gets closeAddress
+     *
+     * @return string
+     */
+    public function getCloseAddress()
+    {
+        return $this->container['closeAddress'];
+    }
+
+    /**
+     * Sets closeAddress
+     *
+     * @param string $closeAddress Close address is the address that we will enforce payout to on cooperative close if the channel was opened utilizing option upfront shutdown. This value can be set on channel open by setting close_address in an open channel request. If this value is not set, you can still choose a payout address by cooperatively closing with the delivery_address field set.
+     *
+     * @return $this
+     */
+    public function setCloseAddress($closeAddress)
+    {
+        $this->container['closeAddress'] = $closeAddress;
+
+        return $this;
+    }
+
+    /**
+     * Gets pushAmountSat
+     *
+     * @return string
+     */
+    public function getPushAmountSat()
+    {
+        return $this->container['pushAmountSat'];
+    }
+
+    /**
+     * Sets pushAmountSat
+     *
+     * @param string $pushAmountSat The amount that the initiator of the channel optionally pushed to the remote party on channel open. This amount will be zero if the channel initiator did not push any funds to the remote peer. If the initiator field is true, we pushed this amount to our peer, if it is false, the remote peer pushed this amount to us.
+     *
+     * @return $this
+     */
+    public function setPushAmountSat($pushAmountSat)
+    {
+        $this->container['pushAmountSat'] = $pushAmountSat;
+
+        return $this;
+    }
+
+    /**
+     * Gets thawHeight
+     *
+     * @return int
+     */
+    public function getThawHeight()
+    {
+        return $this->container['thawHeight'];
+    }
+
+    /**
+     * Sets thawHeight
+     *
+     * @param int $thawHeight This uint32 indicates if this channel is to be considered 'frozen'. A frozen channel doest not allow a cooperative channel close by the initiator. The thaw_height is the height that this restriction stops applying to the channel. This field is optional, not setting it or using a value of zero will mean the channel has no additional restrictions. The height can be interpreted in two ways: as a relative height if the value is less than 500,000, or as an absolute height otherwise.
+     *
+     * @return $this
+     */
+    public function setThawHeight($thawHeight)
+    {
+        $this->container['thawHeight'] = $thawHeight;
+
+        return $this;
+    }
+
+    /**
+     * Gets localConstraints
+     *
+     * @return \Lnd\Rest\Model\LnrpcChannelConstraints
+     */
+    public function getLocalConstraints()
+    {
+        return $this->container['localConstraints'];
+    }
+
+    /**
+     * Sets localConstraints
+     *
+     * @param \Lnd\Rest\Model\LnrpcChannelConstraints $localConstraints List constraints for the local node.
+     *
+     * @return $this
+     */
+    public function setLocalConstraints($localConstraints)
+    {
+        $this->container['localConstraints'] = $localConstraints;
+
+        return $this;
+    }
+
+    /**
+     * Gets remoteConstraints
+     *
+     * @return \Lnd\Rest\Model\LnrpcChannelConstraints
+     */
+    public function getRemoteConstraints()
+    {
+        return $this->container['remoteConstraints'];
+    }
+
+    /**
+     * Sets remoteConstraints
+     *
+     * @param \Lnd\Rest\Model\LnrpcChannelConstraints $remoteConstraints List constraints for the remote node.
+     *
+     * @return $this
+     */
+    public function setRemoteConstraints($remoteConstraints)
+    {
+        $this->container['remoteConstraints'] = $remoteConstraints;
 
         return $this;
     }

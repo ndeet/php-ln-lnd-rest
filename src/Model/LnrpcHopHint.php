@@ -241,7 +241,7 @@ class LnrpcHopHint implements ModelInterface, ArrayAccess
     /**
      * Sets nodeId
      *
-     * @param string $nodeId / The public key of the node at the start of the channel.
+     * @param string $nodeId The public key of the node at the start of the channel.
      *
      * @return $this
      */
@@ -265,7 +265,7 @@ class LnrpcHopHint implements ModelInterface, ArrayAccess
     /**
      * Sets chanId
      *
-     * @param string $chanId / The unique identifier of the channel.
+     * @param string $chanId The unique identifier of the channel.
      *
      * @return $this
      */
@@ -289,7 +289,7 @@ class LnrpcHopHint implements ModelInterface, ArrayAccess
     /**
      * Sets feeBaseMsat
      *
-     * @param int $feeBaseMsat / The base fee of the channel denominated in millisatoshis.
+     * @param int $feeBaseMsat The base fee of the channel denominated in millisatoshis.
      *
      * @return $this
      */
@@ -313,7 +313,7 @@ class LnrpcHopHint implements ModelInterface, ArrayAccess
     /**
      * Sets feeProportionalMillionths
      *
-     * @param int $feeProportionalMillionths * The fee rate of the channel for sending one satoshi across it denominated in millionths of a satoshi.
+     * @param int $feeProportionalMillionths The fee rate of the channel for sending one satoshi across it denominated in millionths of a satoshi.
      *
      * @return $this
      */
@@ -337,7 +337,7 @@ class LnrpcHopHint implements ModelInterface, ArrayAccess
     /**
      * Sets cltvExpiryDelta
      *
-     * @param int $cltvExpiryDelta / The time-lock delta of the channel.
+     * @param int $cltvExpiryDelta The time-lock delta of the channel.
      *
      * @return $this
      */

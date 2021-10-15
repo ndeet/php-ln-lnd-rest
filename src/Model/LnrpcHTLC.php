@@ -60,7 +60,10 @@ class LnrpcHTLC implements ModelInterface, ArrayAccess
         'incoming' => 'bool',
         'amount' => 'string',
         'hashLock' => 'string',
-        'expirationHeight' => 'int'
+        'expirationHeight' => 'int',
+        'htlcIndex' => 'string',
+        'forwardingChannel' => 'string',
+        'forwardingHtlcIndex' => 'string'
     ];
 
     /**
@@ -72,7 +75,10 @@ class LnrpcHTLC implements ModelInterface, ArrayAccess
         'incoming' => 'boolean',
         'amount' => 'int64',
         'hashLock' => 'byte',
-        'expirationHeight' => 'int64'
+        'expirationHeight' => 'int64',
+        'htlcIndex' => 'uint64',
+        'forwardingChannel' => 'uint64',
+        'forwardingHtlcIndex' => 'uint64'
     ];
 
     /**
@@ -105,7 +111,10 @@ class LnrpcHTLC implements ModelInterface, ArrayAccess
         'incoming' => 'incoming',
         'amount' => 'amount',
         'hashLock' => 'hash_lock',
-        'expirationHeight' => 'expiration_height'
+        'expirationHeight' => 'expiration_height',
+        'htlcIndex' => 'htlc_index',
+        'forwardingChannel' => 'forwarding_channel',
+        'forwardingHtlcIndex' => 'forwarding_htlc_index'
     ];
 
     /**
@@ -117,7 +126,10 @@ class LnrpcHTLC implements ModelInterface, ArrayAccess
         'incoming' => 'setIncoming',
         'amount' => 'setAmount',
         'hashLock' => 'setHashLock',
-        'expirationHeight' => 'setExpirationHeight'
+        'expirationHeight' => 'setExpirationHeight',
+        'htlcIndex' => 'setHtlcIndex',
+        'forwardingChannel' => 'setForwardingChannel',
+        'forwardingHtlcIndex' => 'setForwardingHtlcIndex'
     ];
 
     /**
@@ -129,7 +141,10 @@ class LnrpcHTLC implements ModelInterface, ArrayAccess
         'incoming' => 'getIncoming',
         'amount' => 'getAmount',
         'hashLock' => 'getHashLock',
-        'expirationHeight' => 'getExpirationHeight'
+        'expirationHeight' => 'getExpirationHeight',
+        'htlcIndex' => 'getHtlcIndex',
+        'forwardingChannel' => 'getForwardingChannel',
+        'forwardingHtlcIndex' => 'getForwardingHtlcIndex'
     ];
 
     /**
@@ -196,6 +211,9 @@ class LnrpcHTLC implements ModelInterface, ArrayAccess
         $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
         $this->container['hashLock'] = isset($data['hashLock']) ? $data['hashLock'] : null;
         $this->container['expirationHeight'] = isset($data['expirationHeight']) ? $data['expirationHeight'] : null;
+        $this->container['htlcIndex'] = isset($data['htlcIndex']) ? $data['htlcIndex'] : null;
+        $this->container['forwardingChannel'] = isset($data['forwardingChannel']) ? $data['forwardingChannel'] : null;
+        $this->container['forwardingHtlcIndex'] = isset($data['forwardingHtlcIndex']) ? $data['forwardingHtlcIndex'] : null;
     }
 
     /**
@@ -323,6 +341,78 @@ class LnrpcHTLC implements ModelInterface, ArrayAccess
     public function setExpirationHeight($expirationHeight)
     {
         $this->container['expirationHeight'] = $expirationHeight;
+
+        return $this;
+    }
+
+    /**
+     * Gets htlcIndex
+     *
+     * @return string
+     */
+    public function getHtlcIndex()
+    {
+        return $this->container['htlcIndex'];
+    }
+
+    /**
+     * Sets htlcIndex
+     *
+     * @param string $htlcIndex Index identifying the htlc on the channel.
+     *
+     * @return $this
+     */
+    public function setHtlcIndex($htlcIndex)
+    {
+        $this->container['htlcIndex'] = $htlcIndex;
+
+        return $this;
+    }
+
+    /**
+     * Gets forwardingChannel
+     *
+     * @return string
+     */
+    public function getForwardingChannel()
+    {
+        return $this->container['forwardingChannel'];
+    }
+
+    /**
+     * Sets forwardingChannel
+     *
+     * @param string $forwardingChannel If this HTLC is involved in a forwarding operation, this field indicates the forwarding channel. For an outgoing htlc, it is the incoming channel. For an incoming htlc, it is the outgoing channel. When the htlc originates from this node or this node is the final destination, forwarding_channel will be zero. The forwarding channel will also be zero for htlcs that need to be forwarded but don't have a forwarding decision persisted yet.
+     *
+     * @return $this
+     */
+    public function setForwardingChannel($forwardingChannel)
+    {
+        $this->container['forwardingChannel'] = $forwardingChannel;
+
+        return $this;
+    }
+
+    /**
+     * Gets forwardingHtlcIndex
+     *
+     * @return string
+     */
+    public function getForwardingHtlcIndex()
+    {
+        return $this->container['forwardingHtlcIndex'];
+    }
+
+    /**
+     * Sets forwardingHtlcIndex
+     *
+     * @param string $forwardingHtlcIndex Index identifying the htlc on the forwarding channel.
+     *
+     * @return $this
+     */
+    public function setForwardingHtlcIndex($forwardingHtlcIndex)
+    {
+        $this->container['forwardingHtlcIndex'] = $forwardingHtlcIndex;
 
         return $this;
     }

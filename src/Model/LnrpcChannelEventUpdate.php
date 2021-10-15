@@ -61,6 +61,7 @@ class LnrpcChannelEventUpdate implements ModelInterface, ArrayAccess
         'closedChannel' => '\Lnd\Rest\Model\LnrpcChannelCloseSummary',
         'activeChannel' => '\Lnd\Rest\Model\LnrpcChannelPoint',
         'inactiveChannel' => '\Lnd\Rest\Model\LnrpcChannelPoint',
+        'pendingOpenChannel' => '\Lnd\Rest\Model\LnrpcPendingUpdate',
         'type' => '\Lnd\Rest\Model\ChannelEventUpdateUpdateType'
     ];
 
@@ -74,6 +75,7 @@ class LnrpcChannelEventUpdate implements ModelInterface, ArrayAccess
         'closedChannel' => null,
         'activeChannel' => null,
         'inactiveChannel' => null,
+        'pendingOpenChannel' => null,
         'type' => null
     ];
 
@@ -108,6 +110,7 @@ class LnrpcChannelEventUpdate implements ModelInterface, ArrayAccess
         'closedChannel' => 'closed_channel',
         'activeChannel' => 'active_channel',
         'inactiveChannel' => 'inactive_channel',
+        'pendingOpenChannel' => 'pending_open_channel',
         'type' => 'type'
     ];
 
@@ -121,6 +124,7 @@ class LnrpcChannelEventUpdate implements ModelInterface, ArrayAccess
         'closedChannel' => 'setClosedChannel',
         'activeChannel' => 'setActiveChannel',
         'inactiveChannel' => 'setInactiveChannel',
+        'pendingOpenChannel' => 'setPendingOpenChannel',
         'type' => 'setType'
     ];
 
@@ -134,6 +138,7 @@ class LnrpcChannelEventUpdate implements ModelInterface, ArrayAccess
         'closedChannel' => 'getClosedChannel',
         'activeChannel' => 'getActiveChannel',
         'inactiveChannel' => 'getInactiveChannel',
+        'pendingOpenChannel' => 'getPendingOpenChannel',
         'type' => 'getType'
     ];
 
@@ -201,6 +206,7 @@ class LnrpcChannelEventUpdate implements ModelInterface, ArrayAccess
         $this->container['closedChannel'] = isset($data['closedChannel']) ? $data['closedChannel'] : null;
         $this->container['activeChannel'] = isset($data['activeChannel']) ? $data['activeChannel'] : null;
         $this->container['inactiveChannel'] = isset($data['inactiveChannel']) ? $data['inactiveChannel'] : null;
+        $this->container['pendingOpenChannel'] = isset($data['pendingOpenChannel']) ? $data['pendingOpenChannel'] : null;
         $this->container['type'] = isset($data['type']) ? $data['type'] : null;
     }
 
@@ -320,6 +326,30 @@ class LnrpcChannelEventUpdate implements ModelInterface, ArrayAccess
     public function setInactiveChannel($inactiveChannel)
     {
         $this->container['inactiveChannel'] = $inactiveChannel;
+
+        return $this;
+    }
+
+    /**
+     * Gets pendingOpenChannel
+     *
+     * @return \Lnd\Rest\Model\LnrpcPendingUpdate
+     */
+    public function getPendingOpenChannel()
+    {
+        return $this->container['pendingOpenChannel'];
+    }
+
+    /**
+     * Sets pendingOpenChannel
+     *
+     * @param \Lnd\Rest\Model\LnrpcPendingUpdate $pendingOpenChannel pendingOpenChannel
+     *
+     * @return $this
+     */
+    public function setPendingOpenChannel($pendingOpenChannel)
+    {
+        $this->container['pendingOpenChannel'] = $pendingOpenChannel;
 
         return $this;
     }

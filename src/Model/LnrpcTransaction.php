@@ -65,7 +65,8 @@ class LnrpcTransaction implements ModelInterface, ArrayAccess
         'timeStamp' => 'string',
         'totalFees' => 'string',
         'destAddresses' => 'string[]',
-        'rawTxHex' => 'string'
+        'rawTxHex' => 'string',
+        'label' => 'string'
     ];
 
     /**
@@ -82,7 +83,8 @@ class LnrpcTransaction implements ModelInterface, ArrayAccess
         'timeStamp' => 'int64',
         'totalFees' => 'int64',
         'destAddresses' => null,
-        'rawTxHex' => null
+        'rawTxHex' => null,
+        'label' => null
     ];
 
     /**
@@ -120,7 +122,8 @@ class LnrpcTransaction implements ModelInterface, ArrayAccess
         'timeStamp' => 'time_stamp',
         'totalFees' => 'total_fees',
         'destAddresses' => 'dest_addresses',
-        'rawTxHex' => 'raw_tx_hex'
+        'rawTxHex' => 'raw_tx_hex',
+        'label' => 'label'
     ];
 
     /**
@@ -137,7 +140,8 @@ class LnrpcTransaction implements ModelInterface, ArrayAccess
         'timeStamp' => 'setTimeStamp',
         'totalFees' => 'setTotalFees',
         'destAddresses' => 'setDestAddresses',
-        'rawTxHex' => 'setRawTxHex'
+        'rawTxHex' => 'setRawTxHex',
+        'label' => 'setLabel'
     ];
 
     /**
@@ -154,7 +158,8 @@ class LnrpcTransaction implements ModelInterface, ArrayAccess
         'timeStamp' => 'getTimeStamp',
         'totalFees' => 'getTotalFees',
         'destAddresses' => 'getDestAddresses',
-        'rawTxHex' => 'getRawTxHex'
+        'rawTxHex' => 'getRawTxHex',
+        'label' => 'getLabel'
     ];
 
     /**
@@ -226,6 +231,7 @@ class LnrpcTransaction implements ModelInterface, ArrayAccess
         $this->container['totalFees'] = isset($data['totalFees']) ? $data['totalFees'] : null;
         $this->container['destAddresses'] = isset($data['destAddresses']) ? $data['destAddresses'] : null;
         $this->container['rawTxHex'] = isset($data['rawTxHex']) ? $data['rawTxHex'] : null;
+        $this->container['label'] = isset($data['label']) ? $data['label'] : null;
     }
 
     /**
@@ -457,13 +463,37 @@ class LnrpcTransaction implements ModelInterface, ArrayAccess
     /**
      * Sets rawTxHex
      *
-     * @param string $rawTxHex / The raw transaction hex.
+     * @param string $rawTxHex The raw transaction hex.
      *
      * @return $this
      */
     public function setRawTxHex($rawTxHex)
     {
         $this->container['rawTxHex'] = $rawTxHex;
+
+        return $this;
+    }
+
+    /**
+     * Gets label
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->container['label'];
+    }
+
+    /**
+     * Sets label
+     *
+     * @param string $label A label that was optionally set on transaction broadcast.
+     *
+     * @return $this
+     */
+    public function setLabel($label)
+    {
+        $this->container['label'] = $label;
 
         return $this;
     }

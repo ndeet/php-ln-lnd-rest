@@ -64,7 +64,11 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'int',
         'amtToForwardMsat' => 'string',
         'feeMsat' => 'string',
-        'pubKey' => 'string'
+        'pubKey' => 'string',
+        'tlvPayload' => 'bool',
+        'mppRecord' => '\Lnd\Rest\Model\LnrpcMPPRecord',
+        'ampRecord' => '\Lnd\Rest\Model\LnrpcAMPRecord',
+        'customRecords' => 'map[string,string]'
     ];
 
     /**
@@ -80,7 +84,11 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'int64',
         'amtToForwardMsat' => 'int64',
         'feeMsat' => 'int64',
-        'pubKey' => null
+        'pubKey' => null,
+        'tlvPayload' => 'boolean',
+        'mppRecord' => null,
+        'ampRecord' => null,
+        'customRecords' => 'byte'
     ];
 
     /**
@@ -117,7 +125,11 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'expiry',
         'amtToForwardMsat' => 'amt_to_forward_msat',
         'feeMsat' => 'fee_msat',
-        'pubKey' => 'pub_key'
+        'pubKey' => 'pub_key',
+        'tlvPayload' => 'tlv_payload',
+        'mppRecord' => 'mpp_record',
+        'ampRecord' => 'amp_record',
+        'customRecords' => 'custom_records'
     ];
 
     /**
@@ -133,7 +145,11 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'setExpiry',
         'amtToForwardMsat' => 'setAmtToForwardMsat',
         'feeMsat' => 'setFeeMsat',
-        'pubKey' => 'setPubKey'
+        'pubKey' => 'setPubKey',
+        'tlvPayload' => 'setTlvPayload',
+        'mppRecord' => 'setMppRecord',
+        'ampRecord' => 'setAmpRecord',
+        'customRecords' => 'setCustomRecords'
     ];
 
     /**
@@ -149,7 +165,11 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         'expiry' => 'getExpiry',
         'amtToForwardMsat' => 'getAmtToForwardMsat',
         'feeMsat' => 'getFeeMsat',
-        'pubKey' => 'getPubKey'
+        'pubKey' => 'getPubKey',
+        'tlvPayload' => 'getTlvPayload',
+        'mppRecord' => 'getMppRecord',
+        'ampRecord' => 'getAmpRecord',
+        'customRecords' => 'getCustomRecords'
     ];
 
     /**
@@ -220,6 +240,10 @@ class LnrpcHop implements ModelInterface, ArrayAccess
         $this->container['amtToForwardMsat'] = isset($data['amtToForwardMsat']) ? $data['amtToForwardMsat'] : null;
         $this->container['feeMsat'] = isset($data['feeMsat']) ? $data['feeMsat'] : null;
         $this->container['pubKey'] = isset($data['pubKey']) ? $data['pubKey'] : null;
+        $this->container['tlvPayload'] = isset($data['tlvPayload']) ? $data['tlvPayload'] : null;
+        $this->container['mppRecord'] = isset($data['mppRecord']) ? $data['mppRecord'] : null;
+        $this->container['ampRecord'] = isset($data['ampRecord']) ? $data['ampRecord'] : null;
+        $this->container['customRecords'] = isset($data['customRecords']) ? $data['customRecords'] : null;
     }
 
     /**
@@ -259,7 +283,7 @@ class LnrpcHop implements ModelInterface, ArrayAccess
     /**
      * Sets chanId
      *
-     * @param string $chanId * The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel.
+     * @param string $chanId The unique channel ID for the channel. The first 3 bytes are the block height, the next 3 the index within the block, and the last 2 bytes are the output index for the channel.
      *
      * @return $this
      */
@@ -427,13 +451,109 @@ class LnrpcHop implements ModelInterface, ArrayAccess
     /**
      * Sets pubKey
      *
-     * @param string $pubKey * An optional public key of the hop. If the public key is given, the payment can be executed without relying on a copy of the channel graph.
+     * @param string $pubKey An optional public key of the hop. If the public key is given, the payment can be executed without relying on a copy of the channel graph.
      *
      * @return $this
      */
     public function setPubKey($pubKey)
     {
         $this->container['pubKey'] = $pubKey;
+
+        return $this;
+    }
+
+    /**
+     * Gets tlvPayload
+     *
+     * @return bool
+     */
+    public function getTlvPayload()
+    {
+        return $this->container['tlvPayload'];
+    }
+
+    /**
+     * Sets tlvPayload
+     *
+     * @param bool $tlvPayload If set to true, then this hop will be encoded using the new variable length TLV format. Note that if any custom tlv_records below are specified, then this field MUST be set to true for them to be encoded properly.
+     *
+     * @return $this
+     */
+    public function setTlvPayload($tlvPayload)
+    {
+        $this->container['tlvPayload'] = $tlvPayload;
+
+        return $this;
+    }
+
+    /**
+     * Gets mppRecord
+     *
+     * @return \Lnd\Rest\Model\LnrpcMPPRecord
+     */
+    public function getMppRecord()
+    {
+        return $this->container['mppRecord'];
+    }
+
+    /**
+     * Sets mppRecord
+     *
+     * @param \Lnd\Rest\Model\LnrpcMPPRecord $mppRecord An optional TLV record that signals the use of an MPP payment. If present, the receiver will enforce that the same mpp_record is included in the final hop payload of all non-zero payments in the HTLC set. If empty, a regular single-shot payment is or was attempted.
+     *
+     * @return $this
+     */
+    public function setMppRecord($mppRecord)
+    {
+        $this->container['mppRecord'] = $mppRecord;
+
+        return $this;
+    }
+
+    /**
+     * Gets ampRecord
+     *
+     * @return \Lnd\Rest\Model\LnrpcAMPRecord
+     */
+    public function getAmpRecord()
+    {
+        return $this->container['ampRecord'];
+    }
+
+    /**
+     * Sets ampRecord
+     *
+     * @param \Lnd\Rest\Model\LnrpcAMPRecord $ampRecord An optional TLV record that signals the use of an AMP payment. If present, the receiver will treat all received payments including the same (payment_addr, set_id) pair  as being part of one logical payment. The payment will be settled by XORing the root_share's together and deriving the child hashes and preimages according to BOLT XX. Must be used in conjunction with mpp_record.
+     *
+     * @return $this
+     */
+    public function setAmpRecord($ampRecord)
+    {
+        $this->container['ampRecord'] = $ampRecord;
+
+        return $this;
+    }
+
+    /**
+     * Gets customRecords
+     *
+     * @return map[string,string]
+     */
+    public function getCustomRecords()
+    {
+        return $this->container['customRecords'];
+    }
+
+    /**
+     * Sets customRecords
+     *
+     * @param map[string,string] $customRecords An optional set of key-value TLV records. This is useful within the context of the SendToRoute call as it allows callers to specify arbitrary K-V pairs to drop off at each hop within the onion.
+     *
+     * @return $this
+     */
+    public function setCustomRecords($customRecords)
+    {
+        $this->container['customRecords'] = $customRecords;
 
         return $this;
     }

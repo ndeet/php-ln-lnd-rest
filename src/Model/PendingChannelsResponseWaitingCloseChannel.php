@@ -58,7 +58,8 @@ class PendingChannelsResponseWaitingCloseChannel implements ModelInterface, Arra
       */
     protected static $swaggerTypes = [
         'channel' => '\Lnd\Rest\Model\PendingChannelsResponsePendingChannel',
-        'limboBalance' => 'string'
+        'limboBalance' => 'string',
+        'commitments' => '\Lnd\Rest\Model\PendingChannelsResponseCommitments'
     ];
 
     /**
@@ -68,7 +69,8 @@ class PendingChannelsResponseWaitingCloseChannel implements ModelInterface, Arra
       */
     protected static $swaggerFormats = [
         'channel' => null,
-        'limboBalance' => 'int64'
+        'limboBalance' => 'int64',
+        'commitments' => null
     ];
 
     /**
@@ -99,7 +101,8 @@ class PendingChannelsResponseWaitingCloseChannel implements ModelInterface, Arra
      */
     protected static $attributeMap = [
         'channel' => 'channel',
-        'limboBalance' => 'limbo_balance'
+        'limboBalance' => 'limbo_balance',
+        'commitments' => 'commitments'
     ];
 
     /**
@@ -109,7 +112,8 @@ class PendingChannelsResponseWaitingCloseChannel implements ModelInterface, Arra
      */
     protected static $setters = [
         'channel' => 'setChannel',
-        'limboBalance' => 'setLimboBalance'
+        'limboBalance' => 'setLimboBalance',
+        'commitments' => 'setCommitments'
     ];
 
     /**
@@ -119,7 +123,8 @@ class PendingChannelsResponseWaitingCloseChannel implements ModelInterface, Arra
      */
     protected static $getters = [
         'channel' => 'getChannel',
-        'limboBalance' => 'getLimboBalance'
+        'limboBalance' => 'getLimboBalance',
+        'commitments' => 'getCommitments'
     ];
 
     /**
@@ -184,6 +189,7 @@ class PendingChannelsResponseWaitingCloseChannel implements ModelInterface, Arra
     {
         $this->container['channel'] = isset($data['channel']) ? $data['channel'] : null;
         $this->container['limboBalance'] = isset($data['limboBalance']) ? $data['limboBalance'] : null;
+        $this->container['commitments'] = isset($data['commitments']) ? $data['commitments'] : null;
     }
 
     /**
@@ -254,6 +260,30 @@ class PendingChannelsResponseWaitingCloseChannel implements ModelInterface, Arra
     public function setLimboBalance($limboBalance)
     {
         $this->container['limboBalance'] = $limboBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets commitments
+     *
+     * @return \Lnd\Rest\Model\PendingChannelsResponseCommitments
+     */
+    public function getCommitments()
+    {
+        return $this->container['commitments'];
+    }
+
+    /**
+     * Sets commitments
+     *
+     * @param \Lnd\Rest\Model\PendingChannelsResponseCommitments $commitments A list of valid commitment transactions. Any of these can confirm at this point.
+     *
+     * @return $this
+     */
+    public function setCommitments($commitments)
+    {
+        $this->container['commitments'] = $commitments;
 
         return $this;
     }

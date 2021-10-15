@@ -81,14 +81,14 @@ class Configuration
      *
      * @var string
      */
-    protected $host = 'http://localhost';
+    protected $host = 'https://localhost';
 
     /**
      * User agent of the HTTP request, set to "PHP-Swagger" by default
      *
      * @var string
      */
-    protected $userAgent = 'Swagger-Codegen/0.7.1/php';
+    protected $userAgent = 'Swagger-Codegen/0.13.3/php';
 
     /**
      * Debug switch (default set to false)
@@ -397,7 +397,7 @@ class Configuration
         $report .= '    OS: ' . php_uname() . PHP_EOL;
         $report .= '    PHP Version: ' . PHP_VERSION . PHP_EOL;
         $report .= '    OpenAPI Spec Version: version not set' . PHP_EOL;
-        $report .= '    SDK Package Version: 0.7.1' . PHP_EOL;
+        $report .= '    SDK Package Version: 0.13.3' . PHP_EOL;
         $report .= '    Temp Folder Path: ' . self::getDefaultConfiguration()->getTempFolderPath() . PHP_EOL;
 
         return $report;

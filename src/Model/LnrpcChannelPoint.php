@@ -233,7 +233,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
     /**
      * Sets fundingTxidBytes
      *
-     * @param string $fundingTxidBytes fundingTxidBytes
+     * @param string $fundingTxidBytes Txid of the funding transaction. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */
@@ -262,7 +262,7 @@ class LnrpcChannelPoint implements ModelInterface, ArrayAccess
     /**
      * Sets fundingTxidStr
      *
-     * @param string $fundingTxidStr fundingTxidStr
+     * @param string $fundingTxidStr Hex-encoded string representing the byte-reversed hash of the funding transaction.
      *
      * @return $this
      */

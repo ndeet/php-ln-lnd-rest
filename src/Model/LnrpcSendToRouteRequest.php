@@ -233,7 +233,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     /**
      * Sets paymentHash
      *
-     * @param string $paymentHash / The payment hash to use for the HTLC.
+     * @param string $paymentHash The payment hash to use for the HTLC. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */
@@ -262,7 +262,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     /**
      * Sets paymentHashString
      *
-     * @param string $paymentHashString / An optional hex-encoded payment hash to be used for the HTLC.
+     * @param string $paymentHashString An optional hex-encoded payment hash to be used for the HTLC. Deprecated now that the REST gateway supports base64 encoding of bytes fields.
      *
      * @return $this
      */
@@ -286,7 +286,7 @@ class LnrpcSendToRouteRequest implements ModelInterface, ArrayAccess
     /**
      * Sets route
      *
-     * @param \Lnd\Rest\Model\LnrpcRoute $route / Route that should be used to attempt to complete the payment.
+     * @param \Lnd\Rest\Model\LnrpcRoute $route Route that should be used to attempt to complete the payment.
      *
      * @return $this
      */

@@ -227,7 +227,7 @@ class LnrpcVerifyMessageRequest implements ModelInterface, ArrayAccess
     /**
      * Sets msg
      *
-     * @param string $msg msg
+     * @param string $msg The message over which the signature is to be verified. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */

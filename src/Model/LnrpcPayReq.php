@@ -66,7 +66,10 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'descriptionHash' => 'string',
         'fallbackAddr' => 'string',
         'cltvExpiry' => 'string',
-        'routeHints' => '\Lnd\Rest\Model\LnrpcRouteHint[]'
+        'routeHints' => '\Lnd\Rest\Model\LnrpcRouteHint[]',
+        'paymentAddr' => 'string',
+        'numMsat' => 'string',
+        'features' => 'map[string,\Lnd\Rest\Model\LnrpcFeature]'
     ];
 
     /**
@@ -84,7 +87,10 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'descriptionHash' => null,
         'fallbackAddr' => null,
         'cltvExpiry' => 'int64',
-        'routeHints' => null
+        'routeHints' => null,
+        'paymentAddr' => 'byte',
+        'numMsat' => 'int64',
+        'features' => null
     ];
 
     /**
@@ -123,7 +129,10 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'descriptionHash' => 'description_hash',
         'fallbackAddr' => 'fallback_addr',
         'cltvExpiry' => 'cltv_expiry',
-        'routeHints' => 'route_hints'
+        'routeHints' => 'route_hints',
+        'paymentAddr' => 'payment_addr',
+        'numMsat' => 'num_msat',
+        'features' => 'features'
     ];
 
     /**
@@ -141,7 +150,10 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'descriptionHash' => 'setDescriptionHash',
         'fallbackAddr' => 'setFallbackAddr',
         'cltvExpiry' => 'setCltvExpiry',
-        'routeHints' => 'setRouteHints'
+        'routeHints' => 'setRouteHints',
+        'paymentAddr' => 'setPaymentAddr',
+        'numMsat' => 'setNumMsat',
+        'features' => 'setFeatures'
     ];
 
     /**
@@ -159,7 +171,10 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         'descriptionHash' => 'getDescriptionHash',
         'fallbackAddr' => 'getFallbackAddr',
         'cltvExpiry' => 'getCltvExpiry',
-        'routeHints' => 'getRouteHints'
+        'routeHints' => 'getRouteHints',
+        'paymentAddr' => 'getPaymentAddr',
+        'numMsat' => 'getNumMsat',
+        'features' => 'getFeatures'
     ];
 
     /**
@@ -232,6 +247,9 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
         $this->container['fallbackAddr'] = isset($data['fallbackAddr']) ? $data['fallbackAddr'] : null;
         $this->container['cltvExpiry'] = isset($data['cltvExpiry']) ? $data['cltvExpiry'] : null;
         $this->container['routeHints'] = isset($data['routeHints']) ? $data['routeHints'] : null;
+        $this->container['paymentAddr'] = isset($data['paymentAddr']) ? $data['paymentAddr'] : null;
+        $this->container['numMsat'] = isset($data['numMsat']) ? $data['numMsat'] : null;
+        $this->container['features'] = isset($data['features']) ? $data['features'] : null;
     }
 
     /**
@@ -242,6 +260,10 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
     public function listInvalidProperties()
     {
         $invalidProperties = [];
+
+        if (!is_null($this->container['paymentAddr']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['paymentAddr'])) {
+            $invalidProperties[] = "invalid value for 'paymentAddr', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        }
 
         return $invalidProperties;
     }
@@ -494,6 +516,83 @@ class LnrpcPayReq implements ModelInterface, ArrayAccess
     public function setRouteHints($routeHints)
     {
         $this->container['routeHints'] = $routeHints;
+
+        return $this;
+    }
+
+    /**
+     * Gets paymentAddr
+     *
+     * @return string
+     */
+    public function getPaymentAddr()
+    {
+        return $this->container['paymentAddr'];
+    }
+
+    /**
+     * Sets paymentAddr
+     *
+     * @param string $paymentAddr paymentAddr
+     *
+     * @return $this
+     */
+    public function setPaymentAddr($paymentAddr)
+    {
+
+        if (!is_null($paymentAddr) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $paymentAddr))) {
+            throw new \InvalidArgumentException("invalid value for $paymentAddr when calling LnrpcPayReq., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        }
+
+        $this->container['paymentAddr'] = $paymentAddr;
+
+        return $this;
+    }
+
+    /**
+     * Gets numMsat
+     *
+     * @return string
+     */
+    public function getNumMsat()
+    {
+        return $this->container['numMsat'];
+    }
+
+    /**
+     * Sets numMsat
+     *
+     * @param string $numMsat numMsat
+     *
+     * @return $this
+     */
+    public function setNumMsat($numMsat)
+    {
+        $this->container['numMsat'] = $numMsat;
+
+        return $this;
+    }
+
+    /**
+     * Gets features
+     *
+     * @return map[string,\Lnd\Rest\Model\LnrpcFeature]
+     */
+    public function getFeatures()
+    {
+        return $this->container['features'];
+    }
+
+    /**
+     * Sets features
+     *
+     * @param map[string,\Lnd\Rest\Model\LnrpcFeature] $features features
+     *
+     * @return $this
+     */
+    public function setFeatures($features)
+    {
+        $this->container['features'] = $features;
 
         return $this;
     }

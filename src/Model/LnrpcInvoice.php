@@ -58,10 +58,10 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'memo' => 'string',
-        'receipt' => 'string',
         'rPreimage' => 'string',
         'rHash' => 'string',
         'value' => 'string',
+        'valueMsat' => 'string',
         'settled' => 'bool',
         'creationDate' => 'string',
         'settleDate' => 'string',
@@ -77,7 +77,12 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'string',
         'amtPaidSat' => 'string',
         'amtPaidMsat' => 'string',
-        'state' => '\Lnd\Rest\Model\InvoiceInvoiceState'
+        'state' => '\Lnd\Rest\Model\InvoiceInvoiceState',
+        'htlcs' => '\Lnd\Rest\Model\LnrpcInvoiceHTLC[]',
+        'features' => 'map[string,\Lnd\Rest\Model\LnrpcFeature]',
+        'isKeysend' => 'bool',
+        'paymentAddr' => 'string',
+        'isAmp' => 'bool'
     ];
 
     /**
@@ -87,10 +92,10 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'memo' => null,
-        'receipt' => 'byte',
         'rPreimage' => 'byte',
         'rHash' => 'byte',
         'value' => 'int64',
+        'valueMsat' => 'int64',
         'settled' => 'boolean',
         'creationDate' => 'int64',
         'settleDate' => 'int64',
@@ -106,7 +111,12 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'int64',
         'amtPaidSat' => 'int64',
         'amtPaidMsat' => 'int64',
-        'state' => null
+        'state' => null,
+        'htlcs' => null,
+        'features' => null,
+        'isKeysend' => 'boolean',
+        'paymentAddr' => 'byte',
+        'isAmp' => 'boolean'
     ];
 
     /**
@@ -137,10 +147,10 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'memo' => 'memo',
-        'receipt' => 'receipt',
         'rPreimage' => 'r_preimage',
         'rHash' => 'r_hash',
         'value' => 'value',
+        'valueMsat' => 'value_msat',
         'settled' => 'settled',
         'creationDate' => 'creation_date',
         'settleDate' => 'settle_date',
@@ -156,7 +166,12 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'amt_paid',
         'amtPaidSat' => 'amt_paid_sat',
         'amtPaidMsat' => 'amt_paid_msat',
-        'state' => 'state'
+        'state' => 'state',
+        'htlcs' => 'htlcs',
+        'features' => 'features',
+        'isKeysend' => 'is_keysend',
+        'paymentAddr' => 'payment_addr',
+        'isAmp' => 'is_amp'
     ];
 
     /**
@@ -166,10 +181,10 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'memo' => 'setMemo',
-        'receipt' => 'setReceipt',
         'rPreimage' => 'setRPreimage',
         'rHash' => 'setRHash',
         'value' => 'setValue',
+        'valueMsat' => 'setValueMsat',
         'settled' => 'setSettled',
         'creationDate' => 'setCreationDate',
         'settleDate' => 'setSettleDate',
@@ -185,7 +200,12 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'setAmtPaid',
         'amtPaidSat' => 'setAmtPaidSat',
         'amtPaidMsat' => 'setAmtPaidMsat',
-        'state' => 'setState'
+        'state' => 'setState',
+        'htlcs' => 'setHtlcs',
+        'features' => 'setFeatures',
+        'isKeysend' => 'setIsKeysend',
+        'paymentAddr' => 'setPaymentAddr',
+        'isAmp' => 'setIsAmp'
     ];
 
     /**
@@ -195,10 +215,10 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'memo' => 'getMemo',
-        'receipt' => 'getReceipt',
         'rPreimage' => 'getRPreimage',
         'rHash' => 'getRHash',
         'value' => 'getValue',
+        'valueMsat' => 'getValueMsat',
         'settled' => 'getSettled',
         'creationDate' => 'getCreationDate',
         'settleDate' => 'getSettleDate',
@@ -214,7 +234,12 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         'amtPaid' => 'getAmtPaid',
         'amtPaidSat' => 'getAmtPaidSat',
         'amtPaidMsat' => 'getAmtPaidMsat',
-        'state' => 'getState'
+        'state' => 'getState',
+        'htlcs' => 'getHtlcs',
+        'features' => 'getFeatures',
+        'isKeysend' => 'getIsKeysend',
+        'paymentAddr' => 'getPaymentAddr',
+        'isAmp' => 'getIsAmp'
     ];
 
     /**
@@ -278,10 +303,10 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['memo'] = isset($data['memo']) ? $data['memo'] : null;
-        $this->container['receipt'] = isset($data['receipt']) ? $data['receipt'] : null;
         $this->container['rPreimage'] = isset($data['rPreimage']) ? $data['rPreimage'] : null;
         $this->container['rHash'] = isset($data['rHash']) ? $data['rHash'] : null;
         $this->container['value'] = isset($data['value']) ? $data['value'] : null;
+        $this->container['valueMsat'] = isset($data['valueMsat']) ? $data['valueMsat'] : null;
         $this->container['settled'] = isset($data['settled']) ? $data['settled'] : null;
         $this->container['creationDate'] = isset($data['creationDate']) ? $data['creationDate'] : null;
         $this->container['settleDate'] = isset($data['settleDate']) ? $data['settleDate'] : null;
@@ -298,6 +323,11 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
         $this->container['amtPaidSat'] = isset($data['amtPaidSat']) ? $data['amtPaidSat'] : null;
         $this->container['amtPaidMsat'] = isset($data['amtPaidMsat']) ? $data['amtPaidMsat'] : null;
         $this->container['state'] = isset($data['state']) ? $data['state'] : null;
+        $this->container['htlcs'] = isset($data['htlcs']) ? $data['htlcs'] : null;
+        $this->container['features'] = isset($data['features']) ? $data['features'] : null;
+        $this->container['isKeysend'] = isset($data['isKeysend']) ? $data['isKeysend'] : null;
+        $this->container['paymentAddr'] = isset($data['paymentAddr']) ? $data['paymentAddr'] : null;
+        $this->container['isAmp'] = isset($data['isAmp']) ? $data['isAmp'] : null;
     }
 
     /**
@@ -309,10 +339,6 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     {
         $invalidProperties = [];
 
-        if (!is_null($this->container['receipt']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['receipt'])) {
-            $invalidProperties[] = "invalid value for 'receipt', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
-        }
-
         if (!is_null($this->container['rPreimage']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['rPreimage'])) {
             $invalidProperties[] = "invalid value for 'rPreimage', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
         }
@@ -323,6 +349,10 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
 
         if (!is_null($this->container['descriptionHash']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['descriptionHash'])) {
             $invalidProperties[] = "invalid value for 'descriptionHash', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        }
+
+        if (!is_null($this->container['paymentAddr']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['paymentAddr'])) {
+            $invalidProperties[] = "invalid value for 'paymentAddr', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
         }
 
         return $invalidProperties;
@@ -353,42 +383,13 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets memo
      *
-     * @param string $memo * An optional memo to attach along with the invoice. Used for record keeping purposes for the invoice's creator, and will also be set in the description field of the encoded payment request if the description_hash field is not being used.
+     * @param string $memo An optional memo to attach along with the invoice. Used for record keeping purposes for the invoice's creator, and will also be set in the description field of the encoded payment request if the description_hash field is not being used.
      *
      * @return $this
      */
     public function setMemo($memo)
     {
         $this->container['memo'] = $memo;
-
-        return $this;
-    }
-
-    /**
-     * Gets receipt
-     *
-     * @return string
-     */
-    public function getReceipt()
-    {
-        return $this->container['receipt'];
-    }
-
-    /**
-     * Sets receipt
-     *
-     * @param string $receipt * Deprecated. An optional cryptographic receipt of payment which is not implemented.
-     *
-     * @return $this
-     */
-    public function setReceipt($receipt)
-    {
-
-        if (!is_null($receipt) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $receipt))) {
-            throw new \InvalidArgumentException("invalid value for $receipt when calling LnrpcInvoice., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
-        }
-
-        $this->container['receipt'] = $receipt;
 
         return $this;
     }
@@ -406,7 +407,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets rPreimage
      *
-     * @param string $rPreimage rPreimage
+     * @param string $rPreimage The hex-encoded preimage (32 byte) which will allow settling an incoming HTLC payable to this preimage. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */
@@ -435,7 +436,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets rHash
      *
-     * @param string $rHash rHash
+     * @param string $rHash The hash of the preimage. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */
@@ -464,13 +465,37 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets value
      *
-     * @param string $value value
+     * @param string $value The fields value and value_msat are mutually exclusive.
      *
      * @return $this
      */
     public function setValue($value)
     {
         $this->container['value'] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Gets valueMsat
+     *
+     * @return string
+     */
+    public function getValueMsat()
+    {
+        return $this->container['valueMsat'];
+    }
+
+    /**
+     * Sets valueMsat
+     *
+     * @param string $valueMsat The fields value and value_msat are mutually exclusive.
+     *
+     * @return $this
+     */
+    public function setValueMsat($valueMsat)
+    {
+        $this->container['valueMsat'] = $valueMsat;
 
         return $this;
     }
@@ -560,7 +585,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets paymentRequest
      *
-     * @param string $paymentRequest * A bare-bones invoice for a payment within the Lightning Network.  With the details of the invoice, the sender has all the data necessary to send a payment to the recipient.
+     * @param string $paymentRequest A bare-bones invoice for a payment within the Lightning Network. With the details of the invoice, the sender has all the data necessary to send a payment to the recipient.
      *
      * @return $this
      */
@@ -584,7 +609,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets descriptionHash
      *
-     * @param string $descriptionHash * Hash (SHA-256) of a description of the payment. Used if the description of payment (memo) is too long to naturally fit within the description field of an encoded payment request.
+     * @param string $descriptionHash Hash (SHA-256) of a description of the payment. Used if the description of payment (memo) is too long to naturally fit within the description field of an encoded payment request. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */
@@ -613,7 +638,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets expiry
      *
-     * @param string $expiry / Payment request expiry time in seconds. Default is 3600 (1 hour).
+     * @param string $expiry Payment request expiry time in seconds. Default is 3600 (1 hour).
      *
      * @return $this
      */
@@ -637,7 +662,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets fallbackAddr
      *
-     * @param string $fallbackAddr / Fallback on-chain address.
+     * @param string $fallbackAddr Fallback on-chain address.
      *
      * @return $this
      */
@@ -661,7 +686,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets cltvExpiry
      *
-     * @param string $cltvExpiry / Delta to use for the time-lock of the CLTV extended to the final hop.
+     * @param string $cltvExpiry Delta to use for the time-lock of the CLTV extended to the final hop.
      *
      * @return $this
      */
@@ -685,7 +710,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets routeHints
      *
-     * @param \Lnd\Rest\Model\LnrpcRouteHint[] $routeHints * Route hints that can each be individually used to assist in reaching the invoice's destination.
+     * @param \Lnd\Rest\Model\LnrpcRouteHint[] $routeHints Route hints that can each be individually used to assist in reaching the invoice's destination.
      *
      * @return $this
      */
@@ -709,7 +734,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets private
      *
-     * @param bool $private / Whether this invoice should include routing hints for private channels.
+     * @param bool $private Whether this invoice should include routing hints for private channels.
      *
      * @return $this
      */
@@ -733,7 +758,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets addIndex
      *
-     * @param string $addIndex * The \"add\" index of this invoice. Each newly created invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all added invoices with an add_index greater than this one.
+     * @param string $addIndex The \"add\" index of this invoice. Each newly created invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all added invoices with an add_index greater than this one.
      *
      * @return $this
      */
@@ -757,7 +782,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets settleIndex
      *
-     * @param string $settleIndex * The \"settle\" index of this invoice. Each newly settled invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all settled invoices with an settle_index greater than this one.
+     * @param string $settleIndex The \"settle\" index of this invoice. Each newly settled invoice will increment this index making it monotonically increasing. Callers to the SubscribeInvoices call can use this to instantly get notified of all settled invoices with an settle_index greater than this one.
      *
      * @return $this
      */
@@ -781,7 +806,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets amtPaid
      *
-     * @param string $amtPaid / Deprecated, use amt_paid_sat or amt_paid_msat.
+     * @param string $amtPaid Deprecated, use amt_paid_sat or amt_paid_msat.
      *
      * @return $this
      */
@@ -805,7 +830,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets amtPaidSat
      *
-     * @param string $amtPaidSat * The amount that was accepted for this invoice, in satoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it's possible that the sender paid MORE that was specified in the original invoice. So we'll record that here as well.
+     * @param string $amtPaidSat The amount that was accepted for this invoice, in satoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it's possible that the sender paid MORE that was specified in the original invoice. So we'll record that here as well.
      *
      * @return $this
      */
@@ -829,7 +854,7 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets amtPaidMsat
      *
-     * @param string $amtPaidMsat * The amount that was accepted for this invoice, in millisatoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it's possible that the sender paid MORE that was specified in the original invoice. So we'll record that here as well.
+     * @param string $amtPaidMsat The amount that was accepted for this invoice, in millisatoshis. This will ONLY be set if this invoice has been settled. We provide this field as if the invoice was created with a zero value, then we need to record what amount was ultimately accepted. Additionally, it's possible that the sender paid MORE that was specified in the original invoice. So we'll record that here as well.
      *
      * @return $this
      */
@@ -853,13 +878,138 @@ class LnrpcInvoice implements ModelInterface, ArrayAccess
     /**
      * Sets state
      *
-     * @param \Lnd\Rest\Model\InvoiceInvoiceState $state * The state the invoice is in.
+     * @param \Lnd\Rest\Model\InvoiceInvoiceState $state The state the invoice is in.
      *
      * @return $this
      */
     public function setState($state)
     {
         $this->container['state'] = $state;
+
+        return $this;
+    }
+
+    /**
+     * Gets htlcs
+     *
+     * @return \Lnd\Rest\Model\LnrpcInvoiceHTLC[]
+     */
+    public function getHtlcs()
+    {
+        return $this->container['htlcs'];
+    }
+
+    /**
+     * Sets htlcs
+     *
+     * @param \Lnd\Rest\Model\LnrpcInvoiceHTLC[] $htlcs List of HTLCs paying to this invoice [EXPERIMENTAL].
+     *
+     * @return $this
+     */
+    public function setHtlcs($htlcs)
+    {
+        $this->container['htlcs'] = $htlcs;
+
+        return $this;
+    }
+
+    /**
+     * Gets features
+     *
+     * @return map[string,\Lnd\Rest\Model\LnrpcFeature]
+     */
+    public function getFeatures()
+    {
+        return $this->container['features'];
+    }
+
+    /**
+     * Sets features
+     *
+     * @param map[string,\Lnd\Rest\Model\LnrpcFeature] $features List of features advertised on the invoice.
+     *
+     * @return $this
+     */
+    public function setFeatures($features)
+    {
+        $this->container['features'] = $features;
+
+        return $this;
+    }
+
+    /**
+     * Gets isKeysend
+     *
+     * @return bool
+     */
+    public function getIsKeysend()
+    {
+        return $this->container['isKeysend'];
+    }
+
+    /**
+     * Sets isKeysend
+     *
+     * @param bool $isKeysend Indicates if this invoice was a spontaneous payment that arrived via keysend [EXPERIMENTAL].
+     *
+     * @return $this
+     */
+    public function setIsKeysend($isKeysend)
+    {
+        $this->container['isKeysend'] = $isKeysend;
+
+        return $this;
+    }
+
+    /**
+     * Gets paymentAddr
+     *
+     * @return string
+     */
+    public function getPaymentAddr()
+    {
+        return $this->container['paymentAddr'];
+    }
+
+    /**
+     * Sets paymentAddr
+     *
+     * @param string $paymentAddr The payment address of this invoice. This value will be used in MPP payments, and also for newer invoies that always require the MPP paylaod for added end-to-end security.
+     *
+     * @return $this
+     */
+    public function setPaymentAddr($paymentAddr)
+    {
+
+        if (!is_null($paymentAddr) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $paymentAddr))) {
+            throw new \InvalidArgumentException("invalid value for $paymentAddr when calling LnrpcInvoice., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        }
+
+        $this->container['paymentAddr'] = $paymentAddr;
+
+        return $this;
+    }
+
+    /**
+     * Gets isAmp
+     *
+     * @return bool
+     */
+    public function getIsAmp()
+    {
+        return $this->container['isAmp'];
+    }
+
+    /**
+     * Sets isAmp
+     *
+     * @param bool $isAmp Signals whether or not this is an AMP invoice.
+     *
+     * @return $this
+     */
+    public function setIsAmp($isAmp)
+    {
+        $this->container['isAmp'] = $isAmp;
 
         return $this;
     }

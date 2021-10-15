@@ -227,7 +227,7 @@ class LnrpcMultiChanBackup implements ModelInterface, ArrayAccess
     /**
      * Sets chanPoints
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelPoint[] $chanPoints * Is the set of all channels that are included in this multi-channel backup.
+     * @param \Lnd\Rest\Model\LnrpcChannelPoint[] $chanPoints Is the set of all channels that are included in this multi-channel backup.
      *
      * @return $this
      */
@@ -251,7 +251,7 @@ class LnrpcMultiChanBackup implements ModelInterface, ArrayAccess
     /**
      * Sets multiChanBackup
      *
-     * @param string $multiChanBackup * A single encrypted blob containing all the static channel backups of the channel listed above. This can be stored as a single file or blob, and safely be replaced with any prior/future versions.
+     * @param string $multiChanBackup A single encrypted blob containing all the static channel backups of the channel listed above. This can be stored as a single file or blob, and safely be replaced with any prior/future versions. When using REST, this field must be encoded as base64.
      *
      * @return $this
      */

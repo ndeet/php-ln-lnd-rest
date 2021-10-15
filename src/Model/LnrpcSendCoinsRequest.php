@@ -60,8 +60,12 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => 'string',
         'amount' => 'string',
         'targetConf' => 'int',
+        'satPerVbyte' => 'string',
         'satPerByte' => 'string',
-        'sendAll' => 'bool'
+        'sendAll' => 'bool',
+        'label' => 'string',
+        'minConfs' => 'int',
+        'spendUnconfirmed' => 'bool'
     ];
 
     /**
@@ -73,8 +77,12 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => null,
         'amount' => 'int64',
         'targetConf' => 'int32',
+        'satPerVbyte' => 'uint64',
         'satPerByte' => 'int64',
-        'sendAll' => 'boolean'
+        'sendAll' => 'boolean',
+        'label' => null,
+        'minConfs' => 'int32',
+        'spendUnconfirmed' => 'boolean'
     ];
 
     /**
@@ -107,8 +115,12 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => 'addr',
         'amount' => 'amount',
         'targetConf' => 'target_conf',
+        'satPerVbyte' => 'sat_per_vbyte',
         'satPerByte' => 'sat_per_byte',
-        'sendAll' => 'send_all'
+        'sendAll' => 'send_all',
+        'label' => 'label',
+        'minConfs' => 'min_confs',
+        'spendUnconfirmed' => 'spend_unconfirmed'
     ];
 
     /**
@@ -120,8 +132,12 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => 'setAddr',
         'amount' => 'setAmount',
         'targetConf' => 'setTargetConf',
+        'satPerVbyte' => 'setSatPerVbyte',
         'satPerByte' => 'setSatPerByte',
-        'sendAll' => 'setSendAll'
+        'sendAll' => 'setSendAll',
+        'label' => 'setLabel',
+        'minConfs' => 'setMinConfs',
+        'spendUnconfirmed' => 'setSpendUnconfirmed'
     ];
 
     /**
@@ -133,8 +149,12 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         'addr' => 'getAddr',
         'amount' => 'getAmount',
         'targetConf' => 'getTargetConf',
+        'satPerVbyte' => 'getSatPerVbyte',
         'satPerByte' => 'getSatPerByte',
-        'sendAll' => 'getSendAll'
+        'sendAll' => 'getSendAll',
+        'label' => 'getLabel',
+        'minConfs' => 'getMinConfs',
+        'spendUnconfirmed' => 'getSpendUnconfirmed'
     ];
 
     /**
@@ -200,8 +220,12 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
         $this->container['addr'] = isset($data['addr']) ? $data['addr'] : null;
         $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
         $this->container['targetConf'] = isset($data['targetConf']) ? $data['targetConf'] : null;
+        $this->container['satPerVbyte'] = isset($data['satPerVbyte']) ? $data['satPerVbyte'] : null;
         $this->container['satPerByte'] = isset($data['satPerByte']) ? $data['satPerByte'] : null;
         $this->container['sendAll'] = isset($data['sendAll']) ? $data['sendAll'] : null;
+        $this->container['label'] = isset($data['label']) ? $data['label'] : null;
+        $this->container['minConfs'] = isset($data['minConfs']) ? $data['minConfs'] : null;
+        $this->container['spendUnconfirmed'] = isset($data['spendUnconfirmed']) ? $data['spendUnconfirmed'] : null;
     }
 
     /**
@@ -289,13 +313,37 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
     /**
      * Sets targetConf
      *
-     * @param int $targetConf / The target number of blocks that this transaction should be confirmed by.
+     * @param int $targetConf The target number of blocks that this transaction should be confirmed by.
      *
      * @return $this
      */
     public function setTargetConf($targetConf)
     {
         $this->container['targetConf'] = $targetConf;
+
+        return $this;
+    }
+
+    /**
+     * Gets satPerVbyte
+     *
+     * @return string
+     */
+    public function getSatPerVbyte()
+    {
+        return $this->container['satPerVbyte'];
+    }
+
+    /**
+     * Sets satPerVbyte
+     *
+     * @param string $satPerVbyte A manual fee rate set in sat/vbyte that should be used when crafting the transaction.
+     *
+     * @return $this
+     */
+    public function setSatPerVbyte($satPerVbyte)
+    {
+        $this->container['satPerVbyte'] = $satPerVbyte;
 
         return $this;
     }
@@ -313,7 +361,7 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
     /**
      * Sets satPerByte
      *
-     * @param string $satPerByte / A manual fee rate set in sat/byte that should be used when crafting the transaction.
+     * @param string $satPerByte Deprecated, use sat_per_vbyte. A manual fee rate set in sat/vbyte that should be used when crafting the transaction.
      *
      * @return $this
      */
@@ -337,13 +385,85 @@ class LnrpcSendCoinsRequest implements ModelInterface, ArrayAccess
     /**
      * Sets sendAll
      *
-     * @param bool $sendAll * If set, then the amount field will be ignored, and lnd will attempt to send all the coins under control of the internal wallet to the specified address.
+     * @param bool $sendAll If set, then the amount field will be ignored, and lnd will attempt to send all the coins under control of the internal wallet to the specified address.
      *
      * @return $this
      */
     public function setSendAll($sendAll)
     {
         $this->container['sendAll'] = $sendAll;
+
+        return $this;
+    }
+
+    /**
+     * Gets label
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->container['label'];
+    }
+
+    /**
+     * Sets label
+     *
+     * @param string $label An optional label for the transaction, limited to 500 characters.
+     *
+     * @return $this
+     */
+    public function setLabel($label)
+    {
+        $this->container['label'] = $label;
+
+        return $this;
+    }
+
+    /**
+     * Gets minConfs
+     *
+     * @return int
+     */
+    public function getMinConfs()
+    {
+        return $this->container['minConfs'];
+    }
+
+    /**
+     * Sets minConfs
+     *
+     * @param int $minConfs The minimum number of confirmations each one of your outputs used for the transaction must satisfy.
+     *
+     * @return $this
+     */
+    public function setMinConfs($minConfs)
+    {
+        $this->container['minConfs'] = $minConfs;
+
+        return $this;
+    }
+
+    /**
+     * Gets spendUnconfirmed
+     *
+     * @return bool
+     */
+    public function getSpendUnconfirmed()
+    {
+        return $this->container['spendUnconfirmed'];
+    }
+
+    /**
+     * Sets spendUnconfirmed
+     *
+     * @param bool $spendUnconfirmed Whether unconfirmed outputs should be used as inputs for the transaction.
+     *
+     * @return $this
+     */
+    public function setSpendUnconfirmed($spendUnconfirmed)
+    {
+        $this->container['spendUnconfirmed'] = $spendUnconfirmed;
 
         return $this;
     }

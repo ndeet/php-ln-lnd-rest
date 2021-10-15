@@ -58,7 +58,13 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'balance' => 'string',
-        'pendingOpenBalance' => 'string'
+        'pendingOpenBalance' => 'string',
+        'localBalance' => '\Lnd\Rest\Model\LnrpcAmount',
+        'remoteBalance' => '\Lnd\Rest\Model\LnrpcAmount',
+        'unsettledLocalBalance' => '\Lnd\Rest\Model\LnrpcAmount',
+        'unsettledRemoteBalance' => '\Lnd\Rest\Model\LnrpcAmount',
+        'pendingOpenLocalBalance' => '\Lnd\Rest\Model\LnrpcAmount',
+        'pendingOpenRemoteBalance' => '\Lnd\Rest\Model\LnrpcAmount'
     ];
 
     /**
@@ -68,7 +74,13 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'balance' => 'int64',
-        'pendingOpenBalance' => 'int64'
+        'pendingOpenBalance' => 'int64',
+        'localBalance' => null,
+        'remoteBalance' => null,
+        'unsettledLocalBalance' => null,
+        'unsettledRemoteBalance' => null,
+        'pendingOpenLocalBalance' => null,
+        'pendingOpenRemoteBalance' => null
     ];
 
     /**
@@ -99,7 +111,13 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'balance' => 'balance',
-        'pendingOpenBalance' => 'pending_open_balance'
+        'pendingOpenBalance' => 'pending_open_balance',
+        'localBalance' => 'local_balance',
+        'remoteBalance' => 'remote_balance',
+        'unsettledLocalBalance' => 'unsettled_local_balance',
+        'unsettledRemoteBalance' => 'unsettled_remote_balance',
+        'pendingOpenLocalBalance' => 'pending_open_local_balance',
+        'pendingOpenRemoteBalance' => 'pending_open_remote_balance'
     ];
 
     /**
@@ -109,7 +127,13 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'balance' => 'setBalance',
-        'pendingOpenBalance' => 'setPendingOpenBalance'
+        'pendingOpenBalance' => 'setPendingOpenBalance',
+        'localBalance' => 'setLocalBalance',
+        'remoteBalance' => 'setRemoteBalance',
+        'unsettledLocalBalance' => 'setUnsettledLocalBalance',
+        'unsettledRemoteBalance' => 'setUnsettledRemoteBalance',
+        'pendingOpenLocalBalance' => 'setPendingOpenLocalBalance',
+        'pendingOpenRemoteBalance' => 'setPendingOpenRemoteBalance'
     ];
 
     /**
@@ -119,7 +143,13 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'balance' => 'getBalance',
-        'pendingOpenBalance' => 'getPendingOpenBalance'
+        'pendingOpenBalance' => 'getPendingOpenBalance',
+        'localBalance' => 'getLocalBalance',
+        'remoteBalance' => 'getRemoteBalance',
+        'unsettledLocalBalance' => 'getUnsettledLocalBalance',
+        'unsettledRemoteBalance' => 'getUnsettledRemoteBalance',
+        'pendingOpenLocalBalance' => 'getPendingOpenLocalBalance',
+        'pendingOpenRemoteBalance' => 'getPendingOpenRemoteBalance'
     ];
 
     /**
@@ -184,6 +214,12 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
     {
         $this->container['balance'] = isset($data['balance']) ? $data['balance'] : null;
         $this->container['pendingOpenBalance'] = isset($data['pendingOpenBalance']) ? $data['pendingOpenBalance'] : null;
+        $this->container['localBalance'] = isset($data['localBalance']) ? $data['localBalance'] : null;
+        $this->container['remoteBalance'] = isset($data['remoteBalance']) ? $data['remoteBalance'] : null;
+        $this->container['unsettledLocalBalance'] = isset($data['unsettledLocalBalance']) ? $data['unsettledLocalBalance'] : null;
+        $this->container['unsettledRemoteBalance'] = isset($data['unsettledRemoteBalance']) ? $data['unsettledRemoteBalance'] : null;
+        $this->container['pendingOpenLocalBalance'] = isset($data['pendingOpenLocalBalance']) ? $data['pendingOpenLocalBalance'] : null;
+        $this->container['pendingOpenRemoteBalance'] = isset($data['pendingOpenRemoteBalance']) ? $data['pendingOpenRemoteBalance'] : null;
     }
 
     /**
@@ -254,6 +290,150 @@ class LnrpcChannelBalanceResponse implements ModelInterface, ArrayAccess
     public function setPendingOpenBalance($pendingOpenBalance)
     {
         $this->container['pendingOpenBalance'] = $pendingOpenBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets localBalance
+     *
+     * @return \Lnd\Rest\Model\LnrpcAmount
+     */
+    public function getLocalBalance()
+    {
+        return $this->container['localBalance'];
+    }
+
+    /**
+     * Sets localBalance
+     *
+     * @param \Lnd\Rest\Model\LnrpcAmount $localBalance Sum of channels local balances.
+     *
+     * @return $this
+     */
+    public function setLocalBalance($localBalance)
+    {
+        $this->container['localBalance'] = $localBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets remoteBalance
+     *
+     * @return \Lnd\Rest\Model\LnrpcAmount
+     */
+    public function getRemoteBalance()
+    {
+        return $this->container['remoteBalance'];
+    }
+
+    /**
+     * Sets remoteBalance
+     *
+     * @param \Lnd\Rest\Model\LnrpcAmount $remoteBalance Sum of channels remote balances.
+     *
+     * @return $this
+     */
+    public function setRemoteBalance($remoteBalance)
+    {
+        $this->container['remoteBalance'] = $remoteBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets unsettledLocalBalance
+     *
+     * @return \Lnd\Rest\Model\LnrpcAmount
+     */
+    public function getUnsettledLocalBalance()
+    {
+        return $this->container['unsettledLocalBalance'];
+    }
+
+    /**
+     * Sets unsettledLocalBalance
+     *
+     * @param \Lnd\Rest\Model\LnrpcAmount $unsettledLocalBalance Sum of channels local unsettled balances.
+     *
+     * @return $this
+     */
+    public function setUnsettledLocalBalance($unsettledLocalBalance)
+    {
+        $this->container['unsettledLocalBalance'] = $unsettledLocalBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets unsettledRemoteBalance
+     *
+     * @return \Lnd\Rest\Model\LnrpcAmount
+     */
+    public function getUnsettledRemoteBalance()
+    {
+        return $this->container['unsettledRemoteBalance'];
+    }
+
+    /**
+     * Sets unsettledRemoteBalance
+     *
+     * @param \Lnd\Rest\Model\LnrpcAmount $unsettledRemoteBalance Sum of channels remote unsettled balances.
+     *
+     * @return $this
+     */
+    public function setUnsettledRemoteBalance($unsettledRemoteBalance)
+    {
+        $this->container['unsettledRemoteBalance'] = $unsettledRemoteBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets pendingOpenLocalBalance
+     *
+     * @return \Lnd\Rest\Model\LnrpcAmount
+     */
+    public function getPendingOpenLocalBalance()
+    {
+        return $this->container['pendingOpenLocalBalance'];
+    }
+
+    /**
+     * Sets pendingOpenLocalBalance
+     *
+     * @param \Lnd\Rest\Model\LnrpcAmount $pendingOpenLocalBalance Sum of channels pending local balances.
+     *
+     * @return $this
+     */
+    public function setPendingOpenLocalBalance($pendingOpenLocalBalance)
+    {
+        $this->container['pendingOpenLocalBalance'] = $pendingOpenLocalBalance;
+
+        return $this;
+    }
+
+    /**
+     * Gets pendingOpenRemoteBalance
+     *
+     * @return \Lnd\Rest\Model\LnrpcAmount
+     */
+    public function getPendingOpenRemoteBalance()
+    {
+        return $this->container['pendingOpenRemoteBalance'];
+    }
+
+    /**
+     * Sets pendingOpenRemoteBalance
+     *
+     * @param \Lnd\Rest\Model\LnrpcAmount $pendingOpenRemoteBalance Sum of channels pending remote balances.
+     *
+     * @return $this
+     */
+    public function setPendingOpenRemoteBalance($pendingOpenRemoteBalance)
+    {
+        $this->container['pendingOpenRemoteBalance'] = $pendingOpenRemoteBalance;
 
         return $this;
     }

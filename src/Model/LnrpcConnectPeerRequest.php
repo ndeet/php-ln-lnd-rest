@@ -58,7 +58,8 @@ class LnrpcConnectPeerRequest implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'addr' => '\Lnd\Rest\Model\LnrpcLightningAddress',
-        'perm' => 'bool'
+        'perm' => 'bool',
+        'timeout' => 'string'
     ];
 
     /**
@@ -68,7 +69,8 @@ class LnrpcConnectPeerRequest implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'addr' => null,
-        'perm' => 'boolean'
+        'perm' => 'boolean',
+        'timeout' => 'uint64'
     ];
 
     /**
@@ -99,7 +101,8 @@ class LnrpcConnectPeerRequest implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'addr' => 'addr',
-        'perm' => 'perm'
+        'perm' => 'perm',
+        'timeout' => 'timeout'
     ];
 
     /**
@@ -109,7 +112,8 @@ class LnrpcConnectPeerRequest implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'addr' => 'setAddr',
-        'perm' => 'setPerm'
+        'perm' => 'setPerm',
+        'timeout' => 'setTimeout'
     ];
 
     /**
@@ -119,7 +123,8 @@ class LnrpcConnectPeerRequest implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'addr' => 'getAddr',
-        'perm' => 'getPerm'
+        'perm' => 'getPerm',
+        'timeout' => 'getTimeout'
     ];
 
     /**
@@ -184,6 +189,7 @@ class LnrpcConnectPeerRequest implements ModelInterface, ArrayAccess
     {
         $this->container['addr'] = isset($data['addr']) ? $data['addr'] : null;
         $this->container['perm'] = isset($data['perm']) ? $data['perm'] : null;
+        $this->container['timeout'] = isset($data['timeout']) ? $data['timeout'] : null;
     }
 
     /**
@@ -247,13 +253,37 @@ class LnrpcConnectPeerRequest implements ModelInterface, ArrayAccess
     /**
      * Sets perm
      *
-     * @param bool $perm * If set, the daemon will attempt to persistently connect to the target peer.  Otherwise, the call will be synchronous.
+     * @param bool $perm If set, the daemon will attempt to persistently connect to the target peer. Otherwise, the call will be synchronous.
      *
      * @return $this
      */
     public function setPerm($perm)
     {
         $this->container['perm'] = $perm;
+
+        return $this;
+    }
+
+    /**
+     * Gets timeout
+     *
+     * @return string
+     */
+    public function getTimeout()
+    {
+        return $this->container['timeout'];
+    }
+
+    /**
+     * Sets timeout
+     *
+     * @param string $timeout The connection timeout value (in seconds) for this request. It won't affect other requests.
+     *
+     * @return $this
+     */
+    public function setTimeout($timeout)
+    {
+        $this->container['timeout'] = $timeout;
 
         return $this;
     }

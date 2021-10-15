@@ -233,7 +233,7 @@ class LnrpcOutPoint implements ModelInterface, ArrayAccess
     /**
      * Sets txidBytes
      *
-     * @param string $txidBytes / Raw bytes representing the transaction id.
+     * @param string $txidBytes Raw bytes representing the transaction id.
      *
      * @return $this
      */
@@ -262,7 +262,7 @@ class LnrpcOutPoint implements ModelInterface, ArrayAccess
     /**
      * Sets txidStr
      *
-     * @param string $txidStr / Reversed, hex-encoded string representing the transaction id.
+     * @param string $txidStr Reversed, hex-encoded string representing the transaction id.
      *
      * @return $this
      */
@@ -286,7 +286,7 @@ class LnrpcOutPoint implements ModelInterface, ArrayAccess
     /**
      * Sets outputIndex
      *
-     * @param int $outputIndex / The index of the output on the transaction.
+     * @param int $outputIndex The index of the output on the transaction.
      *
      * @return $this
      */

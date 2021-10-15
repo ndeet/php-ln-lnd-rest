@@ -57,7 +57,7 @@ class LnrpcUtxo implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'type' => '\Lnd\Rest\Model\LnrpcAddressType',
+        'addressType' => '\Lnd\Rest\Model\LnrpcAddressType',
         'address' => 'string',
         'amountSat' => 'string',
         'pkScript' => 'string',
@@ -71,7 +71,7 @@ class LnrpcUtxo implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'type' => null,
+        'addressType' => null,
         'address' => null,
         'amountSat' => 'int64',
         'pkScript' => null,
@@ -106,7 +106,7 @@ class LnrpcUtxo implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'type' => 'type',
+        'addressType' => 'address_type',
         'address' => 'address',
         'amountSat' => 'amount_sat',
         'pkScript' => 'pk_script',
@@ -120,7 +120,7 @@ class LnrpcUtxo implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'type' => 'setType',
+        'addressType' => 'setAddressType',
         'address' => 'setAddress',
         'amountSat' => 'setAmountSat',
         'pkScript' => 'setPkScript',
@@ -134,7 +134,7 @@ class LnrpcUtxo implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'type' => 'getType',
+        'addressType' => 'getAddressType',
         'address' => 'getAddress',
         'amountSat' => 'getAmountSat',
         'pkScript' => 'getPkScript',
@@ -202,7 +202,7 @@ class LnrpcUtxo implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
+        $this->container['addressType'] = isset($data['addressType']) ? $data['addressType'] : null;
         $this->container['address'] = isset($data['address']) ? $data['address'] : null;
         $this->container['amountSat'] = isset($data['amountSat']) ? $data['amountSat'] : null;
         $this->container['pkScript'] = isset($data['pkScript']) ? $data['pkScript'] : null;
@@ -235,25 +235,25 @@ class LnrpcUtxo implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets type
+     * Gets addressType
      *
      * @return \Lnd\Rest\Model\LnrpcAddressType
      */
-    public function getType()
+    public function getAddressType()
     {
-        return $this->container['type'];
+        return $this->container['addressType'];
     }
 
     /**
-     * Sets type
+     * Sets addressType
      *
-     * @param \Lnd\Rest\Model\LnrpcAddressType $type type
+     * @param \Lnd\Rest\Model\LnrpcAddressType $addressType addressType
      *
      * @return $this
      */
-    public function setType($type)
+    public function setAddressType($addressType)
     {
-        $this->container['type'] = $type;
+        $this->container['addressType'] = $addressType;
 
         return $this;
     }

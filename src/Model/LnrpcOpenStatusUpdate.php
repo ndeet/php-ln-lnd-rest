@@ -58,7 +58,9 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'chanPending' => '\Lnd\Rest\Model\LnrpcPendingUpdate',
-        'chanOpen' => '\Lnd\Rest\Model\LnrpcChannelOpenUpdate'
+        'chanOpen' => '\Lnd\Rest\Model\LnrpcChannelOpenUpdate',
+        'psbtFund' => '\Lnd\Rest\Model\LnrpcReadyForPsbtFunding',
+        'pendingChanId' => 'string'
     ];
 
     /**
@@ -68,7 +70,9 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'chanPending' => null,
-        'chanOpen' => null
+        'chanOpen' => null,
+        'psbtFund' => null,
+        'pendingChanId' => 'byte'
     ];
 
     /**
@@ -99,7 +103,9 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'chanPending' => 'chan_pending',
-        'chanOpen' => 'chan_open'
+        'chanOpen' => 'chan_open',
+        'psbtFund' => 'psbt_fund',
+        'pendingChanId' => 'pending_chan_id'
     ];
 
     /**
@@ -109,7 +115,9 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'chanPending' => 'setChanPending',
-        'chanOpen' => 'setChanOpen'
+        'chanOpen' => 'setChanOpen',
+        'psbtFund' => 'setPsbtFund',
+        'pendingChanId' => 'setPendingChanId'
     ];
 
     /**
@@ -119,7 +127,9 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'chanPending' => 'getChanPending',
-        'chanOpen' => 'getChanOpen'
+        'chanOpen' => 'getChanOpen',
+        'psbtFund' => 'getPsbtFund',
+        'pendingChanId' => 'getPendingChanId'
     ];
 
     /**
@@ -184,6 +194,8 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
     {
         $this->container['chanPending'] = isset($data['chanPending']) ? $data['chanPending'] : null;
         $this->container['chanOpen'] = isset($data['chanOpen']) ? $data['chanOpen'] : null;
+        $this->container['psbtFund'] = isset($data['psbtFund']) ? $data['psbtFund'] : null;
+        $this->container['pendingChanId'] = isset($data['pendingChanId']) ? $data['pendingChanId'] : null;
     }
 
     /**
@@ -194,6 +206,10 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
     public function listInvalidProperties()
     {
         $invalidProperties = [];
+
+        if (!is_null($this->container['pendingChanId']) && !preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $this->container['pendingChanId'])) {
+            $invalidProperties[] = "invalid value for 'pendingChanId', must be conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.";
+        }
 
         return $invalidProperties;
     }
@@ -223,7 +239,7 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
     /**
      * Sets chanPending
      *
-     * @param \Lnd\Rest\Model\LnrpcPendingUpdate $chanPending chanPending
+     * @param \Lnd\Rest\Model\LnrpcPendingUpdate $chanPending Signals that the channel is now fully negotiated and the funding transaction published.
      *
      * @return $this
      */
@@ -247,13 +263,66 @@ class LnrpcOpenStatusUpdate implements ModelInterface, ArrayAccess
     /**
      * Sets chanOpen
      *
-     * @param \Lnd\Rest\Model\LnrpcChannelOpenUpdate $chanOpen chanOpen
+     * @param \Lnd\Rest\Model\LnrpcChannelOpenUpdate $chanOpen Signals that the channel's funding transaction has now reached the required number of confirmations on chain and can be used.
      *
      * @return $this
      */
     public function setChanOpen($chanOpen)
     {
         $this->container['chanOpen'] = $chanOpen;
+
+        return $this;
+    }
+
+    /**
+     * Gets psbtFund
+     *
+     * @return \Lnd\Rest\Model\LnrpcReadyForPsbtFunding
+     */
+    public function getPsbtFund()
+    {
+        return $this->container['psbtFund'];
+    }
+
+    /**
+     * Sets psbtFund
+     *
+     * @param \Lnd\Rest\Model\LnrpcReadyForPsbtFunding $psbtFund Signals that the funding process has been suspended and the construction of a PSBT that funds the channel PK script is now required.
+     *
+     * @return $this
+     */
+    public function setPsbtFund($psbtFund)
+    {
+        $this->container['psbtFund'] = $psbtFund;
+
+        return $this;
+    }
+
+    /**
+     * Gets pendingChanId
+     *
+     * @return string
+     */
+    public function getPendingChanId()
+    {
+        return $this->container['pendingChanId'];
+    }
+
+    /**
+     * Sets pendingChanId
+     *
+     * @param string $pendingChanId The pending channel ID of the created channel. This value may be used to further the funding flow manually via the FundingStateStep method.
+     *
+     * @return $this
+     */
+    public function setPendingChanId($pendingChanId)
+    {
+
+        if (!is_null($pendingChanId) && (!preg_match("/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/", $pendingChanId))) {
+            throw new \InvalidArgumentException("invalid value for $pendingChanId when calling LnrpcOpenStatusUpdate., must conform to the pattern /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.");
+        }
+
+        $this->container['pendingChanId'] = $pendingChanId;
 
         return $this;
     }

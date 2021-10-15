@@ -57,21 +57,24 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
+        'version' => 'string',
+        'commitHash' => 'string',
         'identityPubkey' => 'string',
         'alias' => 'string',
+        'color' => 'string',
         'numPendingChannels' => 'int',
         'numActiveChannels' => 'int',
+        'numInactiveChannels' => 'int',
         'numPeers' => 'int',
         'blockHeight' => 'int',
         'blockHash' => 'string',
-        'syncedToChain' => 'bool',
-        'testnet' => 'bool',
-        'uris' => 'string[]',
         'bestHeaderTimestamp' => 'string',
-        'version' => 'string',
-        'numInactiveChannels' => 'int',
+        'syncedToChain' => 'bool',
+        'syncedToGraph' => 'bool',
+        'testnet' => 'bool',
         'chains' => '\Lnd\Rest\Model\LnrpcChain[]',
-        'color' => 'string'
+        'uris' => 'string[]',
+        'features' => 'map[string,\Lnd\Rest\Model\LnrpcFeature]'
     ];
 
     /**
@@ -80,21 +83,24 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
+        'version' => null,
+        'commitHash' => null,
         'identityPubkey' => null,
         'alias' => null,
+        'color' => null,
         'numPendingChannels' => 'int64',
         'numActiveChannels' => 'int64',
+        'numInactiveChannels' => 'int64',
         'numPeers' => 'int64',
         'blockHeight' => 'int64',
         'blockHash' => null,
-        'syncedToChain' => 'boolean',
-        'testnet' => 'boolean',
-        'uris' => null,
         'bestHeaderTimestamp' => 'int64',
-        'version' => null,
-        'numInactiveChannels' => 'int64',
+        'syncedToChain' => 'boolean',
+        'syncedToGraph' => 'boolean',
+        'testnet' => 'boolean',
         'chains' => null,
-        'color' => null
+        'uris' => null,
+        'features' => null
     ];
 
     /**
@@ -124,21 +130,24 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
+        'version' => 'version',
+        'commitHash' => 'commit_hash',
         'identityPubkey' => 'identity_pubkey',
         'alias' => 'alias',
+        'color' => 'color',
         'numPendingChannels' => 'num_pending_channels',
         'numActiveChannels' => 'num_active_channels',
+        'numInactiveChannels' => 'num_inactive_channels',
         'numPeers' => 'num_peers',
         'blockHeight' => 'block_height',
         'blockHash' => 'block_hash',
-        'syncedToChain' => 'synced_to_chain',
-        'testnet' => 'testnet',
-        'uris' => 'uris',
         'bestHeaderTimestamp' => 'best_header_timestamp',
-        'version' => 'version',
-        'numInactiveChannels' => 'num_inactive_channels',
+        'syncedToChain' => 'synced_to_chain',
+        'syncedToGraph' => 'synced_to_graph',
+        'testnet' => 'testnet',
         'chains' => 'chains',
-        'color' => 'color'
+        'uris' => 'uris',
+        'features' => 'features'
     ];
 
     /**
@@ -147,21 +156,24 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
+        'version' => 'setVersion',
+        'commitHash' => 'setCommitHash',
         'identityPubkey' => 'setIdentityPubkey',
         'alias' => 'setAlias',
+        'color' => 'setColor',
         'numPendingChannels' => 'setNumPendingChannels',
         'numActiveChannels' => 'setNumActiveChannels',
+        'numInactiveChannels' => 'setNumInactiveChannels',
         'numPeers' => 'setNumPeers',
         'blockHeight' => 'setBlockHeight',
         'blockHash' => 'setBlockHash',
-        'syncedToChain' => 'setSyncedToChain',
-        'testnet' => 'setTestnet',
-        'uris' => 'setUris',
         'bestHeaderTimestamp' => 'setBestHeaderTimestamp',
-        'version' => 'setVersion',
-        'numInactiveChannels' => 'setNumInactiveChannels',
+        'syncedToChain' => 'setSyncedToChain',
+        'syncedToGraph' => 'setSyncedToGraph',
+        'testnet' => 'setTestnet',
         'chains' => 'setChains',
-        'color' => 'setColor'
+        'uris' => 'setUris',
+        'features' => 'setFeatures'
     ];
 
     /**
@@ -170,21 +182,24 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
+        'version' => 'getVersion',
+        'commitHash' => 'getCommitHash',
         'identityPubkey' => 'getIdentityPubkey',
         'alias' => 'getAlias',
+        'color' => 'getColor',
         'numPendingChannels' => 'getNumPendingChannels',
         'numActiveChannels' => 'getNumActiveChannels',
+        'numInactiveChannels' => 'getNumInactiveChannels',
         'numPeers' => 'getNumPeers',
         'blockHeight' => 'getBlockHeight',
         'blockHash' => 'getBlockHash',
-        'syncedToChain' => 'getSyncedToChain',
-        'testnet' => 'getTestnet',
-        'uris' => 'getUris',
         'bestHeaderTimestamp' => 'getBestHeaderTimestamp',
-        'version' => 'getVersion',
-        'numInactiveChannels' => 'getNumInactiveChannels',
+        'syncedToChain' => 'getSyncedToChain',
+        'syncedToGraph' => 'getSyncedToGraph',
+        'testnet' => 'getTestnet',
         'chains' => 'getChains',
-        'color' => 'getColor'
+        'uris' => 'getUris',
+        'features' => 'getFeatures'
     ];
 
     /**
@@ -247,21 +262,24 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
+        $this->container['version'] = isset($data['version']) ? $data['version'] : null;
+        $this->container['commitHash'] = isset($data['commitHash']) ? $data['commitHash'] : null;
         $this->container['identityPubkey'] = isset($data['identityPubkey']) ? $data['identityPubkey'] : null;
         $this->container['alias'] = isset($data['alias']) ? $data['alias'] : null;
+        $this->container['color'] = isset($data['color']) ? $data['color'] : null;
         $this->container['numPendingChannels'] = isset($data['numPendingChannels']) ? $data['numPendingChannels'] : null;
         $this->container['numActiveChannels'] = isset($data['numActiveChannels']) ? $data['numActiveChannels'] : null;
+        $this->container['numInactiveChannels'] = isset($data['numInactiveChannels']) ? $data['numInactiveChannels'] : null;
         $this->container['numPeers'] = isset($data['numPeers']) ? $data['numPeers'] : null;
         $this->container['blockHeight'] = isset($data['blockHeight']) ? $data['blockHeight'] : null;
         $this->container['blockHash'] = isset($data['blockHash']) ? $data['blockHash'] : null;
-        $this->container['syncedToChain'] = isset($data['syncedToChain']) ? $data['syncedToChain'] : null;
-        $this->container['testnet'] = isset($data['testnet']) ? $data['testnet'] : null;
-        $this->container['uris'] = isset($data['uris']) ? $data['uris'] : null;
         $this->container['bestHeaderTimestamp'] = isset($data['bestHeaderTimestamp']) ? $data['bestHeaderTimestamp'] : null;
-        $this->container['version'] = isset($data['version']) ? $data['version'] : null;
-        $this->container['numInactiveChannels'] = isset($data['numInactiveChannels']) ? $data['numInactiveChannels'] : null;
+        $this->container['syncedToChain'] = isset($data['syncedToChain']) ? $data['syncedToChain'] : null;
+        $this->container['syncedToGraph'] = isset($data['syncedToGraph']) ? $data['syncedToGraph'] : null;
+        $this->container['testnet'] = isset($data['testnet']) ? $data['testnet'] : null;
         $this->container['chains'] = isset($data['chains']) ? $data['chains'] : null;
-        $this->container['color'] = isset($data['color']) ? $data['color'] : null;
+        $this->container['uris'] = isset($data['uris']) ? $data['uris'] : null;
+        $this->container['features'] = isset($data['features']) ? $data['features'] : null;
     }
 
     /**
@@ -289,6 +307,54 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
 
 
     /**
+     * Gets version
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->container['version'];
+    }
+
+    /**
+     * Sets version
+     *
+     * @param string $version The version of the LND software that the node is running.
+     *
+     * @return $this
+     */
+    public function setVersion($version)
+    {
+        $this->container['version'] = $version;
+
+        return $this;
+    }
+
+    /**
+     * Gets commitHash
+     *
+     * @return string
+     */
+    public function getCommitHash()
+    {
+        return $this->container['commitHash'];
+    }
+
+    /**
+     * Sets commitHash
+     *
+     * @param string $commitHash The SHA1 commit hash that the daemon is compiled with.
+     *
+     * @return $this
+     */
+    public function setCommitHash($commitHash)
+    {
+        $this->container['commitHash'] = $commitHash;
+
+        return $this;
+    }
+
+    /**
      * Gets identityPubkey
      *
      * @return string
@@ -301,7 +367,7 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     /**
      * Sets identityPubkey
      *
-     * @param string $identityPubkey / The identity pubkey of the current node.
+     * @param string $identityPubkey The identity pubkey of the current node.
      *
      * @return $this
      */
@@ -332,6 +398,30 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     public function setAlias($alias)
     {
         $this->container['alias'] = $alias;
+
+        return $this;
+    }
+
+    /**
+     * Gets color
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->container['color'];
+    }
+
+    /**
+     * Sets color
+     *
+     * @param string $color color
+     *
+     * @return $this
+     */
+    public function setColor($color)
+    {
+        $this->container['color'] = $color;
 
         return $this;
     }
@@ -380,6 +470,30 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     public function setNumActiveChannels($numActiveChannels)
     {
         $this->container['numActiveChannels'] = $numActiveChannels;
+
+        return $this;
+    }
+
+    /**
+     * Gets numInactiveChannels
+     *
+     * @return int
+     */
+    public function getNumInactiveChannels()
+    {
+        return $this->container['numInactiveChannels'];
+    }
+
+    /**
+     * Sets numInactiveChannels
+     *
+     * @param int $numInactiveChannels numInactiveChannels
+     *
+     * @return $this
+     */
+    public function setNumInactiveChannels($numInactiveChannels)
+    {
+        $this->container['numInactiveChannels'] = $numInactiveChannels;
 
         return $this;
     }
@@ -457,6 +571,30 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     }
 
     /**
+     * Gets bestHeaderTimestamp
+     *
+     * @return string
+     */
+    public function getBestHeaderTimestamp()
+    {
+        return $this->container['bestHeaderTimestamp'];
+    }
+
+    /**
+     * Sets bestHeaderTimestamp
+     *
+     * @param string $bestHeaderTimestamp bestHeaderTimestamp
+     *
+     * @return $this
+     */
+    public function setBestHeaderTimestamp($bestHeaderTimestamp)
+    {
+        $this->container['bestHeaderTimestamp'] = $bestHeaderTimestamp;
+
+        return $this;
+    }
+
+    /**
      * Gets syncedToChain
      *
      * @return bool
@@ -476,6 +614,30 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     public function setSyncedToChain($syncedToChain)
     {
         $this->container['syncedToChain'] = $syncedToChain;
+
+        return $this;
+    }
+
+    /**
+     * Gets syncedToGraph
+     *
+     * @return bool
+     */
+    public function getSyncedToGraph()
+    {
+        return $this->container['syncedToGraph'];
+    }
+
+    /**
+     * Sets syncedToGraph
+     *
+     * @param bool $syncedToGraph Whether we consider ourselves synced with the public channel graph.
+     *
+     * @return $this
+     */
+    public function setSyncedToGraph($syncedToGraph)
+    {
+        $this->container['syncedToGraph'] = $syncedToGraph;
 
         return $this;
     }
@@ -505,102 +667,6 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     }
 
     /**
-     * Gets uris
-     *
-     * @return string[]
-     */
-    public function getUris()
-    {
-        return $this->container['uris'];
-    }
-
-    /**
-     * Sets uris
-     *
-     * @param string[] $uris / The URIs of the current node.
-     *
-     * @return $this
-     */
-    public function setUris($uris)
-    {
-        $this->container['uris'] = $uris;
-
-        return $this;
-    }
-
-    /**
-     * Gets bestHeaderTimestamp
-     *
-     * @return string
-     */
-    public function getBestHeaderTimestamp()
-    {
-        return $this->container['bestHeaderTimestamp'];
-    }
-
-    /**
-     * Sets bestHeaderTimestamp
-     *
-     * @param string $bestHeaderTimestamp bestHeaderTimestamp
-     *
-     * @return $this
-     */
-    public function setBestHeaderTimestamp($bestHeaderTimestamp)
-    {
-        $this->container['bestHeaderTimestamp'] = $bestHeaderTimestamp;
-
-        return $this;
-    }
-
-    /**
-     * Gets version
-     *
-     * @return string
-     */
-    public function getVersion()
-    {
-        return $this->container['version'];
-    }
-
-    /**
-     * Sets version
-     *
-     * @param string $version / The version of the LND software that the node is running.
-     *
-     * @return $this
-     */
-    public function setVersion($version)
-    {
-        $this->container['version'] = $version;
-
-        return $this;
-    }
-
-    /**
-     * Gets numInactiveChannels
-     *
-     * @return int
-     */
-    public function getNumInactiveChannels()
-    {
-        return $this->container['numInactiveChannels'];
-    }
-
-    /**
-     * Sets numInactiveChannels
-     *
-     * @param int $numInactiveChannels numInactiveChannels
-     *
-     * @return $this
-     */
-    public function setNumInactiveChannels($numInactiveChannels)
-    {
-        $this->container['numInactiveChannels'] = $numInactiveChannels;
-
-        return $this;
-    }
-
-    /**
      * Gets chains
      *
      * @return \Lnd\Rest\Model\LnrpcChain[]
@@ -625,25 +691,49 @@ class LnrpcGetInfoResponse implements ModelInterface, ArrayAccess
     }
 
     /**
-     * Gets color
+     * Gets uris
      *
-     * @return string
+     * @return string[]
      */
-    public function getColor()
+    public function getUris()
     {
-        return $this->container['color'];
+        return $this->container['uris'];
     }
 
     /**
-     * Sets color
+     * Sets uris
      *
-     * @param string $color color
+     * @param string[] $uris The URIs of the current node.
      *
      * @return $this
      */
-    public function setColor($color)
+    public function setUris($uris)
     {
-        $this->container['color'] = $color;
+        $this->container['uris'] = $uris;
+
+        return $this;
+    }
+
+    /**
+     * Gets features
+     *
+     * @return map[string,\Lnd\Rest\Model\LnrpcFeature]
+     */
+    public function getFeatures()
+    {
+        return $this->container['features'];
+    }
+
+    /**
+     * Sets features
+     *
+     * @param map[string,\Lnd\Rest\Model\LnrpcFeature] $features Features that our node has advertised in our init message, node announcements and invoices.
+     *
+     * @return $this
+     */
+    public function setFeatures($features)
+    {
+        $this->container['features'] = $features;
 
         return $this;
     }

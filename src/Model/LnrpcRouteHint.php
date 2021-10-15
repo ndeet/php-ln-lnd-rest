@@ -217,7 +217,7 @@ class LnrpcRouteHint implements ModelInterface, ArrayAccess
     /**
      * Sets hopHints
      *
-     * @param \Lnd\Rest\Model\LnrpcHopHint[] $hopHints * A list of hop hints that when chained together can assist in reaching a specific destination.
+     * @param \Lnd\Rest\Model\LnrpcHopHint[] $hopHints A list of hop hints that when chained together can assist in reaching a specific destination.
      *
      * @return $this
      */
